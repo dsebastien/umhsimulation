@@ -1,6 +1,9 @@
 package be.simulation.tp1;
 
+import java.util.Random;
+
 import org.apache.log4j.Logger;
+
 import be.simulation.core.AbstractSimulation;
 import be.simulation.tp1.configuration.NewsDealerSimulationConfiguration;
 import be.simulation.tp1.model.NewsDealer;
@@ -12,6 +15,7 @@ public class NewsDealerSimulation extends
 			.getName());
 
 	private NewsDealer	newsDealer;
+	private Random dayTypeGenerator;
 	private long			currentSimulationDay;
 	
 	@Override
@@ -42,6 +46,9 @@ public class NewsDealerSimulation extends
 	public void start() {
 		for (; currentSimulationDay <= getConfig().getDaysToSimulate(); currentSimulationDay++) {
 			LOG.info("Day " + currentSimulationDay);
+			
+			// newsDealer.runOneDay(dayType)
+			
 			// TODO do this:
 			// generate type of day
 			// depending on the type, generate the number of bought newspapers
