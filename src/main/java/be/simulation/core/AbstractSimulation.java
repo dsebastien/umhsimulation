@@ -91,10 +91,9 @@ public abstract class AbstractSimulation<T extends AbstractConfiguration> {
 	 * put the system in a valid state before beginning the simulation.
 	 */
 	public abstract void reset();
-
-
+	
 	/**
-	 * Start the simulation.
+	 * Execute the simulation.
 	 */
 	public abstract void start();
 }

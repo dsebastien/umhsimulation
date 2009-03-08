@@ -8,8 +8,8 @@ import be.simulation.core.configuration.AbstractConfiguration;
  * @author Dubois Sebastien
  */
 public class NewsDealerSimulationConfiguration extends AbstractConfiguration {
-	private Long	newsPapersPerDay;
-	private Long	daysToSimulate;
+	private Integer	newsPapersPerDay;
+	private Integer	daysToSimulate;
 
 
 
@@ -18,11 +18,12 @@ public class NewsDealerSimulationConfiguration extends AbstractConfiguration {
 	 * 
 	 * @return the number of days to simulate
 	 */
-	public Long getDaysToSimulate() {
+	public Integer getDaysToSimulate() {
 		if (daysToSimulate == null) {
 			daysToSimulate =
-					Long.parseLong(getConfiguration().getProperty(
+					Integer.parseInt(getConfiguration().getProperty(
 							"days_to_simulate", "20"));
+			
 		}
 		return daysToSimulate;
 	}
@@ -34,10 +35,10 @@ public class NewsDealerSimulationConfiguration extends AbstractConfiguration {
 	 * 
 	 * @return the number of news papers available each day
 	 */
-	public Long getNewsPapersPerDay() {
+	public Integer getNewsPapersPerDay() {
 		if (newsPapersPerDay == null) {
 			newsPapersPerDay =
-					Long.parseLong(getConfiguration().getProperty(
+					Integer.parseInt(getConfiguration().getProperty(
 							"newspapers_per_day", "50"));
 		}
 		return newsPapersPerDay;
@@ -45,7 +46,7 @@ public class NewsDealerSimulationConfiguration extends AbstractConfiguration {
 
 
 
-	public void setDaysToSimulate(Long daysToSimulate) {
+	public void setDaysToSimulate(Integer daysToSimulate) {
 		if (daysToSimulate != null) {
 			this.daysToSimulate = daysToSimulate;
 		}
@@ -53,7 +54,7 @@ public class NewsDealerSimulationConfiguration extends AbstractConfiguration {
 
 
 
-	public void setNewsPapersPerDay(Long newsPapersPerDay) {
+	public void setNewsPapersPerDay(Integer newsPapersPerDay) {
 		if (newsPapersPerDay != null) {
 			this.newsPapersPerDay = newsPapersPerDay;
 		}
