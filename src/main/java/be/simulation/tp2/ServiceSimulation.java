@@ -4,7 +4,9 @@ package be.simulation.tp2;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.log4j.Logger;
+
 import be.simulation.core.AbstractSimulation;
 import be.simulation.tp2.configuration.ServiceSimulationConfiguration;
 import be.simulation.tp2.model.Server;
@@ -26,8 +28,7 @@ public class ServiceSimulation extends
     //private Random random;
 
     @Override
-    public void initialize() {
-        LOG.info("Initializing the simulation");
+    public void reset() {
         servers = new ArrayList<Server>();
 
         // create the servers
@@ -35,9 +36,6 @@ public class ServiceSimulation extends
 		for (long i = 0; i < getConfig().getNumberOfServers(); i++) {
             servers.add(new Server());
         }
-
-        LOG.info("Simulation initialized");
-
     }
 
 

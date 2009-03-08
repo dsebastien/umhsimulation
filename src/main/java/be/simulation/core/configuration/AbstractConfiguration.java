@@ -20,7 +20,8 @@ public abstract class AbstractConfiguration {
 	/**
 	 * The managed configuration.
 	 */
-	private final Properties	configuration	= new Properties();
+	private final Properties	configuration					=
+																		new Properties();
 	
 
 	/**

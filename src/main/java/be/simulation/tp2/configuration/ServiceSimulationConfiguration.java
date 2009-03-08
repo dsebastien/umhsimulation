@@ -3,9 +3,9 @@ package be.simulation.tp2.configuration;
 import be.simulation.core.configuration.AbstractConfiguration;
 
 /**
- * Simple class to give access to the configuration
+ * Service simulation configuration holder.
+ * 
  * @author Dubois Sebastien
- *
  */
 public class ServiceSimulationConfiguration extends AbstractConfiguration {
     /**
@@ -14,14 +14,20 @@ public class ServiceSimulationConfiguration extends AbstractConfiguration {
     private Long numberOfServers;
 
 
+    public void setNumberOfServers(Long numberOfServers) {
+    	if (numberOfServers != null) {
+			this.numberOfServers = numberOfServers;
+		}
+	}
+
+
 
 	/**
-	 * Loads the simulation configuration file.
+	 * How many servers can the system use.
+	 * 
+	 * @return the number of servers
 	 */
-    public ServiceSimulationConfiguration(){
-    }
-
-    public long getNumberOfServers(){
+	public long getNumberOfServers() {
         if(numberOfServers == null){
             numberOfServers =
 					Long.parseLong(getConfiguration().getProperty("servers",
