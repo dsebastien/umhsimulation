@@ -2,6 +2,7 @@ package be.simulation.core;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import org.apache.log4j.Logger;
 import be.simulation.core.configuration.AbstractConfiguration;
 import be.simulation.core.events.EventList;
 
@@ -13,8 +14,14 @@ import be.simulation.core.events.EventList;
  * @author Dubois Sebastien
  */
 public abstract class AbstractSimulation<T extends AbstractConfiguration> {
-	private EventList						futureEventList;
-	private long							clock					= 0L;
+	private final Logger LOG = Logger.getLogger(AbstractSimulation.class
+			.getName());
+	
+	private EventList		futureEventList;
+	protected long clock = 0L;
+
+
+
 	private T			config;
 
 
@@ -42,37 +49,39 @@ public abstract class AbstractSimulation<T extends AbstractConfiguration> {
 			e.printStackTrace();
 		}
 		
-		initialize();
+		initializeSimulation();
 	}
-	
-	
-	
+	/**
+	 * Display the results of the simulation.
+	 */
+	public abstract void displayResults();
+
+
+
+	/**
+	 * Get the simulation configuration.
+	 * 
+	 * @return the configuration
+	 */
 	public T getConfig() {
 		return config;
 	}
 	
 	
-
-	public long getClock() {
-		return clock;
-	}
-
-
-
-	public void setClock(long clock) {
-		this.clock = clock;
-	}
-
-
-
-	public EventList getFutureEventList() {
+	
+	protected EventList getFutureEventList() {
 		return futureEventList;
 	}
 
 
 
-	public void setFutureEventList(EventList futureEventList) {
-		this.futureEventList = futureEventList;
+	/**
+	 * Initializes the simulation (first start).
+	 */
+	private void initializeSimulation() {
+		LOG.info("Initializing the simulation...");
+		reset();
+		LOG.info("Simulation initialized");
 	}
 
 
@@ -81,19 +90,11 @@ public abstract class AbstractSimulation<T extends AbstractConfiguration> {
 	 * Initializes (or reinitializes) the system (initial system state). Should
 	 * put the system in a valid state before beginning the simulation.
 	 */
-	public abstract void initialize();
-
+	public abstract void reset();
 
 
 	/**
 	 * Start the simulation.
 	 */
 	public abstract void start();
-
-
-
-	/**
-	 * Display the results of the simulation.
-	 */
-	public abstract void displayResults();
 }
