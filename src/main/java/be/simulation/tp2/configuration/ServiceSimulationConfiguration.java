@@ -11,10 +11,10 @@ public class ServiceSimulationConfiguration extends AbstractConfiguration {
     /**
 	 * How many servers are available in the system.
 	 */
-    private Long numberOfServers;
+    private Integer	numberOfServers;
 
 
-    public void setNumberOfServers(Long numberOfServers) {
+    public void setNumberOfServers(Integer numberOfServers) {
     	if (numberOfServers != null) {
 			this.numberOfServers = numberOfServers;
 		}
@@ -27,10 +27,10 @@ public class ServiceSimulationConfiguration extends AbstractConfiguration {
 	 * 
 	 * @return the number of servers
 	 */
-	public long getNumberOfServers() {
+	public int getNumberOfServers() {
         if(numberOfServers == null){
             numberOfServers =
-					Long.parseLong(getConfiguration().getProperty("servers",
+					Integer.parseInt(getConfiguration().getProperty("servers",
 							"1"));
         }
         return numberOfServers;

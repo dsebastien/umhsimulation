@@ -4,9 +4,7 @@ package be.simulation.tp2;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.log4j.Logger;
-
 import be.simulation.core.AbstractSimulation;
 import be.simulation.tp2.configuration.ServiceSimulationConfiguration;
 import be.simulation.tp2.model.Server;
@@ -55,11 +53,7 @@ public class ServiceSimulation extends
     @Override
     public void displayResults() {
         // FIXME implement
+		LOG.info("NOT IMPLEMENTED YET");
 
     }
-    
-    public static void main(String[] args) {
-		LOG.info("Loading the simulation");
-		ServiceSimulation s = new ServiceSimulation();
-	}
 }
