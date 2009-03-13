@@ -4,7 +4,7 @@ import be.simulation.core.configuration.AbstractConfiguration;
 
 /**
  * Service simulation configuration holder.
- * 
+ *
  * @author Dubois Sebastien
  */
 public class ServiceSimulationConfiguration extends AbstractConfiguration {
@@ -13,6 +13,7 @@ public class ServiceSimulationConfiguration extends AbstractConfiguration {
 	 */
     private Integer	numberOfServers;
 
+    private Float	meanInterArrivalTime;
 
     public void setNumberOfServers(Integer numberOfServers) {
     	if (numberOfServers != null) {
@@ -24,7 +25,7 @@ public class ServiceSimulationConfiguration extends AbstractConfiguration {
 
 	/**
 	 * How many servers can the system use.
-	 * 
+	 *
 	 * @return the number of servers
 	 */
 	public int getNumberOfServers() {
@@ -37,5 +38,17 @@ public class ServiceSimulationConfiguration extends AbstractConfiguration {
     }
 
 
-
+	/**
+	 * Mean inter arrival time.
+	 *
+	 * @return the mean inter arrival time
+	 */
+	public long getMeanInterArrivalTime() {
+		if (meanInterArrivalTime == null) {
+			meanInterArrivalTime =
+					Float.parseFloat(getConfiguration().getProperty(
+							"mean_interarrival_time", "1"));
+		}
+		return numberOfServers;
+	}
 }

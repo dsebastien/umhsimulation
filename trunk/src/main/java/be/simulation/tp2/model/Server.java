@@ -1,5 +1,10 @@
 package be.simulation.tp2.model;
 
+/**
+ * A server.
+ * 
+ * @author Dubois Sebastien
+ */
 public class Server {
     private boolean busy = false;
 

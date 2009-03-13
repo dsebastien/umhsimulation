@@ -2,6 +2,11 @@ package be.simulation.tp1.model;
 
 import java.util.Random;
 
+/**
+ * A newsdealer. He holds his sales information.
+ * 
+ * @author Dubois Sebastien
+ */
 public class NewsDealer {
 	private final Random	demandGenerator			= new Random();
 	private final Random	dayTypeGenerator		= new Random();

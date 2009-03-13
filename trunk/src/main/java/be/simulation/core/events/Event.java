@@ -6,17 +6,17 @@ package be.simulation.core.events;
  * @author Dubois Sebastien
  */
 public class Event implements Comparable<Event>{
-	/**
-	 * When this event should occur.
-	 */
-    private long time;
-    
     /**
-	 * The type of the event.
-	 */
+     * When this event should occur.
+     */
+    private long time;
+
+    /**
+     * The type of the event.
+     */
     private EventType eventType;
 
-    public Event(long time, EventType eventType){
+    public Event(Long time, EventType eventType){
         this.time = time;
         this.eventType = eventType;
     }
@@ -39,10 +39,10 @@ public class Event implements Comparable<Event>{
 
 
 
-	/**
-	 * Compare an event with another. The result only depends on the time at
-	 * which the events are planned to occur.
-	 */
+    /**
+     * Compare an event with another. The result only depends on the time at
+     * which the events are planned to occur.
+     */
     public int compareTo(Event other) {
         return Long.valueOf(getTime()).compareTo(Long.valueOf(other.getTime()));
     }

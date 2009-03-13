@@ -15,20 +15,27 @@ import java.util.Queue;
  *
  */
 public class EventList {
-	/**
-	 * The Hash Table containing the events. The key is the time at which the
-	 * associated are planned. The events that should occur at the same time are
-	 * stored together in a {@link Queue} (FIFO).
-	 */
-    private final Map<Long, Queue<Event>> events = new LinkedHashMap<Long, Queue<Event>>();
+    /**
+     * The Hash Table containing the events. The key is the time at which the
+     * associated are planned. The events that should occur at the same time are
+     * stored together in a {@link Queue} (FIFO).
+     */
+    private Map<Long, Queue<Event>> events = new LinkedHashMap<Long, Queue<Event>>();
 
-    
+
     public void scheduleEvent(Event evt) {
         //FIXME implement
         // ajout trié de l'evenement
         // voir le temps auquel il doit se produire
         // et l'insérer au bon endroit
         // evt.getTime()
+    }
+
+    /**
+     * Reset the event list.
+     */
+    public void reset(){
+        events = new LinkedHashMap<Long, Queue<Event>>();
     }
 
     //TODO method to retrieve the imminent events
