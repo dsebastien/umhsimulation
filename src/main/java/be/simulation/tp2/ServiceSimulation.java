@@ -10,30 +10,41 @@ import be.simulation.tp2.configuration.ServiceSimulationConfiguration;
 import be.simulation.tp2.model.Server;
 
 /**
- * Simulation of services with customers (multiple servers)
+ * Simulation of services with customers (multiple servers).
+ * 
  * @author Dubois Sebastien
- *
  */
 public class ServiceSimulation extends
-		AbstractSimulation<ServiceSimulationConfiguration> {
+AbstractSimulation<ServiceSimulationConfiguration> {
     private static final Logger LOG = Logger.getLogger(AbstractSimulation.class.getName());
 
     /**
-	 * The servers.
-	 */
+     * The servers.
+     */
     private List<Server> servers;
 
-    //private Random random;
 
     @Override
     public void reset() {
         servers = new ArrayList<Server>();
 
         // create the servers
-		LOG.info("Creating " + getConfig().getNumberOfServers() + " servers");
-		for (long i = 0; i < getConfig().getNumberOfServers(); i++) {
+        LOG.info("Creating " + getConfig().getNumberOfServers() + " servers");
+        for (long i = 0; i < getConfig().getNumberOfServers(); i++) {
             servers.add(new Server());
         }
+
+        // very important if we reset the simulation.
+        getFutureEventList().reset();
+
+        // schedule the first event
+		// FIXME implements this (use RandomUtils
+		Long firstEventTime = getConfig().getMeanInterArrivalTime();
+
+
+        //Event firstEvent = new Event();
+
+        // futureEventList.scheduleEvent(evt);
     }
 
 
@@ -41,9 +52,10 @@ public class ServiceSimulation extends
     @Override
     public void start(){
         LOG.info("Beginning the simulation");
-        // schedule the first events
 
-        // futureEventList.scheduleEvent(evt);
+
+
+        // query the FEL for the imminent events
 
         // priority queue for ? and getMin
         // to process an event: setClock(evt.getTime());

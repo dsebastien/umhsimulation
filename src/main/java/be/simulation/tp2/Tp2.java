@@ -1,7 +1,7 @@
 package be.simulation.tp2;
 
 /**
- * TP1 Entry point.
+ * TP2 Entry point.
  * 
  * @author Dubois Sebastien
  */
