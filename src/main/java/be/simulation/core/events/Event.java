@@ -2,10 +2,12 @@ package be.simulation.core.events;
 
 /**
  * An event (notice), which can be stored in an {@link EventList}.
- * 
+ *
  * @author Dubois Sebastien
  */
 public class Event implements Comparable<Event>{
+	// FIXME ask whether the time can be a long or if it better be a double (so
+	// that no two events are likely to occur at the exact same time
     /**
      * When this event should occur.
      */
@@ -14,27 +16,27 @@ public class Event implements Comparable<Event>{
     /**
      * The type of the event.
      */
-    private EventType eventType;
+    private EventType	type;
 
-    public Event(Long time, EventType eventType){
-        this.time = time;
-        this.eventType = eventType;
+    public Event(Long eventTime, EventType eventType) {
+        this.time = eventTime;
+        this.type = eventType;
     }
 
     public long getTime() {
         return time;
     }
 
-    public void setTime(long time) {
-        this.time = time;
+    public void setTime(long eventTime) {
+		this.time = eventTime;
     }
 
-    public EventType getEventType() {
-        return eventType;
+    public EventType getType() {
+        return type;
     }
 
-    public void setEventType(EventType eventType) {
-        this.eventType = eventType;
+    public void setType(EventType eventType) {
+        this.type = eventType;
     }
 
 
@@ -48,5 +50,11 @@ public class Event implements Comparable<Event>{
     }
 
 
-
+    /**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Time: " + time + " - Type: " + type.toString();
+	}
 }
