@@ -13,7 +13,17 @@ public class ServiceSimulationConfiguration extends AbstractConfiguration {
 	 */
     private Integer	numberOfServers;
 
+    /**
+	 * Mean time between each customer's arrival.
+	 */
     private Double	meanInterArrivalTime;
+    
+    /**
+	 * How many customers should be served during the simulation.
+	 */
+    private Integer	customersToServe;
+    
+    
 
     public void setNumberOfServers(Integer numberOfServers) {
     	if (numberOfServers != null) {
@@ -51,4 +61,19 @@ public class ServiceSimulationConfiguration extends AbstractConfiguration {
 		}
 		return meanInterArrivalTime;
 	}
+	
+	/**
+	 * Customers to serve.
+	 * 
+	 * @return the number of customers to serve
+	 */
+	public double getCustomersToServe() {
+		if (customersToServe == null) {
+			customersToServe =
+					Integer.parseInt(getConfiguration().getProperty(
+							"customers_to_serve", "10"));
+		}
+		return customersToServe;
+	}
+	
 }

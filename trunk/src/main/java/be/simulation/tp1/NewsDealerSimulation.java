@@ -1,7 +1,6 @@
 package be.simulation.tp1;
 
 import org.apache.log4j.Logger;
-
 import be.simulation.core.AbstractSimulation;
 import be.simulation.tp1.configuration.NewsDealerSimulationConfiguration;
 import be.simulation.tp1.model.NewsDealer;
@@ -19,6 +18,9 @@ public class NewsDealerSimulation extends AbstractSimulation<NewsDealerSimulatio
 
     private long currentSimulationDay;
 
+    /**
+	 * {@inheritDoc}
+	 */
     @Override
     public void displayResults() {
         if (newsDealer == null) {
@@ -29,13 +31,18 @@ public class NewsDealerSimulation extends AbstractSimulation<NewsDealerSimulatio
         }
     }
 
+    /**
+	 * {@inheritDoc}
+	 */
     @Override
     public void reset() {
-        clock = 0L;
         newsDealer = new NewsDealer(getConfig().getNewsPapersPerDay());
         currentSimulationDay = 1;
     }
 
+    /**
+	 * {@inheritDoc}
+	 */
     @Override
     public void start() {
         LOG.info("Simulation in progress...");

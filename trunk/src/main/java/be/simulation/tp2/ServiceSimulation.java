@@ -13,7 +13,7 @@ import be.simulation.tp2.model.Server;
 
 /**
  * Simulation of services with customers (multiple servers).
- *
+ * 
  * @author Dubois Sebastien
  */
 public class ServiceSimulation extends
@@ -30,11 +30,21 @@ public class ServiceSimulation extends
 	 * The pseudo-random number generator.
 	 */
 	private Random				prng;
+	/**
+	 * How many customers were already served.
+	 */
+	private int					servedCustomers;
 
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void reset() {
+		resetBasicSimulation();
+		
+		servedCustomers = 0;
 		servers = new ArrayList<Server>();
 		prng = new Random();
 		// create the servers
@@ -42,8 +52,6 @@ public class ServiceSimulation extends
 		for (long i = 0; i < getConfig().getNumberOfServers(); i++) {
 			servers.add(new Server());
 		}
-		// very important if we reset the simulation.
-		getFutureEventList().reset();
 		
 		// schedule the first event
 		Double firstEventTime =
@@ -55,18 +63,35 @@ public class ServiceSimulation extends
 
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void start() {
 		LOG.info("Beginning the simulation");
-		
-		// Loop while until we served n clients
-		// query the FEL for the imminent event
+		// continue the simulation until we served the configured number of
+		// customers
+		while (servedCustomers < getConfig().getCustomersToServe()) {
+			// query the FEL for the imminent event
+			Event imminent = getFutureEventList().getImminentEvent();
+			if (imminent == null) {
+				LOG
+						.warn("No imminent event was found, stopping the simulation");
+				break;
+			}
+			// we have the event, process it!
+			setClock(imminent.getTime());
+			
+		}
 		// process the event: setClock(evt.getTime());
 		// to planify the finish event: event.getTime() + service time
 	}
 
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void displayResults() {
 		// FIXME implement
