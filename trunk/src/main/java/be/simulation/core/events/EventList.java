@@ -3,6 +3,7 @@ package be.simulation.core.events;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Queue;
+import org.apache.log4j.Logger;
 
 /**
  * An event list manages a list of events.
@@ -15,6 +16,10 @@ import java.util.Queue;
  *
  */
 public class EventList {
+	private static final Logger		LOG		=
+													Logger
+															.getLogger(EventList.class
+																	.getName());
     /**
      * The Hash Table containing the events. The key is the time at which the
      * associated are planned. The events that should occur at the same time are
@@ -24,6 +29,7 @@ public class EventList {
 
 
     public void scheduleEvent(Event evt) {
+    	LOG.info(evt);
         //FIXME implement
         // ajout trié de l'evenement
         // voir le temps auquel il doit se produire
