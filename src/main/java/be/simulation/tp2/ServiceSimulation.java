@@ -44,14 +44,11 @@ public class ServiceSimulation extends
 		}
 		// very important if we reset the simulation.
 		getFutureEventList().reset();
+		
 		// schedule the first event
-		// FIXME check with teacher/assistant if we can keep track of the time
-		// with a long value (which means that the likelihood of having multiple
-		// events at the same time is higher) even though the FEL will give us
-		// these events in a FIFO order.
-		Long firstEventTime =
-				Math.round(RandomUtils.exponential(prng, getConfig()
-						.getMeanInterArrivalTime()));
+		Double firstEventTime =
+				RandomUtils.exponential(prng, getConfig()
+						.getMeanInterArrivalTime());
 		Event firstEvent = new Event(firstEventTime, EventType.ARRIVAL);
 		getFutureEventList().scheduleEvent(firstEvent);
 	}
@@ -61,9 +58,10 @@ public class ServiceSimulation extends
 	@Override
 	public void start() {
 		LOG.info("Beginning the simulation");
-		// query the FEL for the imminent events
-		// priority queue for ? and getMin
-		// to process an event: setClock(evt.getTime());
+		
+		// Loop while until we served n clients
+		// query the FEL for the imminent event
+		// process the event: setClock(evt.getTime());
 		// to planify the finish event: event.getTime() + service time
 	}
 
@@ -72,6 +70,6 @@ public class ServiceSimulation extends
 	@Override
 	public void displayResults() {
 		// FIXME implement
-		LOG.info("NOT IMPLEMENTED YET");
+		LOG.info("DISPLAY RESULTS NOT IMPLEMENTED YET");
 	}
 }
