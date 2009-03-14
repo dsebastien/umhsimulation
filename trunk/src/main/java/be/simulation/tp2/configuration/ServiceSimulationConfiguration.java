@@ -13,7 +13,7 @@ public class ServiceSimulationConfiguration extends AbstractConfiguration {
 	 */
     private Integer	numberOfServers;
 
-    private Float	meanInterArrivalTime;
+    private Double	meanInterArrivalTime;
 
     public void setNumberOfServers(Integer numberOfServers) {
     	if (numberOfServers != null) {
@@ -43,12 +43,12 @@ public class ServiceSimulationConfiguration extends AbstractConfiguration {
 	 *
 	 * @return the mean inter arrival time
 	 */
-	public long getMeanInterArrivalTime() {
+	public double getMeanInterArrivalTime() {
 		if (meanInterArrivalTime == null) {
 			meanInterArrivalTime =
-					Float.parseFloat(getConfiguration().getProperty(
+					Double.parseDouble(getConfiguration().getProperty(
 							"mean_interarrival_time", "1"));
 		}
-		return numberOfServers;
+		return meanInterArrivalTime;
 	}
 }
