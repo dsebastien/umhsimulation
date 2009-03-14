@@ -34,7 +34,7 @@ public abstract class AbstractConfiguration {
 			configuration.load(this.getClass().getResourceAsStream(filename));
 		} catch (IOException e) {
 			LOG.fatal(e);
-			System.exit(0);
+			throw new Error(e);
 		}
 		LOG.info("Configuration loaded");
 	}
@@ -50,7 +50,12 @@ public abstract class AbstractConfiguration {
 
 
 
-	public Properties getConfiguration() {
+	/**
+	 * Get the configuration.
+	 * 
+	 * @return the configuration
+	 */
+	protected Properties getConfiguration() {
 		return configuration;
 	}
 }
