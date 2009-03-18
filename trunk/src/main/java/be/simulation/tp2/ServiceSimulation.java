@@ -16,6 +16,10 @@ import be.simulation.tp2.model.Server;
  * 
  * @author Dubois Sebastien
  */
+
+// FIXME en fait l'exercice est avec des ambules et je ne sais pas quoi (voir
+// pdf de beauport...)
+
 public class ServiceSimulation extends
 		AbstractSimulation<ServiceSimulationConfiguration> {
 	private static final Logger	LOG	=
@@ -79,12 +83,13 @@ public class ServiceSimulation extends
 						.warn("No imminent event was found, stopping the simulation");
 				break;
 			}
-			// we have the event, process it!
+			// we have the event, we advance the simulation
+			// time to the event time
 			setClock(imminent.getTime());
 			
+			// generate the service time and create the end event
+			
 		}
-		// process the event: setClock(evt.getTime());
-		// to planify the finish event: event.getTime() + service time
 	}
 
 
