@@ -8,8 +8,7 @@ package be.simulation.core.events;
  * @author Mernier Jean-Francois
  */
 public enum EventType {
-    ARRIVAL,
-	DEPARTURE,
-	DELAY,
-	END_OF_SIMULATION
+	// FIXME remplir (envoi de message, reception, ...
+	DELAI,
+	FIN_DE_SIMULATION
 }

@@ -15,7 +15,7 @@ public abstract class AbstractConfiguration {
 	private static final String	DEFAULT_CONFIGURATION_FILENAME	=
 																		"config.properties";
 	
-	private static final Logger	LOG				=
+	private static final Logger	LOGGER				=
 														Logger
 																.getLogger(AbstractConfiguration.class);
 	
@@ -31,14 +31,14 @@ public abstract class AbstractConfiguration {
 	 * package).
 	 */
 	public AbstractConfiguration(String filename) {
-		LOG.info("Loading the configuration...");
+		LOGGER.info("Loading the configuration...");
 		try {
 			configuration.load(this.getClass().getResourceAsStream(filename));
 		} catch (IOException e) {
-			LOG.fatal(e);
+			LOGGER.fatal(e);
 			throw new Error(e);
 		}
-		LOG.info("Configuration loaded");
+		LOGGER.info("Configuration loaded");
 	}
 
 
