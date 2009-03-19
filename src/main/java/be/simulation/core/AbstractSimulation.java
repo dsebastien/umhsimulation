@@ -7,10 +7,12 @@ import be.simulation.core.configuration.AbstractConfiguration;
 import be.simulation.core.events.EventList;
 
 /**
- * Generic simulation class (needed by any simulation).
+ * Classe générique pour les simulations. Regroupe le code commun à toute
+ * simulation (chargement de la configuration de départ, gestion de l'horloge de
+ * simulation, ...
  * 
  * @param <T>
- *        The configuration type
+ *        Le type de configuration utilisée par la simulation
  * @author Dubois Sebastien
  * @author Regnier Frederic
  * @author Mernier Jean-Francois
@@ -25,10 +27,11 @@ public abstract class AbstractSimulation<T extends AbstractConfiguration> {
 	 * The FEL.
 	 */
     private final EventList futureEventList;
-    
-    /**
-	 * The simulation clock.
+	/**
+	 * Horloge de simulation
 	 */
+    // FIXME décider de ce qu'on utilise pour le suivi du temps de simulation
+	// (long ou double?)
     private Double			clock;
 
 

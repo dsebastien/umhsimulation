@@ -10,4 +10,5 @@ import be.simulation.core.configuration.AbstractConfiguration;
  * @author Mernier Jean-Francois
  */
 public class SimulationConfiguration extends AbstractConfiguration {
+	// FIXME
 }

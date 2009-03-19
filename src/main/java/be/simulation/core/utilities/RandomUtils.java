@@ -27,7 +27,7 @@ public final class RandomUtils {
 	 *        mean of the exponential distribution
 	 * @return a pseudo-random number in the exponential distribution
 	 */
-	public static double exponential(Random prng, double mean) {
+	public static double exponential(final Random prng, final double mean) {
 		return -mean * Math.log(prng.nextDouble());
 	}
 
