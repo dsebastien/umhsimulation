@@ -8,6 +8,8 @@ import org.apache.log4j.Logger;
  * Generic configuration.
  * 
  * @author Dubois Sebastien
+ * @author Regnier Frederic
+ * @author Mernier Jean-Francois
  */
 public abstract class AbstractConfiguration {
 	private static final String	DEFAULT_CONFIGURATION_FILENAME	=

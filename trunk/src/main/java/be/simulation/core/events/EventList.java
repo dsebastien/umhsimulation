@@ -5,14 +5,16 @@ import java.util.Queue;
 import org.apache.log4j.Logger;
 
 /**
- * An event list manages a list of events.
- * It can:<br />
+ * An event list manages a list of events. It can:<br />
  * <ul>
- *      <li>schedule events (put them at an appropriate position in the list depending on its planified time</li>
- *      <li>give a list of the next planned events</li>
+ * <li>schedule events (put them at an appropriate position in the list
+ * depending on its planified time</li>
+ * <li>give a list of the next planned events</li>
  * </ul>
+ * 
  * @author Dubois Sebastien
- *
+ * @author Regnier Frederic
+ * @author Mernier Jean-Francois
  */
 public class EventList {
 	private static final Logger		LOG		=

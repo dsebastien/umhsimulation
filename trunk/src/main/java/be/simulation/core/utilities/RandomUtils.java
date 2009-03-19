@@ -5,8 +5,10 @@ import java.util.Random;
 /**
  * Random utilities (producing pseudo-random numbers, exponential probability
  * distributions, ...).
- *
+ * 
  * @author Dubois Sebastien
+ * @author Regnier Frederic
+ * @author Mernier Jean-Francois
  */
 public final class RandomUtils {
 
