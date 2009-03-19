@@ -6,5 +6,8 @@ package be.simulation.core.events;
  * @author Dubois Sebastien
  */
 public enum EventType {
-    ARRIVAL, DEPARTURE, DELAY
+    ARRIVAL,
+	DEPARTURE,
+	DELAY,
+	END_OF_SIMULATION
 }
