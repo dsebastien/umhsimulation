@@ -14,7 +14,10 @@ import be.simulation.core.events.EventList;
  * @author Dubois Sebastien
  */
 public abstract class AbstractSimulation<T extends AbstractConfiguration> {
-    private final Logger LOG = Logger.getLogger(AbstractSimulation.class.getName());
+    protected static final Logger	LOGGER	=
+												Logger
+														.getLogger(AbstractSimulation.class
+																.getName());
 
     /**
 	 * The FEL.
@@ -107,10 +110,10 @@ public abstract class AbstractSimulation<T extends AbstractConfiguration> {
         try {
             config = ((Class<T>) pt.getActualTypeArguments()[0]).newInstance();
         } catch (InstantiationException e) {
-            LOG.fatal(e);
+            LOGGER.fatal(e);
             throw new Error(e);
         } catch (IllegalAccessException e) {
-            LOG.fatal(e);
+            LOGGER.fatal(e);
             throw new Error(e);
         }
                 
@@ -141,9 +144,9 @@ public abstract class AbstractSimulation<T extends AbstractConfiguration> {
      * Initializes the simulation (first start).
      */
     private void initializeSimulation() {
-        LOG.info("Initializing the simulation...");
+        LOGGER.info("Initializing the simulation...");
         reset();
-        LOG.info("Simulation initialized");
+        LOGGER.info("Simulation initialized");
     }
     
 
