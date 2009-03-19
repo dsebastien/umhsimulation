@@ -4,6 +4,8 @@ package be.simulation.core.events;
  * An event (notice), which can be stored in an {@link EventList}.
  * 
  * @author Dubois Sebastien
+ * @author Regnier Frederic
+ * @author Mernier Jean-Francois
  */
 public class Event implements Comparable<Event> {
 	// FIXME ask the teacher/assistant what his advice is concerning time

@@ -10,8 +10,10 @@ import be.simulation.core.events.EventList;
  * Generic simulation class (needed by any simulation).
  * 
  * @param <T>
- *            The configuration type
+ *        The configuration type
  * @author Dubois Sebastien
+ * @author Regnier Frederic
+ * @author Mernier Jean-Francois
  */
 public abstract class AbstractSimulation<T extends AbstractConfiguration> {
     protected static final Logger	LOGGER	=
