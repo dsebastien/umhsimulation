@@ -1,38 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
+	<!--
     Generated from archetype; please customize.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>be.simulation</groupId>
-    <artifactId>simulation</artifactId>
-
-    <name>Simulation</name>
-	<description>Projet de simulation de systèmes à évènements discrets</description>
+	<groupId>be.simulation</groupId>
+	<artifactId>simulation</artifactId>
+	<packaging>jar</packaging>
+	<version>1.0-SNAPSHOT</version>
 	
+	<name>Simulation</name>
+	<description>Projet de simulation de systèmes à évènements discrets</description>
 
-    <version>1.0-SNAPSHOT</version>
+	
+	<developers>
+		<developer>
+			<id>1</id>
+			<name>Dubois Sebastien</name>
+			<email>lechtitseb@gmail.com</email>
+		</developer>
+		<developer>
+			<id>2</id>
+			<name>Regnier Frederic</name>
+			<email>frederic.regnier@gmail.com</email>
+		</developer>
+		<developer>
+			<id>3</id>
+			<name>Mernier Jean-Francois</name>
+			<email>jfmernier@gmail.com</email>
+		</developer>
+	</developers>
 
-    <build>
-        <plugins>
-			<!-- Source plugin -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+	<scm>
+		<connection>scm:svn:http://umhsimulation.googlecode.com/svn/trunk</connection>
+		<developerConnection>scm:svn:https://umhsimulation.googlecode.com/svn/trunk</developerConnection>
+		<url>https://umhsimulation.googlecode.com/svn/trunk</url>
+	</scm>
 
+
+	<build>
+		<finalName>${project.artifactId}-${project.version}-${buildNumber}</finalName>
+		<plugins>
 			<!-- Compiler plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -59,39 +71,100 @@
 					<downloadJavadocs>true</downloadJavadocs>
 					<addGroupIdToProjectName>false</addGroupIdToProjectName>
 				</configuration>
-		  </plugin>
-        </plugins>
-    </build>
+			</plugin>
 
-    <dependencies>
-		<dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.12</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.4</version> <!-- 4.5 -->
-            <scope>test</scope>
-        </dependency>
-		<dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>2.4</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymockclassextension</artifactId>
-            <version>2.4</version>
-            <scope>test</scope>
-        </dependency>
-		<dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.3</version>
-        </dependency>
-    </dependencies>
+			<!-- Build number -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.0-beta-2</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<doCheck>true</doCheck>
+					<doUpdate>true</doUpdate>
+					<format>${{0,number}</format>
+					<items>
+						<item>buildNumber</item>
+					</items>					
+				</configuration>
+			</plugin>
+			<!-- Source plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Implementation-Build>${buildNumber}</Implementation-Build>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
+	<dependencies>
+		<!-- Spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring</artifactId>
+			<version>2.5.6</version>
+		</dependency>
+		<!-- Divers -->
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.3</version>
+		</dependency>
+		<!-- Logging -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.12</version>
+		</dependency>
+		<!-- Tests -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymock</artifactId>
+			<version>2.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymockclassextension</artifactId>
+			<version>2.4</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>
