@@ -1,4 +1,4 @@
-package be.simulation.core.events;
+package be.simulation.core.evenements;
 
 /**
  * Basic event types.

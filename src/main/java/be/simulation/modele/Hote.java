@@ -1,5 +1,8 @@
 package be.simulation.modele;
 
+import be.simulation.configuration.AgentsConfiguration;
+import be.simulation.core.entites.AbstractSimulationEntity;
+
 /**
  * Hote du système, relié à un et un seul agent (liens statique).
  * 
@@ -7,7 +10,7 @@ package be.simulation.modele;
  * @author Regnier Frederic
  * @author Mernier Jean-Francois
  */
-public class Hote {
+public class Hote extends AbstractSimulationEntity<AgentsConfiguration> {
 	/**
 	 * Agent auquel cet hote est relié.
 	 */

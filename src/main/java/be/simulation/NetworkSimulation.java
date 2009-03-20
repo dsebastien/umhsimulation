@@ -1,6 +1,6 @@
 package be.simulation;
 
-import be.simulation.configuration.SimulationConfiguration;
+import be.simulation.configuration.NetworkSimulationConfiguration;
 import be.simulation.core.AbstractSimulation;
 
 /**
@@ -11,14 +11,12 @@ import be.simulation.core.AbstractSimulation;
  * @author Mernier Jean-Francois
  */
 public class NetworkSimulation extends
-		AbstractSimulation<SimulationConfiguration> {
-
+		AbstractSimulation<NetworkSimulationConfiguration> {
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void displayResults() {
-		// TODO Auto-generated method stub
+	public void afficherResultats() {
 	}
 
 
@@ -28,7 +26,6 @@ public class NetworkSimulation extends
 	 */
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
 	}
 
 
@@ -37,7 +34,7 @@ public class NetworkSimulation extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void start() {
-		// TODO Auto-generated method stub
+	public void demarrer() {
+		LOGGER.info("Démarrage de la simulation " + getConfiguration().getNom());
 	}
 }

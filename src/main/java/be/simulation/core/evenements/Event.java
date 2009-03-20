@@ -1,4 +1,7 @@
-package be.simulation.core.events;
+package be.simulation.core.evenements;
+
+// FIXME réfléchir à la gestion des evenements. Envoyer mail avec questions à
+// l'assistant
 
 /**
  * An event (notice), which can be stored in an {@link EventList}.
