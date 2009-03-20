@@ -44,7 +44,10 @@
 
 
 	<build>
+		<!-- Nom de fichier -->
 		<finalName>${project.artifactId}-${project.version}-${buildNumber}</finalName>
+
+
 		<plugins>
 			<!-- Compiler plugin -->
 			<plugin>
@@ -88,11 +91,14 @@
 					</execution>
 				</executions>
 				<configuration>
-					<doCheck>true</doCheck>
+					<!-- Pour pouvoir utiliser le numero de revision du scm -->
+					<doCheck>false</doCheck>
+					<!-- Pour faire un svn update automatiquement -->
 					<doUpdate>false</doUpdate>
-					<format>${{0,number}</format>
+					<format>b{0,number}-{1,date,yyyy-MM-dd}</format>
 					<items>
 						<item>buildNumber</item>
+						<item>timestamp</item>
 					</items>					
 				</configuration>
 			</plugin>
