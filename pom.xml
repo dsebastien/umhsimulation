@@ -35,6 +35,7 @@
 		</developer>
 	</developers>
 
+
 	<scm>
 		<connection>scm:svn:http://umhsimulation.googlecode.com/svn/trunk</connection>
 		<developerConnection>scm:svn:https://umhsimulation.googlecode.com/svn/trunk</developerConnection>
@@ -88,13 +89,14 @@
 				</executions>
 				<configuration>
 					<doCheck>true</doCheck>
-					<doUpdate>true</doUpdate>
+					<doUpdate>false</doUpdate>
 					<format>${{0,number}</format>
 					<items>
 						<item>buildNumber</item>
 					</items>					
 				</configuration>
 			</plugin>
+
 			<!-- Source plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
