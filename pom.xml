@@ -79,6 +79,7 @@
 					</additionalBuildcommands>
 					<additionalProjectnatures>
 						<projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
+						<projectnature>org.maven.ide.eclipse.maven2Nature</projectnature>
 					</additionalProjectnatures>
 				</configuration>
 			</plugin>
@@ -101,7 +102,7 @@
 					<doCheck>false</doCheck>
 					<!-- Pour faire un svn update automatiquement -->
 					<doUpdate>false</doUpdate>
-					<format>b{0,number}-{1,date,yyyy-MM-dd}</format>
+					<format>b{0,number}-{1,date,yyyy-MM-dd-HHmm}</format>
 					<items>
 						<item>buildNumber</item>
 						<item>timestamp</item>
