@@ -15,7 +15,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class Main {
 	public static void main(String[] args) {
 		// FIXME prendre en compte les arguments
-		// (voir CliParser, demander à Seb)
+		// Seb: voir http://jopt-simple.sourceforge.net/examples.html
 		
 		// Chargement de la configuration de spring
 		ApplicationContext springApplicationContext =
