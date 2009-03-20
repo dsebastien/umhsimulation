@@ -1,10 +1,9 @@
 package be.simulation.core;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import org.apache.log4j.Logger;
 import be.simulation.core.configuration.AbstractConfiguration;
-import be.simulation.core.events.EventList;
+import be.simulation.core.entites.AbstractSimulationEntity;
+import be.simulation.core.evenements.EventList;
 
 /**
  * Classe générique pour les simulations. Regroupe le code commun à toute
@@ -17,152 +16,140 @@ import be.simulation.core.events.EventList;
  * @author Regnier Frederic
  * @author Mernier Jean-Francois
  */
-public abstract class AbstractSimulation<T extends AbstractConfiguration> {
-    protected static final Logger	LOGGER	=
-												Logger
-														.getLogger(AbstractSimulation.class
-																.getName());
-
-    /**
-	 * The FEL.
+public abstract class AbstractSimulation<T extends AbstractConfiguration>
+		extends AbstractSimulationEntity<T> {
+	protected static final Logger	LOGGER	=
+													Logger
+															.getLogger(AbstractSimulation.class
+																	.getName());
+	/**
+	 * La FEL.
 	 */
-    private final EventList futureEventList;
+	private final EventList			futureEventList;
 	/**
 	 * Horloge de simulation
 	 */
-    // FIXME décider de ce qu'on utilise pour le suivi du temps de simulation
+	// FIXME décider de ce qu'on utilise pour le suivi du temps de simulation
 	// (long ou double?)
-    private Double			clock;
+	private Double					horloge;
 
 
 
 	/**
-	 * Get the simulation clock.
-	 * 
-	 * @return the clock
+	 * Création et initialisation de la simulation.
 	 */
-	protected Double getClock() {
-		return clock;
+	public AbstractSimulation() {
+		// création de la FEL
+		futureEventList = new EventList();
+		initialiserSimulation();
 	}
-	
+
+
+
 	/**
-	 * Set the clock to the specified time (> 0).
-	 * 
-	 * @param time
-	 *        the time to set the clock to
+	 * Afficher les résultats de la simulation.
 	 */
-	protected void setClock(Double time) {
-		if (time == null || time < 0) {
+	public abstract void afficherResultats();
+
+
+
+	/**
+	 * Ajouter un certain temps à l'horloge de simulation.
+	 * 
+	 * @param temps
+	 *        le temps à ajouter
+	 * @throws IllegalArgumentException
+	 *         si le temps donné est null ou négatif (non autorisé)
+	 */
+	protected void ajouterTempsHorloge(Double temps) {
+		if (temps == null) {
 			throw new IllegalArgumentException(
-					"The time to set the clock to has to be > 0");
+					"Le temps à ajouter à l'horloge ne peut pas être null!");
+		} else {
+			if (temps < 0) {
+				throw new IllegalArgumentException(
+						"Le temps à ajouter à l'horloge ne peut pas être négatif!");
+			}
 		}
-		clock = time;
+		horloge = Double.valueOf(horloge + temps);
 	}
-	
+
+
+
 	/**
-	 * Reset the basic simulation information (FEL, clock, ...).
+	 * Execute la simulation.
+	 */
+	public abstract void demarrer();
+
+
+
+	protected EventList getFutureEventList() {
+		return futureEventList;
+	}
+
+
+
+	/**
+	 * Retourne l'horloge de simulation.
+	 * 
+	 * @return l'horloge de simulation
+	 */
+	protected Double getHorloge() {
+		return horloge;
+	}
+
+
+
+	/**
+	 * Initialise la simulation (utilisé à l'instanciation).
+	 */
+	private void initialiserSimulation() {
+		LOGGER.info("Initialisation de la simulation...");
+		reset();
+		LOGGER.info("Simulation initialisée");
+	}
+
+
+
+	/**
+	 * Initialise ou réunitialise le système (retour à l'état de départ).
+	 */
+	public abstract void reset();
+
+
+
+	/**
+	 * Réinitialise les informations basiques de simulation (FEL, horloge, ...).
 	 */
 	protected void resetBasicSimulation() {
-		resetClock();
+		resetHorloge();
 		futureEventList.reset();
 	}
 
 
 
 	/**
-	 * Reset the clock (0).
+	 * Réinitialise l'horloge de simulation (0).
 	 */
-	protected void resetClock() {
-		clock = Double.valueOf(0);
+	protected void resetHorloge() {
+		horloge = Double.valueOf(0);
 	}
-	
+
+
+
 	/**
-	 * Add the given time to the clock.
+	 * Place le temps de simulation au temps donné.
 	 * 
-	 * @param time
-	 *        the time to add
+	 * @param temps
+	 *        le temps auquel placer l'horloge (> 0)
 	 * @throws IllegalArgumentException
-	 *         if the given time is null or negative (not allowed!)
+	 *         si le temps donné est null ou <= 0
 	 */
-	protected void addToClock(Double time) {
-		if (time == null) {
+	protected void setHorloge(Double temps) {
+		if (temps == null || temps < 0) {
 			throw new IllegalArgumentException(
-					"The time to add to the clock cannot be null!");
-		} else {
-			if (time < 0) {
-				throw new IllegalArgumentException(
-						"The time to add to the clock cannot be negative!");
-			}
+					"Le temps auquel mettre l'horloge doit être > 0");
 		}
-		clock = Double.valueOf(clock + time);
+		horloge = temps;
 	}
-	
-	
-	/**
-	 * The simulation configuration.
-	 */
-	private T	config;
-
-    /**
-     * Initialize the configuration and then initialize the simulation.
-     * 
-     */
-    @SuppressWarnings("unchecked")
-    public AbstractSimulation() {
-        // load the configuration in a generic manner
-        Type type = this.getClass().getGenericSuperclass();
-        ParameterizedType pt = (ParameterizedType) type;
-        try {
-            config = ((Class<T>) pt.getActualTypeArguments()[0]).newInstance();
-        } catch (InstantiationException e) {
-            LOGGER.fatal(e);
-            throw new Error(e);
-        } catch (IllegalAccessException e) {
-            LOGGER.fatal(e);
-            throw new Error(e);
-        }
-                
-        // instanciate the future event list
-        futureEventList = new EventList();
-        initializeSimulation();
-    }
-
-    /**
-     * Display the results of the simulation.
-     */
-    public abstract void displayResults();
-
-    /**
-     * Get the simulation configuration.
-     * 
-     * @return the configuration
-     */
-    public T getConfig() {
-        return config;
-    }
-
-    protected EventList getFutureEventList() {
-        return futureEventList;
-    }
-
-    /**
-     * Initializes the simulation (first start).
-     */
-    private void initializeSimulation() {
-        LOGGER.info("Initializing the simulation...");
-        reset();
-        LOGGER.info("Simulation initialized");
-    }
-    
-
-    /**
-     * Initialize (or reinitialize) the system (initial system state). Puts the
-     * system in a valid state.
-     */
-    public abstract void reset();
-
-    /**
-     * Execute the simulation.
-     */
-    public abstract void start();
 }
