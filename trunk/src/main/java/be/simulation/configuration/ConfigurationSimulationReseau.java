@@ -3,13 +3,13 @@ package be.simulation.configuration;
 import be.simulation.core.configuration.AbstractConfiguration;
 
 /**
- * Configuration de la simulation.
+ * Configuration de la simulation de réseau (projet).
  * 
  * @author Dubois Sebastien
  * @author Regnier Frederic
  * @author Mernier Jean-Francois
  */
-public class NetworkSimulationConfiguration extends AbstractConfiguration {
+public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	/**
 	 * Nom de la simulation.
 	 */
@@ -17,13 +17,10 @@ public class NetworkSimulationConfiguration extends AbstractConfiguration {
 
 
 
-	public NetworkSimulationConfiguration() {
-	}
-
-
-
-	public NetworkSimulationConfiguration(final String nom) {
-		this.nomDeSimulation = nom;
+	/**
+	 * Constructeur par défaut.
+	 */
+	public ConfigurationSimulationReseau() {
 	}
 
 

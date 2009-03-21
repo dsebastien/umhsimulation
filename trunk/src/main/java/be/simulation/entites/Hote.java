@@ -1,6 +1,6 @@
-package be.simulation.modele;
+package be.simulation.entites;
 
-import be.simulation.configuration.AgentsConfiguration;
+import be.simulation.configuration.ConfigurationAgents;
 import be.simulation.core.entites.AbstractSimulationEntity;
 
 /**
@@ -10,7 +10,7 @@ import be.simulation.core.entites.AbstractSimulationEntity;
  * @author Regnier Frederic
  * @author Mernier Jean-Francois
  */
-public class Hote extends AbstractSimulationEntity<AgentsConfiguration> {
+public class Hote extends AbstractSimulationEntity<ConfigurationAgents> {
 	/**
 	 * Agent auquel cet hote est relié.
 	 */

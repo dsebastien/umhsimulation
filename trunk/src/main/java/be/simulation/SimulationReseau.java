@@ -1,6 +1,6 @@
 package be.simulation;
 
-import be.simulation.configuration.NetworkSimulationConfiguration;
+import be.simulation.configuration.ConfigurationSimulationReseau;
 import be.simulation.core.AbstractSimulation;
 
 /**
@@ -10,8 +10,8 @@ import be.simulation.core.AbstractSimulation;
  * @author Regnier Frederic
  * @author Mernier Jean-Francois
  */
-public class NetworkSimulation extends
-		AbstractSimulation<NetworkSimulationConfiguration> {
+public class SimulationReseau extends
+		AbstractSimulation<ConfigurationSimulationReseau> {
 	/**
 	 * {@inheritDoc}
 	 */

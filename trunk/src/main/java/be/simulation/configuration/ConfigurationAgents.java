@@ -9,7 +9,7 @@ import be.simulation.core.configuration.AbstractConfiguration;
  * @author Regnier Frederic
  * @author Mernier Jean-Francois
  */
-public class AgentsConfiguration extends AbstractConfiguration {
+public class ConfigurationAgents extends AbstractConfiguration {
 	/**
 	 * Nombre d'hôtes par agent.
 	 */
