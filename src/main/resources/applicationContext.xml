@@ -15,27 +15,30 @@
 	<context:property-placeholder
 		location="classpath:configuration/general.properties, classpath:configuration/agents.properties" /> <!-- , ... -->
 
-	<bean id="networkSimulation" class="be.simulation.NetworkSimulation"
+	<bean id="simulationReseau" class="be.simulation.SimulationReseau"
 		scope="prototype" />
 
 	<!--
 		TODO, voir ce qui est le mieux pour les configs: prototype ou
 		singleton ?
 	-->
-	<bean id="networkSimulationConfiguration"
-		class="be.simulation.configuration.NetworkSimulationConfiguration"
+	<bean id="configurationSimulationReseau"
+		class="be.simulation.configuration.ConfigurationSimulationReseau"
 		scope="singleton">
 		<property name="nom" value="${general.simulation_name}" />
 	</bean>
 
-	<bean id="agentsConfiguration" class="be.simulation.configuration.AgentsConfiguration"
+	<bean id="configurationAgents" class="be.simulation.configuration.ConfigurationAgents"
 		scope="singleton">
 		<property name="nombreHotes" value="${agents.nombre_hotes}" />
 	</bean>
 
-	<bean id="hotesConfiguration" class="be.simulation.configuration.HotesConfiguration"
+	<bean id="configurationHotes" class="be.simulation.configuration.ConfigurationHotes"
 		scope="singleton">
 	</bean>
+
+	<bean id="configuration" class="be.simulation.configuration.Configuration"
+		scope="singleton" />
 
 
 	<!-- TODO -->

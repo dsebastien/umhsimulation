@@ -1,8 +1,8 @@
-package be.simulation.modele;
+package be.simulation.entites;
 
 import java.util.ArrayList;
 import java.util.List;
-import be.simulation.configuration.AgentsConfiguration;
+import be.simulation.configuration.ConfigurationAgents;
 import be.simulation.core.entites.AbstractSimulationEntity;
 
 /**
@@ -12,7 +12,7 @@ import be.simulation.core.entites.AbstractSimulationEntity;
  * @author Regnier Frederic
  * @author Mernier Jean-Francois
  */
-public class Agent extends AbstractSimulationEntity<AgentsConfiguration> {
+public class Agent extends AbstractSimulationEntity<ConfigurationAgents> {
 	/**
 	 * Le numéro identifiant de cet agent.
 	 */
