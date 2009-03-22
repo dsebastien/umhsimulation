@@ -26,6 +26,10 @@ public class SimulationReseau extends
 	 */
 	@Override
 	public void reset() {
+		resetBasicSimulation(); // temps, FEL
+		
+		// TODO implementer:
+		// recréer les agents, ...
 	}
 
 
@@ -36,5 +40,7 @@ public class SimulationReseau extends
 	@Override
 	public void demarrer() {
 		LOGGER.info("Démarrage de la simulation " + getConfiguration().getNom());
+		
+		// TODO implementer
 	}
 }
