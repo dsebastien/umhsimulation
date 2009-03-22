@@ -12,7 +12,3 @@ mvn clean test
 
 Générer les rapports (dans target\site)
 mvn clean site
-
-
-
-Test ok
