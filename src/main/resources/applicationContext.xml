@@ -11,17 +11,14 @@
 	<!-- Cherche les annotations Spring dans le package: -->
 	<context:component-scan base-package="be.simulation" />
 
-	<!-- où sont stockés les paramètres -->
+	<!-- Chargement des fichiers de configuration (config par défaut) -->
 	<context:property-placeholder
-		location="classpath:configuration/general.properties, classpath:configuration/agents.properties" /> <!-- , ... -->
+		location="classpath:configuration/simulation.properties, classpath:configuration/agents.properties, classpath:configuration/hotes.properties" />
 
 	<bean id="simulationReseau" class="be.simulation.SimulationReseau"
 		scope="prototype" />
 
-	<!--
-		TODO, voir ce qui est le mieux pour les configs: prototype ou
-		singleton ?
-	-->
+	<!-- Les objets de configuration sont des singletons pour que les valeurs soient partagées -->
 	<bean id="configurationSimulationReseau"
 		class="be.simulation.configuration.ConfigurationSimulationReseau"
 		scope="singleton">
@@ -41,7 +38,7 @@
 		scope="singleton" />
 
 
-	<!-- TODO -->
+	<!-- TODO: configurer les agents suivant les directives -->
 	<!--
 		<bean id="agent" class="be.simulation.modele.Agent" scope="singleton"
 		/> ... (plusieurs!)
