@@ -9,3 +9,6 @@ mvn clean package
 
 Tester le code:
 mvn clean test
+
+Générer les rapports (dans target\site)
+mvn clean site
