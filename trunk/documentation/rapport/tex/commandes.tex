@@ -1,0 +1,30 @@
+% ligne horizontale
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+% titre
+\newenvironment{Titre}[1][15cm]{%
+\begin{center}
+\newlength{\LigLen}
+\setlength{\LigLen}{#1}
+\rule[1ex]{\LigLen}{0.5mm}\\
+\mbox{}}{%
+\par\rule[1ex]{\LigLen}{0.5mm}
+\end{center}}
+
+%page blanche avant chaque chapitre
+\makeatletter
+\def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else
+\hbox{}
+\vspace*{\fill}
+\begin{center}
+
+\end{center}
+\vspace{\fill}
+\thispagestyle{empty}
+\newpage
+\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+\makeatother
+
+
+%références à des labels plus simple (avec numéro de page entre ())
+\newcommand{\refp}[1]{\ref{#1} (p\pageref{#1})}

@@ -1,0 +1,161 @@
+\ProvidesPackage{configuration}
+
+% images: vérifie si on compile avec pdftex ou dvips
+\ifx\pdftexversion\undefined
+ \usepackage[dvips]{graphicx}
+\else
+\usepackage[pdftex]{graphicx}
+\fi
+
+
+
+%\usepackage{glosstex}						% création d'un glossaire
+	%http://www.grappa.univ-lille3.fr/FAQ-LaTeX/17.1.html
+	
+%\usepackage{vrsion}						% gestion de la version
+	% avec \version
+
+
+%\usepackage{eurosym}						% symbole euro
+%\usepackage{cite}						% citations de la bibliographie
+%\usepackage{lastpage}						% reference derniere page
+%\usepackage{xspace}						% espaces
+%\usepackage{minitoc}						% table des matieres dans les chapitres
+%\usepackage[Lenny]{fncychap}					% beaux chapitres
+
+%\usepackage{draftcopy}						% draft
+%\usepackage[francais]{layout}					% layout fr
+%\usepackage[outerbars]{changebar}				% positionnement barre en marge externe
+%\usepackage{slashbox}						% slashbox dans les tableaux
+
+\usepackage{a4wide}						% page large
+\usepackage{ucs}						% encodage
+\usepackage[utf8x]{inputenc}					% encodage
+\usepackage[T1]{fontenc}					% font
+\usepackage[frenchb]{babel}					% français
+\selectlanguage{frenchb}					% choix de la langue
+\usepackage{palatino}						% jolie font
+\usepackage[unicode]{hyperref}					% liens
+\hypersetup{unicode, colorlinks, linkcolor=black, urlcolor=black}% configuration des liens
+\usepackage{textcomp}						% ?
+\usepackage{amsmath}						% math
+\usepackage{amsfonts}						% fonts math
+\usepackage{amssymb}						% symboles math
+\usepackage{wasysym}						% symboles supplémentaires
+%\usepackage[french,ruled]{algorithm2e}				% algorithmes
+% autres options: boxrules, linesnumbered, titlenumbered, dotocloa (ajoute une entrée dans la TOC pour les algos)
+
+\usepackage[usenames,dvipsnames,pdftex]{color}				% noms des couleurs
+
+\usepackage{fancyhdr}						% configuration des entete et pied de pages
+\pagestyle{fancy}
+%\fancyheadoffset{10pt}
+
+\renewcommand{\chaptermark}[1]{%
+\markboth{Ch \thechapter.\ #1}{}}
+
+\renewcommand{\sectionmark}[1]%
+{\markright{\thesection.\ #1}}
+
+%\usepackage{fullpage}
+%\usepackage[upright]{fourier}
+
+% graphics and graphs in particular
+%dot
+%\usepackage{dot2texi}
+
+%xy-pic
+%\usepackage[matrix,curve,arrow,tips,frame]{xy}
+%\usepackage{xy}
+%\xyoption{all}
+
+
+
+%\usepackage{colortbl}						% colorer les tableaux
+\usepackage{multirow}						% écrire du texte à cheval sur deux lignes
+%http://www.grappa.univ-lille3.fr/FAQ-LaTeX/7.12.html
+
+%\usepackage{backref}						% référencer les pages contenant des citations
+%\usepackage{endnotes}						% écrire des notes pour la fin du document
+	%\endnote{lol}
+	%\theendnotes
+%\usepackage{footmisc}						% configuration des footnotes
+
+\usepackage{subfigure}						% regroupement de figures
+\usepackage[position=top]{}
+\usepackage{listings}						% listings de code
+\usepackage{multicol}						% gestion de plusieurs colonnes
+
+%\usepackage{natbib}						% autre style (bibliographie)
+%\bibpunct{(}{)}{;}{a}{,}{,}
+
+% préchargement des caractères unicode
+\PreloadUnicodePage{0}
+\PreloadUnicodePage{1}
+\PreloadUnicodePage{2}
+\PreloadUnicodePage{3}
+\PreloadUnicodePage{4}
+\PreloadUnicodePage{5}
+\PreloadUnicodePage{9}
+
+% définitions de couleurs supplémentaires (pour les listings de code)
+\definecolor{light-gray}{gray}{0.95}
+\definecolor{colKeys}{rgb}{0,0,1}
+\definecolor{colIdentifier}{rgb}{0,0.5,0.5}
+\definecolor{colComments}{rgb}{0,0.5,1}
+\definecolor{colString}{rgb}{0.6,0.1,0.1}
+\definecolor{grey}{gray}{0.9}
+
+
+% configuration des listings de code
+\lstset{
+%	float=hbp,%
+	basicstyle=\ttfamily\footnotesize,%
+	identifierstyle=\color{colIdentifier},%
+	keywordstyle=\color{colKeys},%
+	stringstyle=\color{colString},%
+	commentstyle=\color{colComments},%
+	backgroundcolor=\color{white},%
+	columns=fixed,%
+	tabsize=2,%
+%	frame=trBL,%
+	frame=shadowbox,%
+	rulesepcolor=\color{grey},%
+%	frameround=tttt,%
+	extendedchars=true,% Caracteres etendus (ANSI > 127)
+	showspaces=false,%
+	showstringspaces=false,%
+	numbers=left,%
+	numberstyle=\tiny,%
+	breaklines=true,%
+%	breakautoindent=true,%
+%	captionpos=b%,%
+	xrightmargin=-0.5cm%,%
+%	xleftmargin=-2cm,%
+%	stepnumber = 2
+}
+
+
+% marges
+%\hoffset=		0cm		% marge gche = 2.54cm + X cm
+%\oddsidemargin=	0pt		% espace entre marge gauche et corps
+%\marginparsep=		0cm		% espace entre marge droite et corps
+%\marginparwidth=	0cm		% marge a droite
+%\voffset=		-1.5cm		% marge haut = 2.54 + X cm
+
+% corps
+%\textheight=		23cm		% longueur du corps
+%\textwidth=		16cm		% largeur du corps
+
+% entete et pied de pages
+\headheight=		0.5cm		% taille entete
+%\headsep=		0.5cm		% espace entre entete et corps
+%\topmargin=		0cm		% espace entre marge haut et entete
+%\footskip=		2.5cm		% taille pied de page
+
+
+
+\graphicspath{{../img/}}			% chemin vers les images
+%\DeclareGraphicsExtensions{.jpg,.png,.JPG}	% Formats d'images
+
+\input{commandes}
