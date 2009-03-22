@@ -1,0 +1,24 @@
+\appendix
+\chapter{Gnutella}\label{annex-gnutella}
+Nous avons cité Gnutella à plusieurs reprises. Maintenant que nous avons présenté suffisamment d'éléments, voyons un peu plus en détail comment ce système fonctionne. Nous savons à présent que Gnutelle est un système entièrement décentralisé et dont l'overlay est non structuré. A la base, Gnutella est un protocole de recherche de données (e.g., fichiers) et de services \cite{245}. Il a évolué avec le temps et utilise aujourd'hui une architecture avec des super-pairs, mais nous illustrerons ici la première version pour laquelle ce n'était pas le cas.
+
+Le protocole de recherche se base sur un mécanisme de broadcast, dont nous avons un peu discuté à la section \refp{p2p-decentralise-recherche}. Gnutella fixe un nombre de sauts maximal sur les requêtes, de manière à ne pas contacter tous les noeuds. Le nombre maximal de sauts définit en quelque sorte le ``rayon'' de lequel la recherche peut s'effectuer.
+
+Gnutella définit différents messages que les pairs peuvent s'envoyer: 
+\begin{description}
+ \item[Ping]: Pour annoncer sa disponibilité et découvrir d'autres pairs
+ \item[Pong]: Réponse à un ping, contient l'adresse IP et le numéro de port du pair qui répond
+ \item[Query]: Requête (recherche), contient le critère de recherche
+ \item[QueryHit]: Retourné par les pairs ayant le fichier recherché, contient l'IP et le numéro de port du pair qui répond
+ \item[Get]: Demande de téléchargement, contient le numéro unique de la ressource demandée (utilise le protocole HTTP)
+ \item[Push]: Demande de téléchargement (utilisé si le pair cible est derrière un firewall), contient en plus l'IP et le port où envoyer le fichier\end{description}
+
+Pour qu'un utilisateur puisse rejoindre le système, il doit d'abord se connecter à un pair déjà dans le système, en lui envoyant une requête ping auquel le pair doit répondre avec un pong. Pour les nouveaux utilisateurs, des listes de pairs sont disponibles sur Internet.
+
+Quand un pair donné lance une recherche (Query), il envoie sa requête à tous ses voisins, avec un TTL (i.e., le nombre maximal de sauts) fixé à $n$. Quand les voisins reçoivent le message, ils vérifient d'abord s'ils disposent de l'information recherchée (auquel cas ils envoient un QueryHit en retour), ils décrémentent la valeur du TTL et vérifient également qu'ils n'ont pas déjà reçu la même requête (pour éviter les boucles), puis renvoie le message à ses propres voisins.
+
+Le message QueryHit suivra le même chemin pour remonter jusqu'au noeud ayant lancé la recherche et celui-ci, reçevant un résultat, pourra ensuite décider de contacter le noeud ayant répondu positivement. Il tentera d'abord de s'y connecter directement et si possible lui enverra un message Get, mais si ça échoue (e.g., le noeud est derrière un firewall), alors il lui enverra message push afin que la connexion se fasse en sens inverse.
+
+La figure \ref{fig:p2p-gnutella-search} illustre une recherche utilisant ce protocole (version simplifiée), le noeud $p_1$ cherche la ressource $x$ et envoie donc une message \textit{Query} à ses voisins, qui la font suivre à leur tour. $p_k$ possédant la ressource recherchée envoie un message \textit{QueryHit}, qui fait le chemin inverse. Finalement quand $p_1$ reçoit le message, il envoie un message \textit{Get} directement à $p_k$ pour demander la ressource.
+
+\input{graph-p2p-gnutella-search} %fig:p2p-gnutella-search
