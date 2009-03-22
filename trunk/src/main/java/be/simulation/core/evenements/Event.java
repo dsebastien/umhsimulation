@@ -10,7 +10,7 @@ package be.simulation.core.evenements;
  * @author Regnier Frederic
  * @author Mernier Jean-Francois
  */
-public class Event implements Comparable<Event> {
+public class Event {
 	// FIXME ask the teacher/assistant what his advice is concerning time
 	// tracking: Long or Double?
 	// With long, we have simple values but it's more likely that multiple
@@ -54,19 +54,7 @@ public class Event implements Comparable<Event> {
 	public void setType(EventType eventType) {
 		this.type = eventType;
 	}
-
-
-
-	/**
-	 * Compare an event with another. The result only depends on the time at
-	 * which the events are planned to occur.
-	 */
-	public int compareTo(Event other) {
-		return getTime().compareTo(other.getTime());
-	}
-
-
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
