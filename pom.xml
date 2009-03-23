@@ -160,17 +160,25 @@
 			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<configuration>
+					<projectNameTemplate>
+						[artifactId]-[version]
+					</projectNameTemplate>
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>true</downloadJavadocs>
 					<addGroupIdToProjectName>false</addGroupIdToProjectName>
 					<additionalBuildcommands>
 						<buildcommand>org.springframework.ide.eclipse.core.springbuilder</buildcommand>
+						<buildcommand>com.atlassw.tools.eclipse.checkstyle.CheckstyleBuilder</buildcommand>
+						<buildcommand>edu.umd.cs.findbugs.plugin.eclipse.findbugsBuilder</buildcommand>
 					</additionalBuildcommands>
 					<additionalProjectnatures>
 						<projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
 						<projectnature>org.maven.ide.eclipse.maven2Nature</projectnature>
+						<projectnature>com.atlassw.tools.eclipse.checkstyle.CheckstyleNature</projectnature>
+						<projectnature>edu.umd.cs.findbugs.plugin.eclipse.findbugsNature</projectnature>
+						<projectnature>net.sourceforge.pmd.eclipse.plugin.pmdNature</projectnature>
 					</additionalProjectnatures>
-										<additionalProjectFacets>
+					<additionalProjectFacets>
 						<jst.java>5.0</jst.java>
 					</additionalProjectFacets>
 				</configuration>

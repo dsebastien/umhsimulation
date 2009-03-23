@@ -39,7 +39,7 @@ public class SimulationReseau extends
 	 */
 	@Override
 	public void demarrer() {
-		LOGGER.info("Démarrage de la simulation " + getConfiguration().getNom());
+		LOGGER.info("Démarrage de " + getConfiguration().getNom());
 		
 		// TODO implementer
 	}

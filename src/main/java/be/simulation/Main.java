@@ -1,8 +1,10 @@
 package be.simulation;
 
+import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import be.simulation.configuration.Configuration;
+import be.simulation.configuration.exceptions.OptionsIncorrectes;
 
 /**
  * Point d'entrée du programme. Cette classe est uniquement présente pour
@@ -15,21 +17,37 @@ import be.simulation.configuration.Configuration;
  */
 public class Main {
 	/**
+	 * Logger.
+	 */
+	private static final Logger	LOGGER	= Logger.getLogger(Main.class);
+
+
+
+	/**
 	 * Point d'entrée du programme.
 	 * 
 	 * @param args
 	 *        arguments donnés au lancement
 	 */
 	public static void main(String[] args) {
-		// Chargement de la configuration de spring
+		// Chargement de la configuration par défaut
+		// (définie dans l'application context de spring)
 		ApplicationContext springApplicationContext =
 				new ClassPathXmlApplicationContext("applicationContext.xml");
-		// Modification de la configuration en fonction des paramètres donnés
-		// par l'utilisateur
 		Configuration configuration =
 				(Configuration) springApplicationContext
 						.getBean("configuration");
-		configuration.parse(args);
+		// Modification de la configuration en fonction des paramètres donnés
+		// par l'utilisateur
+		try {
+			boolean aideAffichee = configuration.parse(args);
+			if (aideAffichee) {
+				// on quitte car l'utilisateur voulait juste de l'aide
+				System.exit(0);
+			}
+		} catch (OptionsIncorrectes e) {
+			LOGGER.fatal(e.getMessage());
+		}
 		// Recupération de la simulation configurée par spring
 		SimulationReseau simulation =
 				(SimulationReseau) springApplicationContext

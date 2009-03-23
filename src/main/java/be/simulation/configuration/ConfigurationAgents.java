@@ -13,7 +13,7 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	/**
 	 * Nombre d'hôtes par agent.
 	 */
-	private int	nombreHotes;
+	private long	nombreHotes;
 
 
 
@@ -22,7 +22,7 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	 * 
 	 * @return le nombre d'hôtes par agent
 	 */
-	public int getNombreHotes() {
+	public long getNombreHotes() {
 		return nombreHotes;
 	}
 
@@ -35,7 +35,7 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	 * @param nombreHotes
 	 *        le nombre d'hôtes par agent à utiliser
 	 */
-	public void setNombreHotes(int nombreHotes) {
+	public void setNombreHotes(final long nombreHotes) {
 		this.nombreHotes = nombreHotes;
 	}
 }
