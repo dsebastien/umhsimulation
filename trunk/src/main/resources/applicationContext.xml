@@ -22,7 +22,8 @@
 	<bean id="configurationSimulationReseau"
 		class="be.simulation.configuration.ConfigurationSimulationReseau"
 		scope="singleton">
-		<property name="nom" value="${general.simulation_name}" />
+		<property name="nom" value="${general.nom}" />
+		<property name="duree" value="${general.duree}" />
 	</bean>
 
 	<bean id="configurationAgents" class="be.simulation.configuration.ConfigurationAgents"

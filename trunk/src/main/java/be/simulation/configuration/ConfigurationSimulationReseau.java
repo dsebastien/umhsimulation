@@ -11,9 +11,13 @@ import be.simulation.core.configuration.AbstractConfiguration;
  */
 public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	/**
+	 * Durée de simulation.
+	 */
+	private long	duree;
+	/**
 	 * Nom de la simulation.
 	 */
-	private String	nomDeSimulation;
+	private String	nom;
 
 
 
@@ -26,12 +30,35 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 
 
 	/**
+	 * Récupérer la durée de la simulation
+	 * 
+	 * @return la durée de la simulation
+	 */
+	public long getDuree() {
+		return duree;
+	}
+
+
+
+	/**
 	 * Récupérer le nom de la simulation.
 	 * 
 	 * @return nom de la simulation
 	 */
 	public String getNom() {
-		return nomDeSimulation;
+		return nom;
+	}
+
+
+
+	/**
+	 * Déterminer la durée de la simulation.
+	 * 
+	 * @param duree
+	 *        durée de la simulation
+	 */
+	public void setDuree(final long duree) {
+		this.duree = duree;
 	}
 
 
@@ -42,7 +69,7 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	 * @param nom
 	 *        le nom de la simulation
 	 */
-	public void setNom(String nom) {
-		this.nomDeSimulation = nom;
+	public void setNom(final String nom) {
+		this.nom = nom;
 	}
 }
