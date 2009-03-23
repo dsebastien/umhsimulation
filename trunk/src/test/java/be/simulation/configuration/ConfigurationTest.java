@@ -33,10 +33,10 @@ public class ConfigurationTest {
 	 */
 	@Before
 	public void setup() {
-		ConfigurationSimulationReseau cfgSimReseau =
+		final ConfigurationSimulationReseau cfgSimReseau =
 				new ConfigurationSimulationReseau();
-		ConfigurationAgents cfgAgents = new ConfigurationAgents();
-		ConfigurationHotes cfgHotes = new ConfigurationHotes();
+		final ConfigurationAgents cfgAgents = new ConfigurationAgents();
+		final ConfigurationHotes cfgHotes = new ConfigurationHotes();
 		configuration = new Configuration(cfgSimReseau, cfgAgents, cfgHotes);
 	}
 
@@ -50,7 +50,7 @@ public class ConfigurationTest {
 	 */
 	@Test
 	public void testAide() throws OptionsIncorrectes {
-		String[] args = {
+		final String[] args = {
 			PREFIXE + Configuration.OPTION_AIDE
 		};
 		configuration.parse(args);
@@ -66,7 +66,7 @@ public class ConfigurationTest {
 	 */
 	@Test(expected = OptionsIncorrectes.class)
 	public void testOptionInvalide() throws OptionsIncorrectes {
-		String[] args = {
+		final String[] args = {
 			PREFIXE + "oopsjenexistepas"
 		};
 		configuration.parse(args);
@@ -83,7 +83,7 @@ public class ConfigurationTest {
 	@Test
 	public void testAgentsNombreHotes() throws OptionsIncorrectes {
 		final long valeur = 555;
-		String[] args =
+		final String[] args =
 				{
 					PREFIXE + Configuration.OPTION_AGENTS_NOMBRE_HOTES
 							+ SEPARATEUR + valeur
@@ -91,5 +91,23 @@ public class ConfigurationTest {
 		configuration.parse(args);
 		assertEquals(valeur, configuration.getConfigurationAgents()
 				.getNombreHotes());
+	}
+
+
+
+	/**
+	 * Spécifier une valeur invalide pour le nombre d'hotes par agent.
+	 * 
+	 * @throws OptionsIncorrectes
+	 *         doit avoir lieu
+	 */
+	@Test(expected = OptionsIncorrectes.class)
+	public void testAgentsNombreHotesInvalide() throws OptionsIncorrectes {
+		final String[] args =
+				{
+					PREFIXE + Configuration.OPTION_AGENTS_NOMBRE_HOTES
+							+ SEPARATEUR + "BOOM"
+				};
+		configuration.parse(args);
 	}
 }
