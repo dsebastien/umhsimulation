@@ -1,0 +1,16 @@
+Mail: stefan.beauport@umh.ac.be
+Sujet: Projet de simulation (Charleroi)
+
+Bonjour,
+
+Je suis l'un des étudiants du cours de Simulation à Charleroi.
+J'ai quelques questions au sujet du projet que vous nous avez donné.
+
+Concernant la représentation des messages et des évènements dans le programme.
+
+Aussi concernant la gestion du temps de simulation, j'ai vu dans votre exemple que vous utilisez un int. 
+Est-ce qu'il n'est pas préférable d'utiliser un type réel (double) vu que j'imagine que certains calculs (temps de traitement, ...) peuvent donner des résultats non entiers?
+
+Concernant la gestion des FEL et leur traitement. Si on a une seule FEL globale, je comprends comment faire, on a une boucle qui va chaque fois demander le prochain évènement à traiter à la FEL. Aussi, l'ordre est bien clair.
+
+Si maintenant on dit que chaque agent (serveur comme 1000 2000, ...) a sa propre FEL, je ne comprends pas très bien dans le programme comment gérer ça. Donc j'ai la boucle principale du programme. Est-ce qu'elle va alors utiliser une seconde boucle qui va appeler chaque agent et lui demander de faire le traitement du temps suivant (alors, est-ce que �a n'a pas une influence sur les �v�nements g�n�r�s?).
