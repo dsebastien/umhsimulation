@@ -6,9 +6,9 @@ package be.simulation.configuration.exceptions;
  * 
  * @author Dubois Sebastien
  * @author Regnier Frederic
- * @author Mernier Jean-Francois
+ * @author Mernier Jean-François
  */
-public class OptionsIncorrectes extends Exception {
+public class ExceptionOptionsInvalides extends Exception {
 	/**
 	 * serial version uid.
 	 */
@@ -20,7 +20,7 @@ public class OptionsIncorrectes extends Exception {
 	 * @param msg
 	 *        le message
 	 */
-	public OptionsIncorrectes(final String msg) {
+	public ExceptionOptionsInvalides(final String msg) {
 		super(msg);
 	}
 
@@ -34,7 +34,7 @@ public class OptionsIncorrectes extends Exception {
 	 * @param t
 	 *        l'exception englobée
 	 */
-	public OptionsIncorrectes(final String msg, final Throwable t) {
+	public ExceptionOptionsInvalides(final String msg, final Throwable t) {
 		super(msg, t);
 	}
 }

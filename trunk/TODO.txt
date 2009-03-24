@@ -1,1 +1,0 @@
-- Configurer maven pour que le jar soit exécutable (Main)

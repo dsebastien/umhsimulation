@@ -14,7 +14,7 @@ import be.simulation.core.evenements.EventList;
  *        Le type de configuration utilisée par la simulation
  * @author Dubois Sebastien
  * @author Regnier Frederic
- * @author Mernier Jean-Francois
+ * @author Mernier Jean-François
  */
 public abstract class AbstractSimulation<T extends AbstractConfiguration>
 		extends AbstractSimulationEntity<T> {
@@ -109,11 +109,9 @@ public abstract class AbstractSimulation<T extends AbstractConfiguration>
 		LOGGER.info("Simulation initialisée");
 	}
 
-
-
-	/**
-	 * Initialise ou réunitialise le système (retour à l'état de départ).
-	 */
+    /**
+     * Initialise ou réunitialise le système (retour à l'état de d"part).
+     */
 	public abstract void reset();
 
 
@@ -148,7 +146,7 @@ public abstract class AbstractSimulation<T extends AbstractConfiguration>
 	protected void setHorloge(Double temps) {
 		if (temps == null || temps < 0) {
 			throw new IllegalArgumentException(
-					"Le temps auquel mettre l'horloge doit être > 0");
+					"Le temps auquel placer l'horloge doit être > 0");
 		}
 		horloge = temps;
 	}

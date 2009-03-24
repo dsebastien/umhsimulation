@@ -4,16 +4,16 @@ import be.simulation.configuration.ConfigurationAgents;
 import be.simulation.core.entites.AbstractSimulationEntity;
 
 /**
- * Hote du système, relié à un et un seul agent (liens statique).
+ * Hote du système, relié à un et un seul agent (liens statiques).
  * 
  * @author Dubois Sebastien
  * @author Regnier Frederic
- * @author Mernier Jean-Francois
+ * @author Mernier Jean-François
  */
 public class Hote extends AbstractSimulationEntity<ConfigurationAgents> {
-	/**
-	 * Agent auquel cet hote est relié.
-	 */
+    /**
+     * Agent auquel cet hote est relié (pour pouvoir communiquer avec lui).
+     */
 	private final Agent	agent;
 
 	/**

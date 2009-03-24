@@ -8,7 +8,7 @@ package be.simulation.core.evenements;
  * 
  * @author Dubois Sebastien
  * @author Regnier Frederic
- * @author Mernier Jean-Francois
+ * @author Mernier Jean-François
  */
 public class Event {
 	// FIXME ask the teacher/assistant what his advice is concerning time

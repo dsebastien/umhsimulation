@@ -7,17 +7,22 @@ import be.simulation.core.configuration.AbstractConfiguration;
  * 
  * @author Dubois Sebastien
  * @author Regnier Frederic
- * @author Mernier Jean-Francois
+ * @author Mernier Jean-François
  */
 public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	/**
-	 * Durée de simulation.
+	 * Durée de simulation (> 0).
 	 */
 	private long	duree;
 	/**
 	 * Nom de la simulation.
 	 */
 	private String	nom;
+	/**
+	 * Timeout après lequel les messages doivent être réexpédiés si aucun accusé
+	 * de réception n'est reçu (> 80).
+	 */
+	private int		timeoutReemissionMessages;
 
 
 
@@ -52,7 +57,19 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 
 
 	/**
-	 * Déterminer la durée de la simulation.
+	 * Récupérer le timeout après lequel les messages doivent être réexpédiés si
+	 * aucun accusé de réception n'est reçu.
+	 * 
+	 * @return le timeout
+	 */
+	public int getTimeoutReemissionMessages() {
+		return timeoutReemissionMessages;
+	}
+
+
+
+	/**
+	 * Déterminer la durée de la simulation (> 0).
 	 * 
 	 * @param duree
 	 *        durée de la simulation
@@ -71,5 +88,17 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	 */
 	public void setNom(final String nom) {
 		this.nom = nom;
+	}
+
+
+
+	/**
+	 * Définir le timeout pour la réémission des messages (> 80).
+	 * 
+	 * @param timeoutReemissionMessages
+	 *        le timeout
+	 */
+	public void setTimeoutReemissionMessages(final int timeoutReemissionMessages) {
+		this.timeoutReemissionMessages = timeoutReemissionMessages;
 	}
 }

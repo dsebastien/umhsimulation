@@ -24,15 +24,18 @@
 		scope="singleton">
 		<property name="nom" value="${general.nom}" />
 		<property name="duree" value="${general.duree}" />
+		<property name="timeoutReemissionMessages" value="${general.messages_timeout_avant_reemission}" />
 	</bean>
 
 	<bean id="configurationAgents" class="be.simulation.configuration.ConfigurationAgents"
 		scope="singleton">
 		<property name="nombreHotes" value="${agents.nombre_hotes}" />
+		<property name="tauxPerteBrutale" value="${agents.taux_perte_brutale}" />
 	</bean>
 
 	<bean id="configurationHotes" class="be.simulation.configuration.ConfigurationHotes"
 		scope="singleton">
+		<property name="tauxMessagesVersAutreAgent" value="${hotes.taux_messages_vers_autre_agent}" />
 	</bean>
 
 	<bean id="configuration" class="be.simulation.configuration.Configuration"
