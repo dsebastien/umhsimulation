@@ -4,11 +4,11 @@ import be.simulation.configuration.ConfigurationSimulationReseau;
 import be.simulation.core.AbstractSimulation;
 
 /**
- * Network simulation
+ * Simulation d'un réseau.
  * 
  * @author Dubois Sebastien
- * @author Regnier Frederic
- * @author Mernier Jean-Francois
+ * @author Regnier Fréderic
+ * @author Mernier Jean-François
  */
 public class SimulationReseau extends
 		AbstractSimulation<ConfigurationSimulationReseau> {
@@ -27,7 +27,6 @@ public class SimulationReseau extends
 	@Override
 	public void reset() {
 		resetBasicSimulation(); // temps, FEL
-		
 		// TODO implementer:
 		// recréer les agents, ...
 	}
@@ -40,7 +39,6 @@ public class SimulationReseau extends
 	@Override
 	public void demarrer() {
 		LOGGER.info("Démarrage de " + getConfiguration().getNom());
-		
 		// TODO implementer
 	}
 }

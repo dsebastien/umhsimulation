@@ -10,7 +10,7 @@ import be.simulation.core.configuration.AbstractConfiguration;
  * 
  * @author Dubois Sebastien
  * @author Regnier Frederic
- * @author Mernier Jean-Francois
+ * @author Mernier Jean-François
  * @param <T>
  *        Le type de configuration utilisé par cette entité
  */

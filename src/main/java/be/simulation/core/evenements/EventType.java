@@ -5,7 +5,7 @@ package be.simulation.core.evenements;
  * 
  * @author Dubois Sebastien
  * @author Regnier Frederic
- * @author Mernier Jean-Francois
+ * @author Mernier Jean-François
  */
 public enum EventType {
 	// FIXME remplir (envoi de message, reception, ...

@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import be.simulation.configuration.Configuration;
-import be.simulation.configuration.exceptions.OptionsIncorrectes;
+import be.simulation.configuration.exceptions.ExceptionOptionsInvalides;
 
 /**
  * Point d'entrée du programme. Cette classe est uniquement présente pour
@@ -13,7 +13,7 @@ import be.simulation.configuration.exceptions.OptionsIncorrectes;
  * 
  * @author Dubois Sebastien
  * @author Regnier Frederic
- * @author Mernier Jean-Francois
+ * @author Mernier Jean-François
  */
 public class Main {
 	/**
@@ -45,8 +45,9 @@ public class Main {
 				// on quitte car l'utilisateur voulait juste de l'aide
 				System.exit(0);
 			}
-		} catch (OptionsIncorrectes e) {
+		} catch (ExceptionOptionsInvalides e) {
 			LOGGER.fatal(e.getMessage());
+			System.exit(0);
 		}
 		// Recupération de la simulation configurée par spring
 		SimulationReseau simulation =
@@ -54,8 +55,5 @@ public class Main {
 						.getBean("simulationReseau");
 		// Lancement de la simulation
 		simulation.demarrer();
-		
-		// simulation.reset();
-		// simulation.demarrer();
 	}
 }

@@ -10,7 +10,7 @@ import be.simulation.core.entites.AbstractSimulationEntity;
  * 
  * @author Dubois Sebastien
  * @author Regnier Frederic
- * @author Mernier Jean-Francois
+ * @author Mernier Jean-François
  */
 public class Agent extends AbstractSimulationEntity<ConfigurationAgents> {
 	/**

@@ -8,7 +8,7 @@ import java.util.Random;
  * 
  * @author Dubois Sebastien
  * @author Regnier Frederic
- * @author Mernier Jean-Francois
+ * @author Mernier Jean-François
  */
 public final class RandomUtils {
 	/**

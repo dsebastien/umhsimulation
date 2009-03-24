@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
  * 
  * @author Dubois Sebastien
  * @author Regnier Frederic
- * @author Mernier Jean-Francois
+ * @author Mernier Jean-François
  */
 public abstract class AbstractConfiguration {
 	protected final Logger	LOGGER	= Logger.getLogger(getClass());
