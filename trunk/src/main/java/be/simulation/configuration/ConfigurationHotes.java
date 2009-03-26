@@ -16,8 +16,15 @@ public class ConfigurationHotes extends AbstractConfiguration {
      * autre agent (0 <= taux <= 1).
      */
     private float tauxMessagesVersAutreAgent;
+    
+	/**
+	 * Le temps de traitement d'un message (>=0). 0 = traitement instantané.
+	 */
+	private float	tempsTraitementMessage;
 
-    /**
+
+
+	/**
      * Récupérer le taux de messages qui seront à destination d'un hôte relié à
      * un autre agent.
      * 
@@ -26,6 +33,18 @@ public class ConfigurationHotes extends AbstractConfiguration {
     public float getTauxMessagesVersAutreAgent() {
         return this.tauxMessagesVersAutreAgent;
     }
+
+
+
+	/**
+	 * Récupérer le temps de traitement d'un message (>=0). 0 = traitement
+	 * instantané.
+	 * 
+	 * @return le temps de traitement d'un message
+	 */
+	public float getTempsTraitementMessage() {
+		return tempsTraitementMessage;
+	}
 
     /**
      * Définir le taux de messages qui seront à destination d'un hôte relié à un
@@ -37,4 +56,14 @@ public class ConfigurationHotes extends AbstractConfiguration {
     public void setTauxMessagesVersAutreAgent(float tauxMessagesVersAutreAgent) {
         this.tauxMessagesVersAutreAgent = tauxMessagesVersAutreAgent;
     }
+
+    /**
+	 * Définir le temps de traitement d'un message.
+	 * 
+	 * @param tempsTraitementMessage
+	 *        le temps de traitement d'un message (>=0)
+	 */
+	public void setTempsTraitementMessage(final float tempsTraitementMessage) {
+		this.tempsTraitementMessage = tempsTraitementMessage;
+	}
 }

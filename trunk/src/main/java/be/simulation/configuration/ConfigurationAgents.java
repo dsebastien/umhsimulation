@@ -20,17 +20,25 @@ public class ConfigurationAgents extends AbstractConfiguration {
      * Le taux de perte brutale des agents (0 <= taux < 1).
      */
     private float tauxPerteBrutale;
+	/**
+	 * Le temps de traitement d'un message (>=0). 0 = traitement instantané.
+	 */
+    private float	tempsTraitementMessage;
 
-    /**
-     * Récupérer le nombre d'hôtes par agent.
-     * 
-     * @return le nombre d'hôtes par agent
-     */
+
+
+	/**
+	 * Récupérer le nombre d'hôtes par agent.
+	 * 
+	 * @return le nombre d'hôtes par agent
+	 */
     public long getNombreHotes() {
         return nombreHotes;
     }
 
-    /**
+
+
+	/**
      * Récupérer le taux de perte brutale.
      * 
      * @return le taux de perte brutale
@@ -38,6 +46,18 @@ public class ConfigurationAgents extends AbstractConfiguration {
     public float getTauxPerteBrutale() {
         return tauxPerteBrutale;
     }
+
+
+
+	/**
+	 * Récupérer le temps de traitement d'un message (>=0). 0 = traitement
+	 * instantané.
+	 * 
+	 * @return le temps de traitement d'un message
+	 */
+	public float getTempsTraitementMessage() {
+		return tempsTraitementMessage;
+	}
 
     /**
      * Modifier le nombre d'hôtes par agent (effectif seulement après une
@@ -59,4 +79,14 @@ public class ConfigurationAgents extends AbstractConfiguration {
     public void setTauxPerteBrutale(final float tauxPerteBrutale) {
         this.tauxPerteBrutale = tauxPerteBrutale;
     }
+
+    /**
+	 * Définir le temps de traitement d'un message.
+	 * 
+	 * @param tempsTraitementMessage
+	 *        le temps de traitement d'un message (>=0)
+	 */
+	public void setTempsTraitementMessage(final float tempsTraitementMessage) {
+		this.tempsTraitementMessage = tempsTraitementMessage;
+	}
 }

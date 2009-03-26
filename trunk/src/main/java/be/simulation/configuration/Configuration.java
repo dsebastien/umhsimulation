@@ -29,6 +29,9 @@ public class Configuration {
 	private static final Logger					LOGGER											=
 																										Logger
 																												.getLogger(Configuration.class);
+	/**
+	 * Message utilisé quand les options sont mal spécifiées.
+	 */
 	private static final String					MSG_ERREUR_OPTIONS_INCORRECTES					=
 																										"Une erreur s'est produite pendant la vérification des options fournies. Vérifiez la syntaxe (-opt=valeur). Utilisez -aide pour plus d'informations sur les commandes disponibles.";
 	/**
@@ -42,15 +45,30 @@ public class Configuration {
 	public static final String					OPTION_AGENTS_TAUX_PERTE_BRUTALE				=
 																										"agentsTauxPerteBrutale";
 	/**
+	 * OPTION - Temps de traitement d'un message par un agent.
+	 */
+	public static final String					OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE			=
+																										"agentsTempsTraitementMessage";
+	/**
 	 * OPTION - Taux de messages à destination d'un autre agent.
 	 */
 	public static final String					OPTION_HOTES_TAUX_MESSAGES_VERS_AUTRE_AGENT		=
-																										"tauxMessagesVersAutreAgent";
+																										"hotesTauxMessagesVersAutreAgent";
+	/**
+	 * OPTION - Temps de traitement d'un message par un hote.
+	 */
+	public static final String					OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE			=
+																										"hotesTempsTraitementMessage";
 	/**
 	 * OPTION - Durée de simulation.
 	 */
 	public static final String					OPTION_SIMULATION_DUREE							=
 																										"duree";
+	/**
+	 * OPTION - Taille des buffers des agents.
+	 */
+	public static final String					OPTION_SIMULATION_TAILLE_BUFFERS_AGENTS			=
+																										"tailleBuffersAgents";
 	/**
 	 * OPTION - Timeout pour la réémission des messages.
 	 */
@@ -78,19 +96,19 @@ public class Configuration {
 	 * Configuration de la simulation.
 	 */
 	private final ConfigurationSimulationReseau	configurationSimulationReseau;
-	
-	
+	// options (interne)
+	private final OptionSpec<Long>				optionAgentsNombreHotes;
+	private final OptionSpec<Float>				optionAgentsTauxPerteBrutale;
+	private final OptionSpec<Float>				optionAgentsTempsTraitementMessage;
+	private final OptionSpec<Void>				optionAide;
+	private final OptionSpec<Float>				optionHotesTauxMessagesVersAutreAgent;
+	private final OptionSpec<Float>				optionHotesTempsTraitementMessage;
 	/**
 	 * Parser pour récupérer les options données via la ligne de commande.
 	 */
 	private final OptionParser					optionParser;
-	
-	// options (interne)
-	private final OptionSpec<Long>				optionAgentsNombreHotes;
-	private final OptionSpec<Float>				optionAgentsTauxPerteBrutale;
-	private final OptionSpec<Void>				optionAide;
-	private final OptionSpec<Float>				optionHotesTauxMessagesVersAutreAgent;
 	private final OptionSpec<Long>				optionSimulationDuree;
+	private final OptionSpec<Integer>			optionSimulationTailleBuffersAgents;
 	private final OptionSpec<Integer>			optionSimulationTimeoutReemissionMessages;
 
 
@@ -126,8 +144,7 @@ public class Configuration {
 		optionSimulationDuree =
 				optionParser.accepts(OPTION_SIMULATION_DUREE,
 						"Durée de la simulation (> 0)").withRequiredArg()
-						.ofType(
-						Long.class);
+						.ofType(Long.class);
 		optionHotesTauxMessagesVersAutreAgent =
 				optionParser
 						.accepts(
@@ -140,6 +157,21 @@ public class Configuration {
 								OPTION_SIMULATION_TIMEOUT_REEMISSION_MESSAGES,
 								"Timeout après lequel les messages doivent etre réexpédiés si aucun accusé de réception n'est reçu (> 80)")
 						.withRequiredArg().ofType(Integer.class);
+		optionSimulationTailleBuffersAgents =
+				optionParser.accepts(OPTION_SIMULATION_TAILLE_BUFFERS_AGENTS,
+						"Taille des buffers des agents (>= 0)")
+						.withRequiredArg().ofType(Integer.class);
+		optionAgentsTempsTraitementMessage =
+				optionParser
+						.accepts(
+								OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE,
+								"Temps de traitement d'un message par un agent (>=0). 0 = traitement instantané")
+						.withRequiredArg().ofType(Float.class);
+		optionHotesTempsTraitementMessage =
+				optionParser
+						.accepts(OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE,
+								"Temps de traitement d'un message par un hote (>=0). 0 = traitement instantané")
+						.withRequiredArg().ofType(Float.class);
 	}
 
 
@@ -207,6 +239,16 @@ public class Configuration {
 			}
 			configurationAgents.setTauxPerteBrutale(tauxPerteBrutale);
 		}
+		if (options.has(optionAgentsTempsTraitementMessage)) {
+			final float tempsTraitementMessage =
+					options.valueOf(optionAgentsTempsTraitementMessage);
+			if (tempsTraitementMessage < 0) {
+				throw new ExceptionOptionsInvalides(
+						"Le temps de traitement d'un message pour un agent doit être >=0");
+			}
+			configurationAgents
+					.setTempsTraitementMessage(tempsTraitementMessage);
+		}
 	}
 
 
@@ -230,6 +272,16 @@ public class Configuration {
 			}
 			configurationHotes
 					.setTauxMessagesVersAutreAgent(tauxMessagesVersAutreAgent);
+		}
+		if (options.has(optionHotesTempsTraitementMessage)) {
+			final float tempsTraitementMessage =
+					options.valueOf(optionHotesTempsTraitementMessage);
+			if (tempsTraitementMessage < 0) {
+				throw new ExceptionOptionsInvalides(
+						"Le temps de traitement d'un message pour un hote doit être >=0");
+			}
+			configurationHotes
+					.setTempsTraitementMessage(tempsTraitementMessage);
 		}
 	}
 
@@ -265,7 +317,16 @@ public class Configuration {
 			}
 			configurationSimulationReseau
 					.setTimeoutReemissionMessages(timeoutReemission);
-			
+		}
+		if (options.has(optionSimulationTailleBuffersAgents)) {
+			final int tailleBuffersAgents =
+					options.valueOf(optionSimulationTailleBuffersAgents);
+			if (tailleBuffersAgents < 0) {
+				throw new ExceptionOptionsInvalides(
+						"La taille des buffers des agents ne peut pas être < 0");
+			}
+			configurationSimulationReseau
+					.setTailleBuffersAgents(tailleBuffersAgents);
 		}
 	}
 

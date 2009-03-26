@@ -520,4 +520,216 @@ public class ConfigurationTest {
 		} catch (ExceptionOptionsInvalides e) {
 		}
 	}
+
+
+
+	/**
+	 * Spécifier des valeurs correctes pour la taille des buffers des agents.
+	 * 
+	 * @throws ExceptionOptionsInvalides
+	 *         ne doit pas se produire
+	 */
+	@Test
+	public void testSimulationTailleBuffersAgents()
+			throws ExceptionOptionsInvalides {
+		String valeur = "0";
+		String[] args =
+				{
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_TAILLE_BUFFERS_AGENTS
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Integer.valueOf(valeur).intValue() == configuration
+				.getConfigurationSimulationReseau().getTailleBuffersAgents());
+		valeur = "500";
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_TAILLE_BUFFERS_AGENTS
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Integer.valueOf(valeur).intValue() == configuration
+				.getConfigurationSimulationReseau().getTailleBuffersAgents());
+		valeur = "1";
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_TAILLE_BUFFERS_AGENTS
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Integer.valueOf(valeur).intValue() == configuration
+				.getConfigurationSimulationReseau().getTailleBuffersAgents());
+	}
+
+
+
+	/**
+	 * Spécifier des valeurs incorrectes pour la taille des buffers des agents.
+	 */
+	@Test
+	public void testSimulationTailleBuffersAgentsValeursIncorrectes() {
+		// valeur presque ok (frontière)
+		String[] args =
+				{
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_TAILLE_BUFFERS_AGENTS
+							+ SEPARATEUR + "-1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait dû avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur trop basse
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_TAILLE_BUFFERS_AGENTS
+							+ SEPARATEUR + "-100"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait dû avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+	}
+
+
+
+	/**
+	 * Spécifier des valeurs correctes pour le temps de traitement d'un message
+	 * par un agent.
+	 * 
+	 * @throws ExceptionOptionsInvalides
+	 *         ne doit pas se produire
+	 */
+	@Test
+	public void testSimulationAgentTempsTraitementMessage()
+			throws ExceptionOptionsInvalides {
+		String valeur = "0"; // instantané
+		String[] args =
+				{
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Float.valueOf(valeur).floatValue() == configuration
+				.getConfigurationAgents().getTempsTraitementMessage());
+		valeur = "0.5";
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Float.valueOf(valeur).floatValue() == configuration
+				.getConfigurationAgents().getTempsTraitementMessage());
+	}
+
+
+
+	/**
+	 * Spécifier des valeurs incorrectes pour le temps de traitement d'un
+	 * message par un agent.
+	 */
+	@Test
+	public void testSimulationAgentTempsTraitementMessageValeursIncorrectes() {
+		// valeur presque ok (frontière)
+		String[] args =
+				{
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + "-0.1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait dû avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur trop basse
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + "-1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait dû avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+	}
+
+
+
+	/**
+	 * Spécifier des valeurs correctes pour le temps de traitement d'un message
+	 * par un hote.
+	 * 
+	 * @throws ExceptionOptionsInvalides
+	 *         ne doit pas se produire
+	 */
+	@Test
+	public void testSimulationHoteTempsTraitementMessage()
+			throws ExceptionOptionsInvalides {
+		String valeur = "0"; // instantané
+		String[] args =
+				{
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Float.valueOf(valeur).floatValue() == configuration
+				.getConfigurationHotes().getTempsTraitementMessage());
+		valeur = "0.5";
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Float.valueOf(valeur).floatValue() == configuration
+				.getConfigurationHotes().getTempsTraitementMessage());
+	}
+
+
+
+	/**
+	 * Spécifier des valeurs incorrectes pour le temps de traitement d'un
+	 * message par un hote.
+	 */
+	@Test
+	public void testSimulationHoteTempsTraitementMessageValeursIncorrectes() {
+		// valeur presque ok (frontière)
+		String[] args =
+				{
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + "-0.1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait dû avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur trop basse
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + "-1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait dû avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+	}
 }
