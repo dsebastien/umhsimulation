@@ -36,12 +36,11 @@ public abstract class AbstractSimulation<T extends AbstractConfiguration>
 
 
 	/**
-	 * Création et initialisation de la simulation.
+	 * Création de la simulation.
 	 */
 	public AbstractSimulation() {
 		// création de la FEL
 		futureEventList = new EventList();
-		initialiserSimulation();
 	}
 
 
@@ -77,12 +76,17 @@ public abstract class AbstractSimulation<T extends AbstractConfiguration>
 
 
 	/**
-	 * Execute la simulation.
+	 * Démarre la simulation.
 	 */
 	public abstract void demarrer();
 
 
 
+	/**
+	 * Récupérer la FEL.
+	 * 
+	 * @return la FEL
+	 */
 	protected EventList getFutureEventList() {
 		return futureEventList;
 	}
@@ -98,20 +102,9 @@ public abstract class AbstractSimulation<T extends AbstractConfiguration>
 		return horloge;
 	}
 
-
-
 	/**
-	 * Initialise la simulation (utilisé à l'instanciation).
+	 * Initialise ou réinitialise le système (retour à l'état de départ).
 	 */
-	private void initialiserSimulation() {
-		LOGGER.info("Initialisation de la simulation...");
-		reset();
-		LOGGER.info("Simulation initialisée");
-	}
-
-    /**
-     * Initialise ou réunitialise le système (retour à l'état de d"part).
-     */
 	public abstract void reset();
 
 
@@ -149,5 +142,15 @@ public abstract class AbstractSimulation<T extends AbstractConfiguration>
 					"Le temps auquel placer l'horloge doit être > 0");
 		}
 		horloge = temps;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		LOGGER.info("Initialisation de la simulation...");
+		reset();
+		LOGGER.info("Simulation initialisée");
 	}
 }

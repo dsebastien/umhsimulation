@@ -2,6 +2,7 @@ package be.simulation.configuration;
 
 import be.simulation.core.configuration.AbstractConfiguration;
 
+
 /**
  * Configuration de la simulation de réseau (projet).
  * 
@@ -18,6 +19,14 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	 * Nom de la simulation.
 	 */
 	private String	nom;
+	/**
+	 * Taille des buffers des agents (>=0). 0 = infinie.
+	 * 
+	 * @deprecated On l'utilise dans un premier temps, mais ensuite ça devra
+	 *             être différent pour chaque agent
+	 */
+	@Deprecated
+	private int		tailleBuffersAgents;
 	/**
 	 * Timeout après lequel les messages doivent être réexpédiés si aucun accusé
 	 * de réception n'est reçu (> 80).
@@ -57,6 +66,20 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 
 
 	/**
+	 * Récupérer la taille des buffers des agents.
+	 * 
+	 * @return la taille des buffers des agents
+	 * @deprecated On l'utilise dans un premier temps, mais ensuite ça devra
+	 *             être différent pour chaque agent
+	 */
+	@Deprecated
+	public int getTailleBuffersAgents() {
+		return tailleBuffersAgents;
+	}
+
+
+
+	/**
 	 * Récupérer le timeout après lequel les messages doivent être réexpédiés si
 	 * aucun accusé de réception n'est reçu.
 	 * 
@@ -88,6 +111,21 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	 */
 	public void setNom(final String nom) {
 		this.nom = nom;
+	}
+
+
+
+	/**
+	 * Définir la taille des buffers des agents (>=0). 0 = infinie.
+	 * 
+	 * @param tailleBuffersAgents
+	 *        la taille des buffers des agents
+	 * @deprecated On l'utilise dans un premier temps, mais ensuite ça devra
+	 *             être différent pour chaque agent
+	 */
+	@Deprecated
+	public void setTailleBuffersAgents(final int tailleBuffersAgents) {
+		this.tailleBuffersAgents = tailleBuffersAgents;
 	}
 
 

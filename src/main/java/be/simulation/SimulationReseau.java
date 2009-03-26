@@ -2,6 +2,7 @@ package be.simulation;
 
 import be.simulation.configuration.ConfigurationSimulationReseau;
 import be.simulation.core.AbstractSimulation;
+import be.simulation.entites.Agent;
 
 /**
  * Simulation d'un réseau.
@@ -12,6 +13,18 @@ import be.simulation.core.AbstractSimulation;
  */
 public class SimulationReseau extends
 		AbstractSimulation<ConfigurationSimulationReseau> {
+
+	// Les agents de la simulation (fixes, basés sur la figure 2 de l'énoncé)
+	private Agent	agent1000;
+	private Agent	agent2000;
+	private Agent	agent3000;
+	private Agent	agent4000;
+	private Agent	agent5000;
+	private Agent	agent6000;
+	private Agent	agent7000;
+
+
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -27,8 +40,23 @@ public class SimulationReseau extends
 	@Override
 	public void reset() {
 		resetBasicSimulation(); // temps, FEL
-		// TODO implementer:
-		// recréer les agents, ...
+		// recréation des agents
+		// TODO dans un premier temps on utilise la même taille de buffers pour
+		// tous. ensuite on pourra fixer des valeurs différentes pour chacun
+		agent1000 =
+				new Agent(1000, getConfiguration().getTailleBuffersAgents());
+		agent2000 =
+				new Agent(2000, getConfiguration().getTailleBuffersAgents());
+		agent3000 =
+				new Agent(3000, getConfiguration().getTailleBuffersAgents());
+		agent4000 =
+				new Agent(4000, getConfiguration().getTailleBuffersAgents());
+		agent5000 =
+				new Agent(5000, getConfiguration().getTailleBuffersAgents());
+		agent6000 =
+				new Agent(6000, getConfiguration().getTailleBuffersAgents());
+		agent7000 =
+				new Agent(7000, getConfiguration().getTailleBuffersAgents());
 	}
 
 
@@ -41,4 +69,5 @@ public class SimulationReseau extends
 		LOGGER.info("Démarrage de " + getConfiguration().getNom());
 		// TODO implementer
 	}
+
 }

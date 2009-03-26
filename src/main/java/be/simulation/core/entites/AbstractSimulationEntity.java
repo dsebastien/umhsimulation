@@ -1,5 +1,6 @@
 package be.simulation.core.entites;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import be.simulation.core.configuration.AbstractConfiguration;
 
@@ -14,11 +15,20 @@ import be.simulation.core.configuration.AbstractConfiguration;
  * @param <T>
  *        Le type de configuration utilisé par cette entité
  */
-public abstract class AbstractSimulationEntity<T extends AbstractConfiguration> {
+public abstract class AbstractSimulationEntity<T extends AbstractConfiguration>
+		implements InitializingBean {
 	/**
 	 * Configuration de l'entité.
 	 */
 	private T	configuration;
+
+
+
+	/**
+	 * Cette méthode est appelée après que toutes les propriétés aient étés
+	 * initialisées. Permet de mettre l'entité dans l'état souhaité.
+	 */
+	public abstract void afterPropertiesSet() throws Exception;
 
 
 
@@ -42,12 +52,11 @@ public abstract class AbstractSimulationEntity<T extends AbstractConfiguration> 
 	 *         si la configuration donnée est nulle
 	 */
 	@Autowired
-	// Spring appèle cette méthode automatiquement
 	public void setConfiguration(T config) {
 		if (config == null) {
 			throw new IllegalArgumentException(
 					"La configuration ne peut pas être nulle");
 		}
-		this.configuration = config;
+		configuration = config;
 	}
 }

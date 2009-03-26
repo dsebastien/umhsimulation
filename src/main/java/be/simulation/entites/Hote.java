@@ -1,6 +1,6 @@
 package be.simulation.entites;
 
-import be.simulation.configuration.ConfigurationAgents;
+import be.simulation.configuration.ConfigurationHotes;
 import be.simulation.core.entites.AbstractSimulationEntity;
 
 /**
@@ -10,7 +10,7 @@ import be.simulation.core.entites.AbstractSimulationEntity;
  * @author Regnier Frederic
  * @author Mernier Jean-François
  */
-public class Hote extends AbstractSimulationEntity<ConfigurationAgents> {
+public class Hote extends AbstractSimulationEntity<ConfigurationHotes> {
     /**
      * Agent auquel cet hote est relié (pour pouvoir communiquer avec lui).
      */
@@ -31,8 +31,6 @@ public class Hote extends AbstractSimulationEntity<ConfigurationAgents> {
 		return numeroHote;
 	}
 
-
-
 	/**
 	 * Créer un nouvel hote.
 	 * 
@@ -42,11 +40,22 @@ public class Hote extends AbstractSimulationEntity<ConfigurationAgents> {
 	 *        le numéro identifiant de cet hote
 	 * @throw IllegalArgumentException si le numéro d'hote fourni est <= 0
 	 */
-	public Hote(final Agent agent, final int numeroHote) {
+	public Hote(final Agent agent,
+			final int numeroHote) {
 		if(numeroHote <= 0){
 			throw new IllegalArgumentException("Le numero d'hote fourni est invalide (il doit etre > 0)");
 		}
+		
 		this.agent = agent;
 		this.numeroHote = numeroHote;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		// Faire ici toute initialisation qui requiert l'utilisation de la
+		// configuration
 	}
 }

@@ -14,21 +14,40 @@ import be.simulation.core.entites.AbstractSimulationEntity;
  */
 public class Agent extends AbstractSimulationEntity<ConfigurationAgents> {
 	/**
+	 * Hôtes connectés à cet agent.
+	 */
+	private final List<Hote>	hotes	= new ArrayList<Hote>();
+	/**
 	 * Le numéro identifiant de cet agent.
 	 */
 	private final int			numeroAgent;
-	private final List<Hote>	hotes	= new ArrayList<Hote>();
+	/**
+	 * Taille des buffers.
+	 */
+	private final int			tailleBuffers;
 
 
 
 	/**
-	 * Créer un nouvel agent.
+	 * Crée un nouvel agent.
 	 * 
 	 * @param numeroAgent
 	 *        le numéro identifiant de cet agent
+	 * @param tailleBuffers
+	 *        la taille maximale des buffers
 	 */
-	public Agent(final int numeroAgent) {
+	public Agent(final int numeroAgent, final int tailleBuffers) {
+		this.tailleBuffers = tailleBuffers;
 		this.numeroAgent = numeroAgent;
+	}
+
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void afterPropertiesSet() throws Exception {
 		// Quand l'agent est créé, les hôtes viennent directement s'y connecter
 		for (int i = 1; i <= getConfiguration().getNombreHotes(); i++) {
 			hotes.add(new Hote(this, i));
