@@ -55,5 +55,6 @@ public class Main {
 						.getBean("simulationReseau");
 		// Lancement de la simulation
 		simulation.demarrer();
+		simulation.afficherResultats();
 	}
 }

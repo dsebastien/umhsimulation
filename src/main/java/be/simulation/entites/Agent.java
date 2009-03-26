@@ -17,17 +17,16 @@ public class Agent extends AbstractSimulationEntity<ConfigurationAgents> {
 	 * Hôtes connectés à cet agent.
 	 */
 	private final List<Hote>	hotes	= new ArrayList<Hote>();
+	
 	/**
 	 * Le numéro identifiant de cet agent.
 	 */
 	private final int			numeroAgent;
+
 	/**
 	 * Taille des buffers.
 	 */
 	private final int			tailleBuffers;
-
-
-
 	/**
 	 * Crée un nouvel agent.
 	 * 
@@ -52,5 +51,16 @@ public class Agent extends AbstractSimulationEntity<ConfigurationAgents> {
 		for (int i = 1; i <= getConfiguration().getNombreHotes(); i++) {
 			hotes.add(new Hote(this, i));
 		}
+	}
+
+
+
+	/**
+	 * Retourne les hôtes associés à cet agent.
+	 * 
+	 * @return les hôtes associés à cet agent
+	 */
+	public List<Hote> getHotes() {
+		return hotes;
 	}
 }
