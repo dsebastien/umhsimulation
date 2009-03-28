@@ -2,7 +2,6 @@ package be.simulation.configuration;
 
 import be.simulation.core.configuration.AbstractConfiguration;
 
-
 /**
  * Configuration de la simulation de réseau (projet).
  * 
@@ -32,6 +31,23 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	 * de réception n'est reçu (> 80).
 	 */
 	private int		timeoutReemissionMessages;
+	/**
+	 * Temps nécessaire pour qu'un message partant d'un hôte arrive à son agent
+	 * (et inversément) (>= 0).
+	 */
+	private int		delaiEntreEntites;
+
+
+
+	public int getDelaiEntreEntites() {
+		return delaiEntreEntites;
+	}
+
+
+
+	public void setDelaiEntreEntites(int delaiEntreEntites) {
+		this.delaiEntreEntites = delaiEntreEntites;
+	}
 
 
 

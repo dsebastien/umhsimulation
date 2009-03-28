@@ -1,7 +1,7 @@
 package be.simulation.entites;
 
 import be.simulation.configuration.ConfigurationHotes;
-import be.simulation.core.entites.AbstractSimulationEntity;
+import be.simulation.core.entites.AbstractEntiteSimulation;
 
 /**
  * Hote du système, relié à un et un seul agent (liens statiques).
@@ -10,7 +10,7 @@ import be.simulation.core.entites.AbstractSimulationEntity;
  * @author Regnier Frederic
  * @author Mernier Jean-François
  */
-public class Hote extends AbstractSimulationEntity<ConfigurationHotes> {
+public class Hote extends AbstractEntiteSimulation<ConfigurationHotes> {
     /**
      * Agent auquel cet hote est relié (pour pouvoir communiquer avec lui).
      */
@@ -21,15 +21,6 @@ public class Hote extends AbstractSimulationEntity<ConfigurationHotes> {
 	 */
 	private final int	numeroHote;
 
-
-	/**
-	 * Récupérer le numero de l'hote.
-	 * 
-	 * @return le numéro de l'hote
-	 */
-	public int getNumeroHote() {
-		return numeroHote;
-	}
 
 	/**
 	 * Créer un nouvel hote.
@@ -57,5 +48,22 @@ public class Hote extends AbstractSimulationEntity<ConfigurationHotes> {
 	public void afterPropertiesSet() throws Exception {
 		// Faire ici toute initialisation qui requiert l'utilisation de la
 		// configuration
+	}
+
+	/**
+	 * Récupérer le numero de l'hote.
+	 * 
+	 * @return le numéro de l'hote
+	 */
+	public int getNumeroHote() {
+		return numeroHote;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Hote " + getNumeroHote();
 	}
 }

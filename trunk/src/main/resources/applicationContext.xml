@@ -26,6 +26,7 @@
 		<property name="duree" value="${general.duree}" />
 		<property name="timeoutReemissionMessages" value="${general.messages_timeout_avant_reemission}" />
 		<property name="tailleBuffersAgents" value="${general.taille_buffers_agents}" />
+		<property name="delaiEntreEntites" value="${general.delai_entre_entites}" />
 	</bean>
 
 	<bean id="configurationAgents" class="be.simulation.configuration.ConfigurationAgents"

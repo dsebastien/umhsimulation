@@ -1,0 +1,37 @@
+- en début de simulation on pourrait déjà générer tous les évènements de type "AgentForwardMessage" et "HoteEnvoieMessage" puisque ça dépend du temps de traitement des messages.
+  Donc on sait qu'au temps 1 ils pourront traîter x messages, au temps 2 x messages, ...
+  Par exemple au temps t, un agent aura x évènements de type "AgentForwardMessage" dans sa FEL.
+  Quand ces évènements seront imminents, il les traitera, verra dans le buffer s'il y a des messages à traiter et si oui il en traite un, ...
+- est-ce qu'on génère TOUS les évènements pour tous les hôtes dès le départ?
+
+- créer une liste des différentes activités: délai dans un hôte (buffer?), dans un agent (buffer), délai agent-hote (== hote-agent), délai agent-agent, ...
+
+- pour la FEL: Chaque agent a une FEL ou alors on utilise une grosse FEL pour toute la simulation ou aussi une FEL pour tous les hôtes?
+
+
+
+- décider de comment spécifier le paramètre suivant:
+	Dans l'énoncé, dans les paramètres du système, il parle du temps inter-envois.
+	Il dit: "temps entre deux envois d'un hôte du système. Par exemple une valeur aléatoire entre 0 et 200".
+	Alors mes questions:
+		- On fait un random à la création d'un agent et on lui attribute une valeur définitive (pour toute la simulation) entre 0 et 200?
+		- On fait un random à chaque fois que l'agent génère un message pour produire le temps du prochain message qui sera généré?
+		- On a besoin d'une distribution de probabilités?
+			
+- voir comment on va spécifier les délais inter-agents (fixes, basés sur la figure 2 de l'énoncé)
+
+- implémenter le distance vector algorithm
+
+
+
+Stats à calculer:
+- Combien de temps entre l'envoi d'un message et la réception de l'accusé de réception.
+- Pourcentage de paquets réémis
+	- A cause de pertes brutales
+	- A cause des buffers pleins
+- Combien y a-t-il eu de timeouts trop courts (messages réenvoyés car on pensait qu'il était perdu alors que le message et/ou son accusé étaient juste retardés)
+- Temps moyen qu'un message passe dans une file d'attente
+	- En absolu
+	- Par rapport à son voyage complet
+- Taux moyen d'utilisation des buffers des agents (e.g., remplis à 80% en moyenne)
+- Taux moyen par agent d'utilisation des buffers

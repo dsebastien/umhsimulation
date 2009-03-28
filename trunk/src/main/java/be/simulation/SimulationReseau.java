@@ -71,4 +71,14 @@ public class SimulationReseau extends
 		// TODO implementer
 	}
 
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return getConfiguration().getNom();
+	}
+
 }

@@ -15,7 +15,7 @@ import be.simulation.core.configuration.AbstractConfiguration;
  * @param <T>
  *        Le type de configuration utilisé par cette entité
  */
-public abstract class AbstractSimulationEntity<T extends AbstractConfiguration>
+public abstract class AbstractEntiteSimulation<T extends AbstractConfiguration>
 		implements InitializingBean {
 	/**
 	 * Configuration de l'entité.
@@ -59,4 +59,10 @@ public abstract class AbstractSimulationEntity<T extends AbstractConfiguration>
 		}
 		configuration = config;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public abstract String toString();
 }

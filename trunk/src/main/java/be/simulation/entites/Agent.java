@@ -3,7 +3,7 @@ package be.simulation.entites;
 import java.util.ArrayList;
 import java.util.List;
 import be.simulation.configuration.ConfigurationAgents;
-import be.simulation.core.entites.AbstractSimulationEntity;
+import be.simulation.core.entites.AbstractEntiteSimulation;
 
 /**
  * Agent du système (= serveur).
@@ -12,7 +12,7 @@ import be.simulation.core.entites.AbstractSimulationEntity;
  * @author Regnier Frederic
  * @author Mernier Jean-François
  */
-public class Agent extends AbstractSimulationEntity<ConfigurationAgents> {
+public class Agent extends AbstractEntiteSimulation<ConfigurationAgents> {
 	/**
 	 * Hôtes connectés à cet agent.
 	 */
@@ -27,6 +27,9 @@ public class Agent extends AbstractSimulationEntity<ConfigurationAgents> {
 	 * Taille des buffers.
 	 */
 	private final int			tailleBuffers;
+
+
+
 	/**
 	 * Crée un nouvel agent.
 	 * 
@@ -39,9 +42,6 @@ public class Agent extends AbstractSimulationEntity<ConfigurationAgents> {
 		this.tailleBuffers = tailleBuffers;
 		this.numeroAgent = numeroAgent;
 	}
-
-
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -62,5 +62,26 @@ public class Agent extends AbstractSimulationEntity<ConfigurationAgents> {
 	 */
 	public List<Hote> getHotes() {
 		return hotes;
+	}
+
+
+
+	/**
+	 * Récupérer le numéro de cet agent.
+	 * 
+	 * @return le numéro de cet agent
+	 */
+	public int getNumeroAgent() {
+		return numeroAgent;
+	}
+
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Agent " + getNumeroAgent();
 	}
 }
