@@ -1,152 +1,14 @@
-Projet: Simulation de réseau:
-FAI avec plein de clients (hotes privés connectés)
-Chaque serveur (agent) a n clients (n est un param de la simulation)
-
-Explications sur le premier schéma.
-
-Quand un noeud (client,hote) veut envoyer un message à un autre, il envoie le message à son agent qui lui fait suivre vers l'autre client.
-
-Tous les hotes ont un délai de connexion avec leur agent de 5 unités de temps.
-
-Pour la FEL: Chaque agent a une FEL ou alors on utilise une grosse FEL pour toute la simulation
-
-On va donner des paramètres au système, pour dire de tel agent à tel agent, il y a un délai d'autant, ...
-
-
-Event Type: SEND (hote source, hote destination).
-Event TYpe: RECEIVE (hote destination, hote source) (? pas sur pour les params)
-Exemple: 
-t=100 SEND(src,dst)
-t=105 RECEIVE(dst,src)
----> 5 = délai de l'hote à l'agent
-
-Délai d'agent à agent aussi, donc qd on envoie d'un msg d'un hote a un hote ds un autre agent, on a le délai de l'hote + le délai de l'agent 
-
-
-Event Type: AGENT_RECEIVE
-
-
-
-
-
-Event TYpe: HOTE_ENVOIE_MSG
-
-
-
-Event Type: AGENT_RECOIT_MSG
-
-
-
-Event Type: HOTE_RECOIT_MSG
-	On envoie un accusé de réception (instantané)
-
-
-
-
-hote envoie -> (délai) agent recoit -> (délai) hote recoit -> hote envoie -> (délai) agent recoit -> agent envoie -> (délai) hote recoit
-
-
-
-
-
-
-
-Combien de temps entre l'envoi d'un message et la réception de l'accusé de réception.
-
-
-
-
-
-
-Il y a des pertes brutales de messages -> probabilité pour un agent que quand il reçoit un message, il le laisse tomber
-Du coté de l'hote, un timeout qui dit que si on a pas recu d'accusé de réception endéans les x temps, alors on renvoie le message
-
-
--> EVENT TYPE: TIME_OUT
-Quand on envoie un message depuis un hote, on place dans la FEL un TIME_OUT_EVENT avec une copie du message.
-Quand on reçoit l'accusé, on doit aller virer le timeout de la FEL (!!!) --> donc dans l'accusé on a besoin d'une copie du message d'origine
-Quand on doit traiter l'evenement timeout, on renvoie le message
-
-
-
-
-
-Quand un agent recoit un message qui doit aller chez un hote d'un autre agent il:
-- suivant le numéro de l'hote de destination,  Pour savoir auquel il doit envoyer, il se base sur le numéro de l'hote de destination. Il peut devoir passer par un autre agent intermédiaire s'il n'a pas de connexion directe avec le bon agent
-il a une table de routage fixée qui dit par où passer.
-
-
+Les hotes ont aussi une file de traitement et aussi un paramètre de délais
+Chez les hotes, compter pour chaque message envoyé, combien de retries, ... --> historique
 
 
 Le timeout doit etre au moins aussi grand que le temps correspondant au chemin le plus long (ex: >= 80)
 
-
-
-
-Numéros:
-Ex: Agent 1000, 2000, ...
-Hote 1001 1002 1003
-     2001 2002 ...
-     ...
-
-
-
-
-Traitement de message instantane. Si un agent recoit plein de messages osef, temps instantane.
-
-
-Chaque agent a une file de messages. Quand il reçoit un message, il le place dans la file.
-On a un parametre temps de traitement par message: Il peut traiter x messages par unite de temps
-
-La file de messages a une taille max (buffer size donc!) au delà, les messages sont droppés (donc parametre agent buffer size)
-
-Aussi une probabilité de perte de message
-
-
-
 Chaque agent doit avoir une table de routage:
 je suis 7000: pour aller en 1000 je passe par 2000, ..., pour aller en Y, je vais par Z, ...
 
-
-
-
-
-
-
-
-Les hotes ont aussi une file de traitement et aussi un paramètre de délais
-
-
-
-
-
-
-
-Chez les hotes, compter pour chaque message envoyé, combien de retries, ... --> historique
-
-
-
-
-
-Garder trace des messages perdus -> compteur, ... (?)
-
-
-
-
-
-
-
-
-
-
 Possible qu'on envoie un message, qu'on renvoie le message (dépassement du timeout) puis qu'on reçoive seulement l'accusé du premier message. Donc si on recoit un accusé et qu'on a plus de timeout, on garde trace qu'on avait un timeout trop court
-
-
-
-
-
-
-Si timeout = 100:
+Ex: si timeout = 100:
 
 100 envoi msg
 200 timeout (on devrait avoir recu une reponse)
@@ -159,37 +21,10 @@ Si timeout = 100:
 
 
 
-
-
-Un agent pourrait avoir un buffer d'entrée pour chaque source (buffer pour les msgs depuis ses hotes, buffer pour les msgs depuis un autre agent x, buffer pour les msgs depuis un autre agent y, ...)
-
-
-
-
-
-
-
-Chaque hote va generer des trucs tous les X temps
-
-
-
-
-
-
-
-
-
-
-
-
-
 Ensuite adaptation:
-
-
 Si on est l'agent 7000 et qu'on veut communiquer avec 1000, on passe par 2000
 						 avec 2000,		 ... 
 						 avec 3000, on passe par 5000
-
 
 
 Les agents sont fixes et certains sont plus sollicités que d'autres, comme par exemple 4000
@@ -201,16 +36,8 @@ Par contre le chemin choisi pour envoyer un message de x à y va changer. On aur
 
 
 Pour faire ça:
-
-Fichier algorithme de routage (site de beauport).
-Pages avec la méthode à utiliser:
-Section 4.5 (lire)
-
-decentralized routing. Link state algorithm
-...
-
-
-A utiliser: Distance Vector: DIJKSTRA (point 4.5.2)
+(decentralized routing. Link state algorithm)
+utiliser: Distance Vector: DIJKSTRA (point 4.5.2)
 
 Je suis un noeud, j'ai une estimation du cout pour aller en 2000, en 3000, ...
 On a une estimation de couts qui evolue pour chaque agent
@@ -222,67 +49,9 @@ Agent 7000:
 2000 -> 3000 (cout: 30) (PAS BON COUT, VOIR PLUS BAS)
 ...
 
-
--> Message avec un type particulier qui contient les infos de routage
---> Event particulier 
---> Traitement prioritaire pour ces messages là!!
-
-
-
-
-
-
-
-
 Au départ, les agents communiquent pour se mettre d'accord.
 On peut considérer que les 1000 premiers temps de simulation ne servent qu'à la configuration
-
 Ensuite le système démarre vraiment, puis imaginons que 4000 devient surchargé --> il prévient ses voisins
-
-
-
 Chaque agent passe sa table à ses voisins, qui mettent à jour leur propre table
-
-
-
-
-
-
-
-
-
-
-
-
-La notion de cout qu'on utilise dans l'algo pourra etre basee sur une combinaison entre les temps de latence et les taux d'occupation des buffers. Si un agent a un buffer plein de 90%, alors on calcule le co^ut comme le delai sur le chemin vers cet agent + 90
-
-
-
-
-
-
-
-Les agents peuvent connaitre les taux d'occupation des autres directement (ou pour un bonus, un message spécial, ...)
-
-
-
-
-
-
-TODO: diagrammes par type d'evenement
-
-
-Version graphique? :)
-
-
-
-
-
-
-
-
-
-
-
-
-
+La notion de cout qu'on utilise dans l'algo pourra etre basee sur une combinaison entre les temps de latence et les taux d'occupation des buffers. Si un agent a un buffer plein de 90%, alors on calcule le coût comme le delai sur le chemin vers cet agent + 90
+Les agents peuvent connaitre les taux d'occupation des autres directement (ou pour un bonus grace à un message spécial, ...)

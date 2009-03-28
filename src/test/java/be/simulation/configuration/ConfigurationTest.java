@@ -732,4 +732,82 @@ public class ConfigurationTest {
 		} catch (ExceptionOptionsInvalides e) {
 		}
 	}
+
+
+
+	/**
+	 * Spécifier des valeurs correctes pour le delai entre entités (hote ->
+	 * agent / agent -> hôte).
+	 * 
+	 * @throws ExceptionOptionsInvalides
+	 *         ne doit pas se produire
+	 */
+	@Test
+	public void testSimulationDelaiEntreEntites()
+			throws ExceptionOptionsInvalides {
+		String valeur = "0";
+		String[] args =
+				{
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_DELAI_ENTRE_ENTITES
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Integer.valueOf(valeur).intValue() == configuration
+				.getConfigurationSimulationReseau().getDelaiEntreEntites());
+		valeur = "5";
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_DELAI_ENTRE_ENTITES
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Integer.valueOf(valeur).intValue() == configuration
+				.getConfigurationSimulationReseau().getDelaiEntreEntites());
+		valeur = "1";
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_DELAI_ENTRE_ENTITES
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Integer.valueOf(valeur).intValue() == configuration
+				.getConfigurationSimulationReseau().getDelaiEntreEntites());
+	}
+
+
+
+	/**
+	 * Spécifier des valeurs incorrectes pour le delai entre entités (hote ->
+	 * agent / agent -> hôte).
+	 */
+	@Test
+	public void testSimulationDelaiEntreEntitesValeursIncorrectes() {
+		// valeur presque ok (frontière)
+		String[] args =
+				{
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_DELAI_ENTRE_ENTITES
+							+ SEPARATEUR + "-1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait dû avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur trop basse
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_DELAI_ENTRE_ENTITES
+							+ SEPARATEUR + "-100"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait dû avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+	}
 }

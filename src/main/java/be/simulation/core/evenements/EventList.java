@@ -5,11 +5,11 @@ import java.util.Queue;
 import org.apache.log4j.Logger;
 
 /**
- * An event list manages a list of events. It can:<br />
+ * Une EventList gère une liste d'évènements. Elle peut:<br />
  * <ul>
- * <li>schedule events (put them at an appropriate position in the list
- * depending on its planified time</li>
- * <li>give a list of the next planned events</li>
+ * <li>planifier des évènements (les mettre à une position appropriée en
+ * fonction de leur temps d'occurence prévu</li>
+ * <li>récupérer l'évènement imminent</li>
  * </ul>
  * 
  * @author Dubois Sebastien
@@ -22,36 +22,43 @@ public class EventList {
 															.getLogger(EventList.class
 																	.getName());
 
-	private final Queue<Event>	eventsQueue	= new LinkedList<Event>();
+	// FIXME on ne pourra sans doute pas utiliser une vraie Queue étant donné
+	// qu'il faut faire des ajouts un peu partout en fonction du temps
+	private final Queue<Evenement>	fileEvenements	= new LinkedList<Evenement>();
 
-    /**
-	 * Schedule an event (put the event in the event list at the correct
-	 * position).
+
+
+	/**
+	 * Planifier un évènement (le placer à une position appropriée dans la file
+	 * d'évènements).
 	 * 
 	 * @param evt
-	 *        the event
+	 *        l'évènement
 	 */
-    public void scheduleEvent(Event evt) {
-    	LOG.info("Scheduling event: " + evt.toString());
-    	eventsQueue.add(evt);
+    public void planifierEvenement(final Evenement evt) {
+		LOG.info("Planification de l'évènemment: " + evt.toString());
+		// FIXME voir où placer l'évènement en fonction de son temps d'occurence
+		// prévu
+    	fileEvenements.add(evt);
     }
-    
-    /**
-	 * Get the imminent event if it exists, null otherwise.
+
+
+
+	/**
+	 * Récupérer l'évènement imminent s'il existe, null sinon.
 	 * 
-	 * @return the imminent event or null it there isn't any
-	 */
-	public Event getImminentEvent() {
-		return eventsQueue.poll();
+	 * @return l'évènement imminent s'il existe, null sinon
+	 **/
+	public Evenement getEvenementImminent() {
+		return fileEvenements.poll();
 	}
 
-    /**
-     * Reset the event list.
-     */
+
+
+	/**
+	 * Remettre la liste d'évènements à zéro.
+	 */
     public void reset(){
-        eventsQueue.clear();
+        fileEvenements.clear();
     }
-
-    //TODO method to retrieve the imminent events
-
 }
