@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 	<!--
     Generated from archetype; please customize.
 -->
@@ -31,7 +31,7 @@
 		<developer>
 			<id>2</id>
 			<name>Regnier Frederic</name>
-			<email>frederic.regnier@gmail.com</email>
+			<email>regnier.frederic@gmail.com</email>
 		</developer>
 		<developer>
 			<id>3</id>
