@@ -26,13 +26,7 @@ Si on est l'agent 7000 et qu'on veut communiquer avec 1000, on passe par 2000
 						 avec 2000,		 ... 
 						 avec 3000, on passe par 5000
 
-
-Les agents sont fixes et certains sont plus sollicités que d'autres, comme par exemple 4000
-On doit expliquer à 7000 que pour aller en 3000, il vaut mieux passer par X.
-
-Le temps de latence entre agents ne change jamais, la topologie non plus, le niombre d'agents non plus.
-
-Par contre le chemin choisi pour envoyer un message de x à y va changer. On aura besoin d'une méthode pour changer l'itinéraire, donc la table de routage devient DYNAMIQUE
+table de routage devient DYNAMIQUE
 
 
 Pour faire ça:
@@ -42,11 +36,6 @@ utiliser: Distance Vector: DIJKSTRA (point 4.5.2)
 Je suis un noeud, j'ai une estimation du cout pour aller en 2000, en 3000, ...
 On a une estimation de couts qui evolue pour chaque agent
 
-
-De son deuxième schéma:
-Agent 7000:
-1000 -> 2000 (cout: 40)
-2000 -> 3000 (cout: 30) (PAS BON COUT, VOIR PLUS BAS)
 ...
 
 Au départ, les agents communiquent pour se mettre d'accord.
