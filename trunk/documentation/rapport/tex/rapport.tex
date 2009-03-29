@@ -11,11 +11,20 @@
 \listoftables % liste des tables
 \pagebreak
 
+Décisions:
+\begin{itemize}
+ \item Pour un temps $t$ donné, on traite en priorité les évènements de type ``accusé de réception'' par rapport aux timeouts 
+ \item On utilise une seule FEL au niveau de la simulation dans laquelle on place tous les évènements
+ \item Au début de la simulation, on génère tous les évènements de type ``hote envoie message'' et ``agent forward message''
+\end{itemize}
 
-Please fill me in ;-)
 
-
-
+Mise à jour des informations de routage:
+\begin{enumerate}
+ \item initialisation (premiers temps de simulation)
+ \item tous les X temps, évènements pour la màj des tables de routage)
+ \item aux moments où la situation change fortement (e.g., buffer rempli pour un agent)
+\end{enumerate}
 
 %\pagebreak
 \clearpage
