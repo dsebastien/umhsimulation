@@ -10,8 +10,8 @@ package be.simulation.core.evenements;
  * @author Mernier Jean-François
  */
 public abstract class Evenement {
-	// FIXME demander à l'assistant ce qu'il conseille pour la gestion du temps:
-	// Long ou Double? (Avis de Seb: Double)
+	// FIXME demander à l'assistant ce qu'il conseille pour la gestion du temps
+	// (pas clair du tout pour moi)
 	/**
 	 * Temps auquel cet évènement doit se produire.
 	 */
