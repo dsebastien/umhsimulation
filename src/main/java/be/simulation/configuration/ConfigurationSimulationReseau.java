@@ -150,7 +150,7 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	 * Définir le timeout pour la réémission des messages (> 80).
 	 * 
 	 * @param timeoutReemissionMessages
-	 *        le timeout
+	 *        le timeout.
 	 */
 	public void setTimeoutReemissionMessages(final int timeoutReemissionMessages) {
 		this.timeoutReemissionMessages = timeoutReemissionMessages;
