@@ -1,6 +1,5 @@
 package be.simulation.entites;
 
-import be.simulation.configuration.ConfigurationHotes;
 import be.simulation.core.entites.AbstractEntiteSimulation;
 
 /**
@@ -10,7 +9,7 @@ import be.simulation.core.entites.AbstractEntiteSimulation;
  * @author Regnier Frederic
  * @author Mernier Jean-François
  */
-public class Hote extends AbstractEntiteSimulation<ConfigurationHotes> {
+public class Hote extends AbstractEntiteSimulation {
     /**
      * Agent auquel cet hote est relié (pour pouvoir communiquer avec lui).
      */
