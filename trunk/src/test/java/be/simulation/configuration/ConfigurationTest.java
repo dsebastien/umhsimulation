@@ -185,7 +185,7 @@ public class ConfigurationTest {
 		};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 		// valeur non spécifiée
@@ -194,7 +194,7 @@ public class ConfigurationTest {
 		};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 		// valeur nulle
@@ -205,7 +205,7 @@ public class ConfigurationTest {
 				};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 	}
@@ -257,7 +257,7 @@ public class ConfigurationTest {
 				};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 		// valeur trop haute (frontière)
@@ -268,7 +268,7 @@ public class ConfigurationTest {
 				};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 		// valeur trop haute
@@ -279,7 +279,7 @@ public class ConfigurationTest {
 				};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 	}
@@ -330,7 +330,7 @@ public class ConfigurationTest {
 				};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 		// valeur nulle
@@ -339,7 +339,7 @@ public class ConfigurationTest {
 		};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 		// valeur non spécifiée
@@ -348,7 +348,7 @@ public class ConfigurationTest {
 		};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 		// argument non spécifié
@@ -357,7 +357,7 @@ public class ConfigurationTest {
 		};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 	}
@@ -423,7 +423,7 @@ public class ConfigurationTest {
 				};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 		// valeur trop grande
@@ -435,7 +435,7 @@ public class ConfigurationTest {
 				};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 		// valeur trop basse
@@ -447,7 +447,7 @@ public class ConfigurationTest {
 				};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 		// valeur trop haute
@@ -459,7 +459,7 @@ public class ConfigurationTest {
 				};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 	}
@@ -504,7 +504,7 @@ public class ConfigurationTest {
 				};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 		// valeur trop basse
@@ -516,7 +516,7 @@ public class ConfigurationTest {
 				};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 	}
@@ -580,7 +580,7 @@ public class ConfigurationTest {
 				};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 		// valeur trop basse
@@ -592,7 +592,7 @@ public class ConfigurationTest {
 				};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 	}
@@ -648,7 +648,7 @@ public class ConfigurationTest {
 				};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 		// valeur trop basse
@@ -660,7 +660,7 @@ public class ConfigurationTest {
 				};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 	}
@@ -716,7 +716,7 @@ public class ConfigurationTest {
 				};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 		// valeur trop basse
@@ -728,7 +728,7 @@ public class ConfigurationTest {
 				};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 	}
@@ -794,7 +794,7 @@ public class ConfigurationTest {
 				};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 		// valeur trop basse
@@ -806,7 +806,7 @@ public class ConfigurationTest {
 				};
 		try {
 			configuration.parse(args);
-			fail("Une exception aurait dû avoir lieu!");
+			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 	}
