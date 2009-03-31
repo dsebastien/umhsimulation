@@ -1,7 +1,6 @@
 package be.simulation.core;
 
 import org.apache.log4j.Logger;
-import be.simulation.core.configuration.AbstractConfiguration;
 import be.simulation.core.entites.AbstractEntiteSimulation;
 import be.simulation.core.evenements.EventList;
 
@@ -16,8 +15,7 @@ import be.simulation.core.evenements.EventList;
  * @author Regnier Frederic
  * @author Mernier Jean-François
  */
-public abstract class AbstractSimulation<T extends AbstractConfiguration>
-		extends AbstractEntiteSimulation<T> {
+public abstract class AbstractSimulation extends AbstractEntiteSimulation {
 	protected static final Logger	LOGGER	=
 													Logger
 															.getLogger(AbstractSimulation.class

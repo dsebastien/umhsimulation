@@ -11,7 +11,7 @@ import be.simulation.core.entites.AbstractEntiteSimulation;
  * @param <T>
  *        Type des entités qui communiquent
  */
-public abstract class AbstractMessage<T extends AbstractEntiteSimulation<?>> {
+public abstract class AbstractMessage<T extends AbstractEntiteSimulation> {
 	/**
 	 * Entité à l'origine du message.
 	 */

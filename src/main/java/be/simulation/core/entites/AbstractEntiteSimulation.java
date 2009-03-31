@@ -2,7 +2,7 @@ package be.simulation.core.entites;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import be.simulation.core.configuration.AbstractConfiguration;
+import be.simulation.configuration.Configuration;
 
 /**
  * Entité quelconque d'une simulation. Chaque type d'entité (pouvant à priori
@@ -15,12 +15,11 @@ import be.simulation.core.configuration.AbstractConfiguration;
  * @param <T>
  *        Le type de configuration utilisé par cette entité
  */
-public abstract class AbstractEntiteSimulation<T extends AbstractConfiguration>
-		implements InitializingBean {
+public abstract class AbstractEntiteSimulation implements InitializingBean {
 	/**
-	 * Configuration de l'entité.
+	 * Configuration de la simulation.
 	 */
-	private T	configuration;
+	protected Configuration	configuration;
 
 
 
@@ -33,18 +32,18 @@ public abstract class AbstractEntiteSimulation<T extends AbstractConfiguration>
 
 
 	/**
-	 * Récupérer la configuration de l'entité.
+	 * Récupérer la configuration de la simulation.
 	 * 
-	 * @return la configuration de l'entité
+	 * @return la configuration de la simulation
 	 */
-	public T getConfiguration() {
+	public Configuration getConfiguration() {
 		return configuration;
 	}
 
 
 
 	/**
-	 * Remplace la configuration de l'entité.
+	 * Remplace la configuration de la simulation.
 	 * 
 	 * @param config
 	 *        la nouvelle configuration
@@ -52,7 +51,7 @@ public abstract class AbstractEntiteSimulation<T extends AbstractConfiguration>
 	 *         si la configuration donnée est nulle
 	 */
 	@Autowired
-	public void setConfiguration(T config) {
+	public void setConfiguration(Configuration config) {
 		if (config == null) {
 			throw new IllegalArgumentException(
 					"La configuration ne peut pas être nulle");

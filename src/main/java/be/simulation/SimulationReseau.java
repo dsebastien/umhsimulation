@@ -1,6 +1,5 @@
 package be.simulation;
 
-import be.simulation.configuration.ConfigurationSimulationReseau;
 import be.simulation.core.AbstractSimulation;
 import be.simulation.entites.Agent;
 
@@ -12,7 +11,7 @@ import be.simulation.entites.Agent;
  * @author Mernier Jean-François
  */
 public class SimulationReseau extends
-		AbstractSimulation<ConfigurationSimulationReseau> {
+		AbstractSimulation {
 
 	// Les agents de la simulation (fixes, basés sur la figure 2 de l'énoncé)
 	private Agent	agent1000;
@@ -44,19 +43,33 @@ public class SimulationReseau extends
 		// TODO dans un premier temps on utilise la même taille de buffers pour
 		// tous. ensuite on pourra fixer des valeurs différentes pour chacun
 		agent1000 =
-				new Agent(1000, getConfiguration().getTailleBuffersAgents());
+				new Agent(1000, getConfiguration()
+						.getConfigurationSimulationReseau()
+						.getTailleBuffersAgents());
 		agent2000 =
-				new Agent(2000, getConfiguration().getTailleBuffersAgents());
+				new Agent(2000, getConfiguration()
+						.getConfigurationSimulationReseau()
+						.getTailleBuffersAgents());
 		agent3000 =
-				new Agent(3000, getConfiguration().getTailleBuffersAgents());
+				new Agent(3000, getConfiguration()
+						.getConfigurationSimulationReseau()
+						.getTailleBuffersAgents());
 		agent4000 =
-				new Agent(4000, getConfiguration().getTailleBuffersAgents());
+				new Agent(4000, getConfiguration()
+						.getConfigurationSimulationReseau()
+						.getTailleBuffersAgents());
 		agent5000 =
-				new Agent(5000, getConfiguration().getTailleBuffersAgents());
+				new Agent(5000, getConfiguration()
+						.getConfigurationSimulationReseau()
+						.getTailleBuffersAgents());
 		agent6000 =
-				new Agent(6000, getConfiguration().getTailleBuffersAgents());
+				new Agent(6000, getConfiguration()
+						.getConfigurationSimulationReseau()
+						.getTailleBuffersAgents());
 		agent7000 =
-				new Agent(7000, getConfiguration().getTailleBuffersAgents());
+				new Agent(7000, getConfiguration()
+						.getConfigurationSimulationReseau()
+						.getTailleBuffersAgents());
 	}
 
 
@@ -67,7 +80,8 @@ public class SimulationReseau extends
 	@Override
 	public void demarrer() {
 		LOGGER.info("Démarrage de la simulation ("
-				+ getConfiguration().getNom() + ")");
+				+ getConfiguration().getConfigurationSimulationReseau()
+						.getNom() + ")");
 		// TODO implementer
 	}
 
@@ -78,7 +92,7 @@ public class SimulationReseau extends
 	 */
 	@Override
 	public String toString() {
-		return getConfiguration().getNom();
+		return getConfiguration().getConfigurationSimulationReseau().getNom();
 	}
 
 }

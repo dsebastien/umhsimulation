@@ -2,7 +2,6 @@ package be.simulation.entites;
 
 import java.util.ArrayList;
 import java.util.List;
-import be.simulation.configuration.ConfigurationAgents;
 import be.simulation.core.entites.AbstractEntiteSimulation;
 
 /**
@@ -12,7 +11,7 @@ import be.simulation.core.entites.AbstractEntiteSimulation;
  * @author Regnier Frederic
  * @author Mernier Jean-François
  */
-public class Agent extends AbstractEntiteSimulation<ConfigurationAgents> {
+public class Agent extends AbstractEntiteSimulation {
 	/**
 	 * Hôtes connectés à cet agent.
 	 */
@@ -48,7 +47,8 @@ public class Agent extends AbstractEntiteSimulation<ConfigurationAgents> {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// Quand l'agent est créé, les hôtes viennent directement s'y connecter
-		for (int i = 1; i <= getConfiguration().getNombreHotes(); i++) {
+		for (int i = 1; i <= getConfiguration().getConfigurationAgents()
+				.getNombreHotes(); i++) {
 			hotes.add(new Hote(this, i));
 		}
 	}
