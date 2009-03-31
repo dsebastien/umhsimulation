@@ -1,0 +1,47 @@
+Réponses à nos questions (2008-03-31):
+    
+Paramètre "temps de traitement dans les agents ou les
+hôtes": est-ce que cette propriété définit seulement la capacité de
+traitement en entrée, donc par exemple: si au temps t un agent reçoit 50
+messages mais que son temps de traitement est de 0.5, alors il en traite 2
+et place les 48 autres dans une file d'attente?
+
+--->	cela signifie qu'a chaque unité de temps un agent est capable de traiter (s'occuper de forwarder, ou de remarquer qu'il a recu) 
+		au maximum 2 messages  (dans le cas de 0.5) donc effectivement, s'il en recoit 50, il en traitera 2, et les 48 seront en attente, 
+		au temps de simulation suivant, il en traitera 2 et en restera 46, (sauf si d'autres messages arrivent à nouveau, et sont placé en 
+		fin de file (FIFO).
+
+
+
+
+
+Paramètre "temps inter-envois des hôtes":
+Est-ce que ce temps représente la limite d'output par unité de temps d'un hôte?
+
+--->	définit UNIQUEMENT l'envoi des nouveaux messages 
+
+
+Envoi d'un accusé de réception
+Timeout (renvoi d'un message)
+--->	immédiat QUAND ON TRAITE UN MESSAGE RECU QUI AVAIT ETE PLACE DANS LA FILE quand on peut le traiter (dépend du temps de traitement!)
+
+
+
+Ordre de traitement des évènements:
+--->	pour un temps t, si on a x évènements prévus pour un agent dans la FEL, on peut les traiter dans l'ordre qu'on veut! (e.g., traiter les accusés avant les timeouts)
+		l'ordre fifo concerne uniquement la file d'attente des messages (donc on se fiche de l'ordre des évènements dans la FEL!)
+
+Traitement de l'évènement "réception d'un accusé":
+--->	mettre le message dans la file des messages reçus (donc traité après tous les autres)
+		IMPORTANT: les évènements de type réception doivent se dérouler comme ceci:
+			1) vérifier l'état de la file d'entrée, si pas vide alors on ne peut que mettre le message dans la file
+			1) vérifier le nombre de messages qu'on a traité pour le temps actuel et si on peut encore en traiter alors on le fait directement
+			2) si on ne peut plus en traiter, on le place dans la file d'attente
+
+essage reçu dans la file des messages reçus, et il sera traité après tous les autres messages reçus qui sont dans ma file de reception... 
+
+
+Accusés de réception:
+--->	on peut placer dans l'accusé soit une copie du message d'origine (même objet), soit un identifiant
+		il dit qu'on pourrait (simple proposition) mettre tous les messages dans un tableau (seb: une hashmap <id, message>) et n'envoyer que l'id
+		puis récupérer le message correspondant via l'id (seb: à priori, beaucoup plus simple si on met directement une copie de l'objet dans l'accusé)
