@@ -1,5 +1,4 @@
-- en début de simulation on pourrait déjà générer tous les évènements de type "HoteEnvoieMessage" 
-- créer une liste des différentes activités: délai dans un hôte (buffer?), dans un agent (buffer), délai agent-hote (== hote-agent), délai agent-agent, ...
+- créer une liste des différentes activités: délai dans un hôte (buffer), dans un agent (buffer), délai agent-hote (== hote-agent), délais agent-agent, ...
 
 
 
