@@ -1,10 +1,14 @@
-- créer une liste des différentes activités: délai dans un hôte (buffer), dans un agent (buffer), délai agent-hote (== hote-agent), délais agent-agent, ...
+- créer une liste des différentes activités: 
+	délai dans un hôte (buffer)
+	dans un agent (buffer)
+	délai agent-hote (== hote-agent)
+	délais agent-agent
+	... 
+	???
 
 
-
-- décider de comment spécifier le paramètre suivant:
-	Dans l'énoncé, dans les paramètres du système, il parle du temps inter-envois.
-	Il dit: "temps entre deux envois d'un hôte du système. Par exemple une valeur aléatoire entre 0 et 200".
+- décider de comment spécifier le paramètre suivant: temps inter-envois
+	c'est décrit comme: "temps entre deux envois d'un hôte du système. Par exemple une valeur aléatoire entre 0 et 200".
 	Alors mes questions:
 		- On fait un random à la création d'un agent et on lui attribute une valeur définitive (pour toute la simulation) entre 0 et 200?
 		- On fait un random à chaque fois que l'agent génère un message pour produire le temps du prochain message qui sera généré?
@@ -12,7 +16,7 @@
 			
 - voir comment on va spécifier les délais inter-agents (fixes, basés sur la figure 2 de l'énoncé)
 
-- implémenter le distance vector algorithm
+- implémenter le distance vector algorithm (version 2.0 --> on fera un tag/branch avant de l'implémenter)
 
 
 
