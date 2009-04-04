@@ -1,0 +1,33 @@
+- créer une liste des différentes activités: 
+	délai dans un hôte (buffer)
+	dans un agent (buffer)
+	délai agent-hote (== hote-agent)
+	délais agent-agent
+	... 
+	???
+
+
+- décider de comment spécifier le paramètre suivant: temps inter-envois
+	c'est décrit comme: "temps entre deux envois d'un hôte du système. Par exemple une valeur aléatoire entre 0 et 200".
+	Alors mes questions:
+		- On fait un random à la création d'un agent et on lui attribute une valeur définitive (pour toute la simulation) entre 0 et 200?
+		- On fait un random à chaque fois que l'agent génère un message pour produire le temps du prochain message qui sera généré?
+		- On a besoin d'une distribution de probabilités?
+			
+- voir comment on va spécifier les délais inter-agents (fixes, basés sur la figure 2 de l'énoncé)
+
+- implémenter le distance vector algorithm (version 2.0 --> on fera un tag/branch avant de l'implémenter)
+
+
+
+Stats à calculer:
+- Combien de temps entre l'envoi d'un message et la réception de l'accusé de réception.
+- Pourcentage de paquets réémis
+	- A cause de pertes brutales
+	- A cause des buffers pleins
+- Combien y a-t-il eu de timeouts trop courts (messages réenvoyés car on pensait qu'il était perdu alors que le message et/ou son accusé étaient juste retardés)
+- Temps moyen qu'un message passe dans une file d'attente
+	- En absolu
+	- Par rapport à son voyage complet
+- Taux moyen d'utilisation des buffers des agents (e.g., remplis à 80% en moyenne)
+- Taux moyen par agent d'utilisation des buffers

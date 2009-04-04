@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd"
+	default-autowire="constructor">
+
+	<!-- Active le contrôle des annotations -->
+	<context:annotation-config />
+	<!-- Cherche les annotations Spring dans le package: -->
+	<context:component-scan base-package="be.simulation" />
+
+	<!-- Chargement des fichiers de configuration (config par défaut) -->
+	<context:property-placeholder
+		location="classpath:configuration/simulation.properties, classpath:configuration/agents.properties, classpath:configuration/hotes.properties" />
+
+	<bean id="simulationReseau" class="be.simulation.SimulationReseau"
+		scope="prototype" />
+
+	<!-- Les objets de configuration sont des singletons pour que les valeurs soient partagées -->
+	<bean id="configurationSimulationReseau"
+		class="be.simulation.configuration.ConfigurationSimulationReseau"
+		scope="singleton">
+		<property name="nom" value="${general.nom}" />
+		<property name="duree" value="${general.duree}" />
+		<property name="timeoutReemissionMessages" value="${general.messages_timeout_avant_reemission}" />
+		<property name="tailleBuffersAgents" value="${general.taille_buffers_agents}" />
+		<property name="delaiEntreEntites" value="${general.delai_entre_entites}" />
+	</bean>
+
+	<bean id="configurationAgents" class="be.simulation.configuration.ConfigurationAgents"
+		scope="singleton">
+		<property name="nombreHotes" value="${agents.nombre_hotes}" />
+		<property name="tauxPerteBrutale" value="${agents.taux_perte_brutale}" />
+		<property name="tempsTraitementMessage" value="${agents.temps_traitement_message}" />
+	</bean>
+
+	<bean id="configurationHotes" class="be.simulation.configuration.ConfigurationHotes"
+		scope="singleton">
+		<property name="tauxMessagesVersAutreAgent" value="${hotes.taux_messages_vers_autre_agent}" />
+		<property name="tempsTraitementMessage" value="${hotes.temps_traitement_message}" />
+	</bean>
+
+	<bean id="configuration" class="be.simulation.configuration.Configuration"
+		scope="singleton" />
+</beans>
