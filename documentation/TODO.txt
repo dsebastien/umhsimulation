@@ -19,6 +19,8 @@
 - implémenter le distance vector algorithm (version 2.0 --> on fera un tag/branch avant de l'implémenter)
 
 
+- classe message, ajouter le temps total passés dans les buffers (?)
+
 
 Stats à calculer:
 - Combien de temps entre l'envoi d'un message et la réception de l'accusé de réception.
