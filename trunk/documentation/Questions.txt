@@ -1,13 +1,4 @@
 Questions à poser à l'assistant:
 --------------------------------
 
-- Puisqu'on fixe le temps de traitement des hôtes et des agents, est-ce qu'on peut générer en début de simulation tous les évènements de type HoteTraiteMessage et AgentTraiteMessage? Par exemple si on a fixé un temps de traitement de 0.5, on sait que pour chaque temps de simulation, on pourra traiter 2 messages, donc on ajoute à chaque temps t deux évènements de type HoteTraiteMessage et deux évènements de type AgentTraiteMessage
-  Quand un tel évènement se produit, on va alors voir dans la file s'il y a des messages à traiter
-  Et on dirait en plus que pour un temps t, on traite ces évènements en dernier lieu (de manière à éviter que la file ne soit vide).
- 
- 
-- Quand un Agent (ou un hôte) reçoit un message (e.g., évènements de type AgentRecoitMessage ou HoteRecoitMessage) si j'ai bien compris on ne peut à ce moment faire que mettre le message dans la file. Et on ne le traite alors (si ma question précédente est répondue par oui) que quand un évènement de type AgentTraiteMessage ou HoteTraiteMessage survient ?
- 
- 
- 
 - Comment gérer le temps de simulation? (int, double, ???)
