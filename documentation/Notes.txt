@@ -13,20 +13,6 @@ et place les 48 autres dans une file d'attente?
 
 
 
-
-
-Paramètre "temps inter-envois des hôtes":
-Est-ce que ce temps représente la limite d'output par unité de temps d'un hôte?
-
---->	définit UNIQUEMENT l'envoi des nouveaux messages 
-
-
-Envoi d'un accusé de réception
-Timeout (renvoi d'un message)
---->	immédiat QUAND ON TRAITE UN MESSAGE RECU QUI AVAIT ETE PLACE DANS LA FILE quand on peut le traiter (dépend du temps de traitement!)
-
-
-
 Ordre de traitement des évènements:
 --->	pour un temps t, si on a x évènements prévus pour un agent dans la FEL, on peut les traiter dans l'ordre qu'on veut! (e.g., traiter les accusés avant les timeouts)
 		l'ordre fifo concerne uniquement la file d'attente des messages (donc on se fiche de l'ordre des évènements dans la FEL!)
@@ -37,9 +23,6 @@ Traitement de l'évènement "réception d'un accusé":
 			1) vérifier l'état de la file d'entrée, si pas vide alors on ne peut que mettre le message dans la file
 			1) vérifier le nombre de messages qu'on a traité pour le temps actuel et si on peut encore en traiter alors on le fait directement
 			2) si on ne peut plus en traiter, on le place dans la file d'attente
-
-essage reçu dans la file des messages reçus, et il sera traité après tous les autres messages reçus qui sont dans ma file de reception... 
-
 
 Accusés de réception:
 --->	on peut placer dans l'accusé soit une copie du message d'origine (même objet), soit un identifiant
