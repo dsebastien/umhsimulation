@@ -1,4 +1,17 @@
 Questions à poser à l'assistant:
 --------------------------------
+- Temps de traitement?
+	- Quand on reçoit deux évènements à un temps t
+	  on les traite tous les deux si on est libre
+	  donc on crée les evenements de fin au temps actuel + temps vers l'agent + temps de traitement
+	  
+	  si on peut traiter deux messages par temps t, ça veut dire que le temps de traitement est de 0.5
+	  hors si on met le temps de fin pour les deux à +0.5 + delaiEntreEntites
+	  --> le prob alors c'est qu'on traite les deux en 0.5 temps de simulation donc au final on traite 4 messages par temps
+
+- Les timeouts trop courts
+
+- Les délais dans les buffers (ajouter le temps d'arrivée?)
+
 
 - Comment gérer le temps de simulation? (int, double, ???)
