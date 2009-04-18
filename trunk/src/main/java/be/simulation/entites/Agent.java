@@ -41,6 +41,7 @@ public class Agent extends AbstractEntiteSimulation {
 		this.tailleBuffers = tailleBuffers;
 		this.numeroAgent = numeroAgent;
 	}
+	
 	/**
 	 * {@inheritDoc}
 	 */

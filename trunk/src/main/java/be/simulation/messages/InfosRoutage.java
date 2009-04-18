@@ -11,9 +11,8 @@ import be.simulation.entites.Agent;
  * @author Mernier Jean-François
  */
 public class InfosRoutage extends AbstractMessage<Agent> {
-
 	/**
-	 * {@inheritDoc}
+	 * Informations de routage.
 	 */
 	public InfosRoutage(final Agent source, final Agent destination) {
 		super(source, destination);

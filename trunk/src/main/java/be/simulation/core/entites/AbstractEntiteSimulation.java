@@ -12,8 +12,6 @@ import be.simulation.configuration.Configuration;
  * @author Dubois Sebastien
  * @author Regnier Frederic
  * @author Mernier Jean-François
- * @param <T>
- *        Le type de configuration utilisé par cette entité
  */
 public abstract class AbstractEntiteSimulation implements InitializingBean {
 	/**

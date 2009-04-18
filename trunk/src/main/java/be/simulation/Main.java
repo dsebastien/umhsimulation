@@ -42,14 +42,14 @@ public class Main {
 		try {
 			boolean aideAffichee = configuration.parse(args);
 			if (aideAffichee) {
-				// on quitte car l'utilisateur voulait juste de l'aide
+				// on quitte car l'utilisateur voulait juste voir l'aide
 				System.exit(0);
 			}
 		} catch (ExceptionOptionsInvalides e) {
 			LOGGER.fatal(e.getMessage());
 			System.exit(0);
 		}
-		// Recupération de la simulation configurée par spring
+		// Recupération de la simulation pré-configurée par spring
 		SimulationReseau simulation =
 				(SimulationReseau) springApplicationContext
 						.getBean("simulationReseau");

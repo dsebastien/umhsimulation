@@ -16,7 +16,10 @@ public class ConfigurationHotes extends AbstractConfiguration {
      * autre agent (0 <= taux <= 1).
      */
     private float tauxMessagesVersAutreAgent;
-    
+	/**
+	 * Le temps maximal entre deux envois d'un hôte (> 0).
+	 */
+	private int		tempsMaxInterEnvois;
 	/**
 	 * Le temps de traitement d'un message (>=0). 0 = traitement instantané.
 	 */
@@ -36,6 +39,12 @@ public class ConfigurationHotes extends AbstractConfiguration {
 
 
 
+	public int getTempsMaxInterEnvois() {
+		return tempsMaxInterEnvois;
+	}
+
+
+
 	/**
 	 * Récupérer le temps de traitement d'un message (>=0). 0 = traitement
 	 * instantané.
@@ -46,16 +55,22 @@ public class ConfigurationHotes extends AbstractConfiguration {
 		return tempsTraitementMessage;
 	}
 
-    /**
-     * Définir le taux de messages qui seront à destination d'un hôte relié à un
-     * autre agent (0 <= taux <= 1).
-     * 
-     * @param tauxMessagesVersAutreAgent
-     *            le taux
-     */
+
+
+	/**
+	 * Définir le taux de messages qui seront à destination d'un hôte relié à un
+	 * autre agent (0 <= taux <= 1).
+	 * 
+	 * @param tauxMessagesVersAutreAgent
+	 *        le taux
+	 */
     public void setTauxMessagesVersAutreAgent(float tauxMessagesVersAutreAgent) {
         this.tauxMessagesVersAutreAgent = tauxMessagesVersAutreAgent;
     }
+
+    public void setTempsMaxInterEnvois(int tempsMaxInterEnvois) {
+		this.tempsMaxInterEnvois = tempsMaxInterEnvois;
+	}
 
     /**
 	 * Définir le temps de traitement d'un message.

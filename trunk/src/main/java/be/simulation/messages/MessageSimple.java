@@ -10,9 +10,8 @@ import be.simulation.entites.Hote;
  * @author Mernier Jean-François
  */
 public class MessageSimple extends Message {
-
 	/**
-	 * {@inheritDoc}
+	 * Message simple
 	 */
 	public MessageSimple(final Hote source, final Hote destination) {
 		super(source, destination);

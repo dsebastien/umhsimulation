@@ -12,7 +12,7 @@ import be.simulation.entites.Hote;
  */
 public abstract class Message extends AbstractMessage<Hote> {
 	/**
-	 * {@inheritDoc}
+	 * Message.
 	 */
 	public Message(final Hote source, final Hote destination) {
 		super(source, destination);
