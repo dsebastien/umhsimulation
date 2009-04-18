@@ -11,7 +11,7 @@ import be.simulation.core.evenements.Evenement;
  */
 public class FinDeSimulation extends Evenement {
 	/**
-	 * {@inheritDoc}
+	 * Evenement de fin de simulation.
 	 */
 	public FinDeSimulation(final Double tempsPrevu) {
 		super(tempsPrevu);

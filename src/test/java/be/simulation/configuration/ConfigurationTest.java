@@ -810,4 +810,83 @@ public class ConfigurationTest {
 		} catch (ExceptionOptionsInvalides e) {
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Spécifier des valeurs correctes pour le temps maximal inter-envois des
+	 * hôtes.
+	 * 
+	 * @throws ExceptionOptionsInvalides
+	 *         ne doit pas se produire
+	 */
+	@Test
+	public void testSimulationHoteTempsMaxInterEnvois()
+			throws ExceptionOptionsInvalides {
+		String valeur = "200";
+		String[] args =
+				{
+					PREFIXE + Configuration.OPTION_HOTES_TEMPS_MAX_INTER_ENVOIS
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Integer.valueOf(valeur).intValue() == configuration
+				.getConfigurationHotes().getTempsMaxInterEnvois());
+		valeur = "1";
+		args =
+				new String[] {
+					PREFIXE + Configuration.OPTION_HOTES_TEMPS_MAX_INTER_ENVOIS
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Integer.valueOf(valeur).intValue() == configuration
+				.getConfigurationHotes().getTempsMaxInterEnvois());
+	}
+
+
+
+	/**
+	 * Spécifier des valeurs incorrectes pour le temps maximal inter-envois des
+	 * hôtes.
+	 */
+	@Test
+	public void testSimulationHoteTempsMaxInterEnvoisValeursIncorrectes() {
+		// valeur presque ok (frontière)
+		String[] args =
+				{
+					PREFIXE + Configuration.OPTION_HOTES_TEMPS_MAX_INTER_ENVOIS
+							+ SEPARATEUR + "0"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur trop basse
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + "-1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+	}
 }

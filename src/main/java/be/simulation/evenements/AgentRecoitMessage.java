@@ -19,7 +19,7 @@ public class AgentRecoitMessage extends Evenement {
 
 
 	/**
-	 * {@inheritDoc}
+	 * Evènement de réception.
 	 * 
 	 * @param message
 	 *        le message reçu

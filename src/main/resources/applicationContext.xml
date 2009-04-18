@@ -40,6 +40,7 @@
 		scope="singleton">
 		<property name="tauxMessagesVersAutreAgent" value="${hotes.taux_messages_vers_autre_agent}" />
 		<property name="tempsTraitementMessage" value="${hotes.temps_traitement_message}" />
+		<property name="tempsMaxInterEnvois" value="${hotes.temps_max_inter_envois}" />
 	</bean>
 
 	<bean id="configuration" class="be.simulation.configuration.Configuration"

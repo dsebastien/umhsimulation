@@ -9,8 +9,6 @@ import be.simulation.core.evenements.EventList;
  * simulation (chargement de la configuration de départ, gestion de l'horloge de
  * simulation, ...
  * 
- * @param <T>
- *        Le type de configuration utilisée par la simulation
  * @author Dubois Sebastien
  * @author Regnier Frederic
  * @author Mernier Jean-François

@@ -65,6 +65,12 @@ public class Configuration {
 	 */
 	public static final String					OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE			=
 																										"hotesTempsTraitementMessage";
+	
+	/**
+	 * OPTION - Temps maximum entre deux envois d'un hôte.
+	 */
+	public static final String					OPTION_HOTES_TEMPS_MAX_INTER_ENVOIS				=
+																										"hotesTempsMaxInterEnvois";
 	/**
 	 * OPTION - Durée de simulation.
 	 */
@@ -109,6 +115,7 @@ public class Configuration {
 	private final OptionSpec<Void>				optionAide;
 	private final OptionSpec<Float>				optionHotesTauxMessagesVersAutreAgent;
 	private final OptionSpec<Float>				optionHotesTempsTraitementMessage;
+	private final OptionSpec<Integer>			optionHotesTempxMaximalInterEnvois;
 	/**
 	 * Parser pour récupérer les options données via la ligne de commande.
 	 */
@@ -179,12 +186,19 @@ public class Configuration {
 						.accepts(OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE,
 								"Temps de traitement d'un message par un hote (>=0). 0 = traitement instantané")
 						.withRequiredArg().ofType(Float.class);
+		
+		optionHotesTempxMaximalInterEnvois =
+				optionParser.accepts(OPTION_HOTES_TEMPS_MAX_INTER_ENVOIS,
+						"Temps maximal entre deux envois d'un hôte (> 0)")
+						.withRequiredArg().ofType(Integer.class);
 		optionSimulationDelaiEntreEntites =
 				optionParser
 						.accepts(
 								OPTION_SIMULATION_DELAI_ENTRE_ENTITES,
 								"Délai nécessaire pour qu'un message d'un hôte arrive à l'agent (et inversément) (>=0)")
 						.withRequiredArg().ofType(Integer.class);
+		
+		
 	}
 
 
@@ -295,6 +309,15 @@ public class Configuration {
 			}
 			configurationHotes
 					.setTempsTraitementMessage(tempsTraitementMessage);
+		}
+		if (options.has(optionHotesTempxMaximalInterEnvois)) {
+			final int tempsMaxInterEnvois =
+					options.valueOf(optionHotesTempxMaximalInterEnvois);
+			if (tempsMaxInterEnvois <= 0) {
+				throw new ExceptionOptionsInvalides(
+						"Le temps maximal entre deux envois d'un hôte doit être >0");
+			}
+			configurationHotes.setTempsMaxInterEnvois(tempsMaxInterEnvois);
 		}
 	}
 

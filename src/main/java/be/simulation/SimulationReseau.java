@@ -29,6 +29,7 @@ public class SimulationReseau extends
 	 */
 	@Override
 	public void afficherResultats() {
+		// TODO ici on doit calculer les résultats finaux et les afficher)
 	}
 
 
