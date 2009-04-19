@@ -2,7 +2,6 @@ package be.simulation.entites;
 
 import java.util.ArrayList;
 import java.util.List;
-import be.simulation.core.entites.AbstractEntiteSimulation;
 
 /**
  * Agent du système (= serveur).
@@ -11,7 +10,7 @@ import be.simulation.core.entites.AbstractEntiteSimulation;
  * @author Regnier Frederic
  * @author Mernier Jean-François
  */
-public class Agent extends AbstractEntiteSimulation {
+public class Agent extends AbstractEntiteSimulationReseau {
 	/**
 	 * Hôtes connectés à cet agent.
 	 */
@@ -20,26 +19,30 @@ public class Agent extends AbstractEntiteSimulation {
 	/**
 	 * Le numéro identifiant de cet agent.
 	 */
-	private final int			numeroAgent;
+	private int					numero;
 
+
+	/**
+	 * Définir le numéro de cet agent.
+	 * 
+	 * @param numeroAgent
+	 *        le numéro de cet agent
+	 */
+	public void setNumero(int numeroAgent) {
+		numero = numeroAgent;
+	}
 	/**
 	 * Taille des buffers.
 	 */
-	private final int			tailleBuffers;
+	private int					tailleBuffers;
 
 
 
 	/**
 	 * Crée un nouvel agent.
 	 * 
-	 * @param numeroAgent
-	 *        le numéro identifiant de cet agent
-	 * @param tailleBuffers
-	 *        la taille maximale des buffers
 	 */
-	public Agent(final int numeroAgent, final int tailleBuffers) {
-		this.tailleBuffers = tailleBuffers;
-		this.numeroAgent = numeroAgent;
+	public Agent() {
 	}
 	
 	/**
@@ -47,10 +50,26 @@ public class Agent extends AbstractEntiteSimulation {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		// Quand l'agent est créé, les hôtes viennent directement s'y connecter
+		// TODO dans un premier temps on utilise la même taille de buffers pour
+		// tous. ensuite on pourra fixer des valeurs différentes pour chacun
+		this.tailleBuffers =
+			getConfiguration().getConfigurationSimulationReseau()
+						.getTailleBuffersAgents();
+		creerHotes();
+	}
+
+
+
+	/**
+	 * On crée les hôtes connectés à cet agent en fonction de la configuration.
+	 */
+	private void creerHotes() {
 		for (int i = 1; i <= getConfiguration().getConfigurationAgents()
-				.getNombreHotes(); i++) {
-			hotes.add(new Hote(this, i));
+		.getNombreHotes(); i++) {
+			Hote hote = (Hote) getApplicationContext().getBean("hote");
+			hote.setAgent(this);
+			hote.setNumeroHote(i);
+			hotes.add(hote);
 		}
 	}
 
@@ -72,8 +91,8 @@ public class Agent extends AbstractEntiteSimulation {
 	 * 
 	 * @return le numéro de cet agent
 	 */
-	public int getNumeroAgent() {
-		return numeroAgent;
+	public int getNumero() {
+		return numero;
 	}
 
 
@@ -83,6 +102,14 @@ public class Agent extends AbstractEntiteSimulation {
 	 */
 	@Override
 	public String toString() {
-		return "Agent " + getNumeroAgent();
+		return "Agent " + getNumero();
+	}
+
+	@Override
+	public void reset() {
+		// on recrée les hôtes
+		this.hotes.clear();
+		creerHotes();
+		// TODO ici tout remettre à zéro (compteurs, ...)
 	}
 }

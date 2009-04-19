@@ -3,8 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd"
-	default-autowire="constructor">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
 	<!-- Active le contrôle des annotations -->
 	<context:annotation-config />
@@ -14,9 +13,6 @@
 	<!-- Chargement des fichiers de configuration (config par défaut) -->
 	<context:property-placeholder
 		location="classpath:configuration/simulation.properties, classpath:configuration/agents.properties, classpath:configuration/hotes.properties" />
-
-	<bean id="simulationReseau" class="be.simulation.SimulationReseau"
-		scope="prototype" />
 
 	<!-- Les objets de configuration sont des singletons pour que les valeurs soient partagées -->
 	<bean id="configurationSimulationReseau"
@@ -45,4 +41,11 @@
 
 	<bean id="configuration" class="be.simulation.configuration.Configuration"
 		scope="singleton" />
+	
+	<bean id="simulationReseau" class="be.simulation.SimulationReseau"
+		scope="singleton" />
+	
+	<!-- Agent et Hote sont des prototypes (nouvel objet fourni à chaque demande) -->
+	<bean id="agent" class="be.simulation.entites.Agent" scope="prototype" />
+	<bean id="hote" class="be.simulation.entites.Hote" scope="prototype" />
 </beans>

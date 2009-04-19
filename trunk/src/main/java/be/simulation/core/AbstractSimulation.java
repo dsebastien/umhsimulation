@@ -1,6 +1,5 @@
 package be.simulation.core;
 
-import org.apache.log4j.Logger;
 import be.simulation.core.entites.AbstractEntiteSimulation;
 import be.simulation.core.evenements.EventList;
 
@@ -14,19 +13,14 @@ import be.simulation.core.evenements.EventList;
  * @author Mernier Jean-François
  */
 public abstract class AbstractSimulation extends AbstractEntiteSimulation {
-	protected static final Logger	LOGGER	=
-													Logger
-															.getLogger(AbstractSimulation.class
-																	.getName());
 	/**
 	 * La FEL.
 	 */
-	private final EventList			futureEventList;
+	private EventList				futureEventList;
+
 	/**
 	 * Horloge de simulation
 	 */
-	// FIXME décider de ce qu'on utilise pour le suivi du temps de simulation
-	// (long ou double?)
 	private Double					horloge;
 
 
@@ -35,7 +29,6 @@ public abstract class AbstractSimulation extends AbstractEntiteSimulation {
 	 * Création de la simulation.
 	 */
 	public AbstractSimulation() {
-		// création de la FEL
 		futureEventList = new EventList();
 	}
 
@@ -83,7 +76,7 @@ public abstract class AbstractSimulation extends AbstractEntiteSimulation {
 	 * 
 	 * @return la FEL
 	 */
-	protected EventList getFutureEventList() {
+	public EventList getFutureEventList() {
 		return futureEventList;
 	}
 
@@ -94,15 +87,9 @@ public abstract class AbstractSimulation extends AbstractEntiteSimulation {
 	 * 
 	 * @return l'horloge de simulation
 	 */
-	protected Double getHorloge() {
+	public Double getHorloge() {
 		return horloge;
 	}
-
-	/**
-	 * Initialise ou réinitialise le système (retour à l'état de départ).
-	 */
-	public abstract void reset();
-
 
 
 	/**

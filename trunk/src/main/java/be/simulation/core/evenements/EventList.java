@@ -44,7 +44,7 @@ public class EventList {
 	 *        l'évènement
 	 */
 	public void planifierEvenement(final Evenement evt) {
-		LOG.info("Planification de: " + evt.toString());
+		LOG.info("Planification d'un évènement " + evt.toString());
 		
 		int index = Collections.binarySearch(eventList, evt);
 		if (index < 0) {
