@@ -79,8 +79,8 @@ public class Configuration {
 	/**
 	 * OPTION - Taille des buffers des agents.
 	 */
-	public static final String					OPTION_SIMULATION_TAILLE_BUFFERS_AGENTS			=
-																										"tailleBuffersAgents";
+	public static final String					OPTION_AGENTS_TAILLE_BUFFER			=
+																										"agentsTailleBuffer";
 	/**
 	 * OPTION - Timeout pour la réémission des messages.
 	 */
@@ -121,7 +121,7 @@ public class Configuration {
 	 */
 	private final OptionParser					optionParser;
 	private final OptionSpec<Long>				optionSimulationDuree;
-	private final OptionSpec<Integer>			optionSimulationTailleBuffersAgents;
+	private final OptionSpec<Integer>			optionAgentsTailleBuffer;
 	private final OptionSpec<Integer>			optionSimulationTimeoutReemissionMessages;
 	private final OptionSpec<Integer>			optionSimulationDelaiEntreEntites;
 
@@ -171,8 +171,8 @@ public class Configuration {
 								OPTION_SIMULATION_TIMEOUT_REEMISSION_MESSAGES,
 								"Timeout après lequel les messages doivent etre réexpédiés si aucun accusé de réception n'est reçu (> 80)")
 						.withRequiredArg().ofType(Integer.class);
-		optionSimulationTailleBuffersAgents =
-				optionParser.accepts(OPTION_SIMULATION_TAILLE_BUFFERS_AGENTS,
+		optionAgentsTailleBuffer =
+				optionParser.accepts(OPTION_AGENTS_TAILLE_BUFFER,
 						"Taille des buffers des agents (>= 0)")
 						.withRequiredArg().ofType(Integer.class);
 		optionAgentsTempsTraitementMessage =
@@ -197,8 +197,6 @@ public class Configuration {
 								OPTION_SIMULATION_DELAI_ENTRE_ENTITES,
 								"Délai nécessaire pour qu'un message d'un hôte arrive à l'agent (et inversément) (>=0)")
 						.withRequiredArg().ofType(Integer.class);
-		
-		
 	}
 
 
@@ -266,6 +264,7 @@ public class Configuration {
 			}
 			configurationAgents.setTauxPerteBrutale(tauxPerteBrutale);
 		}
+		// temps traitement des messages
 		if (options.has(optionAgentsTempsTraitementMessage)) {
 			final float tempsTraitementMessage =
 					options.valueOf(optionAgentsTempsTraitementMessage);
@@ -275,6 +274,16 @@ public class Configuration {
 			}
 			configurationAgents
 					.setTempsTraitementMessage(tempsTraitementMessage);
+		}
+		// taille du buffer
+		if (options.has(optionAgentsTailleBuffer)) {
+			final int tailleBufferAgents =
+					options.valueOf(optionAgentsTailleBuffer);
+			if (tailleBufferAgents < 0) {
+				throw new ExceptionOptionsInvalides(
+						"La taille des buffers des agents ne peut pas être < 0");
+			}
+			configurationAgents.setTailleBuffer(tailleBufferAgents);
 		}
 	}
 
@@ -353,18 +362,7 @@ public class Configuration {
 			}
 			configurationSimulationReseau
 					.setTimeoutReemissionMessages(timeoutReemission);
-		}
-		if (options.has(optionSimulationTailleBuffersAgents)) {
-			final int tailleBuffersAgents =
-					options.valueOf(optionSimulationTailleBuffersAgents);
-			if (tailleBuffersAgents < 0) {
-				throw new ExceptionOptionsInvalides(
-						"La taille des buffers des agents ne peut pas être < 0");
-			}
-			configurationSimulationReseau
-					.setTailleBuffersAgents(tailleBuffersAgents);
-		}
-		
+		}		
 		if (options.has(optionSimulationDelaiEntreEntites)) {
 			final int delaiEntreEntites =
 					options.valueOf(optionSimulationDelaiEntreEntites);

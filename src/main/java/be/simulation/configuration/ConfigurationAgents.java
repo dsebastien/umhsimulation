@@ -25,7 +25,14 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	 */
     private float	tempsTraitementMessage;
 
-
+	/**
+	 * Taille du buffer des agents (>=0). 0 = infinie.
+	 * 
+	 * @deprecated On l'utilise dans un premier temps, mais ensuite ça devra
+	 *             être différent pour chaque agent
+	 */
+	@Deprecated
+	private int		tailleBuffer;
 
 	/**
 	 * Récupérer le nombre d'hôtes par agent.
@@ -35,8 +42,20 @@ public class ConfigurationAgents extends AbstractConfiguration {
     public long getNombreHotes() {
         return nombreHotes;
     }
+    
+	/**
+	 * Récupérer la taille du buffer des agents.
+	 * 
+	 * @return la taille du buffer des agents
+	 * @deprecated On l'utilise dans un premier temps, mais ensuite ça devra
+	 *             être différent pour chaque agent
+	 */
+	@Deprecated
+	public int getTailleBuffer() {
+		return tailleBuffer;
+	}
 
-
+	
 
 	/**
      * Récupérer le taux de perte brutale.
@@ -46,6 +65,7 @@ public class ConfigurationAgents extends AbstractConfiguration {
     public float getTauxPerteBrutale() {
         return tauxPerteBrutale;
     }
+
 
 
 
@@ -59,7 +79,9 @@ public class ConfigurationAgents extends AbstractConfiguration {
 		return tempsTraitementMessage;
 	}
 
-    /**
+
+
+	/**
      * Modifier le nombre d'hôtes par agent (effectif seulement après une
      * réinitialisation de la simulation).
      * 
@@ -69,6 +91,19 @@ public class ConfigurationAgents extends AbstractConfiguration {
     public void setNombreHotes(final long nombreHotes) {
         this.nombreHotes = nombreHotes;
     }
+
+    /**
+	 * Définir la taille du buffer des agents (>=0). 0 = infinie.
+	 * 
+	 * @param tailleBufferAgents
+	 *        la taille du buffer des agents
+	 * @deprecated On l'utilise dans un premier temps, mais ensuite ça devra
+	 *             être différent pour chaque agent
+	 */
+	@Deprecated
+	public void setTailleBuffer(final int tailleBufferAgents) {
+		this.tailleBuffer = tailleBufferAgents;
+	}
 
     /**
      * Définir le taux de perte brutale.

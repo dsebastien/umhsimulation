@@ -21,7 +21,6 @@
 		<property name="nom" value="${general.nom}" />
 		<property name="duree" value="${general.duree}" />
 		<property name="timeoutReemissionMessages" value="${general.messages_timeout_avant_reemission}" />
-		<property name="tailleBuffersAgents" value="${general.taille_buffers_agents}" />
 		<property name="delaiEntreEntites" value="${general.delai_entre_entites}" />
 	</bean>
 
@@ -30,6 +29,7 @@
 		<property name="nombreHotes" value="${agents.nombre_hotes}" />
 		<property name="tauxPerteBrutale" value="${agents.taux_perte_brutale}" />
 		<property name="tempsTraitementMessage" value="${agents.temps_traitement_message}" />
+		<property name="tailleBuffer" value="${agents.taille_buffer}" />
 	</bean>
 
 	<bean id="configurationHotes" class="be.simulation.configuration.ConfigurationHotes"

@@ -530,38 +530,38 @@ public class ConfigurationTest {
 	 *         ne doit pas se produire
 	 */
 	@Test
-	public void testSimulationTailleBuffersAgents()
+	public void testAgentsTailleBuffer()
 			throws ExceptionOptionsInvalides {
 		String valeur = "0";
 		String[] args =
 				{
 					PREFIXE
-							+ Configuration.OPTION_SIMULATION_TAILLE_BUFFERS_AGENTS
+							+ Configuration.OPTION_AGENTS_TAILLE_BUFFER
 							+ SEPARATEUR + valeur
 				};
 		configuration.parse(args);
 		assertTrue(Integer.valueOf(valeur).intValue() == configuration
-				.getConfigurationSimulationReseau().getTailleBuffersAgents());
+				.getConfigurationAgents().getTailleBuffer());
 		valeur = "500";
 		args =
 				new String[] {
 					PREFIXE
-							+ Configuration.OPTION_SIMULATION_TAILLE_BUFFERS_AGENTS
+							+ Configuration.OPTION_AGENTS_TAILLE_BUFFER
 							+ SEPARATEUR + valeur
 				};
 		configuration.parse(args);
 		assertTrue(Integer.valueOf(valeur).intValue() == configuration
-				.getConfigurationSimulationReseau().getTailleBuffersAgents());
+				.getConfigurationAgents().getTailleBuffer());
 		valeur = "1";
 		args =
 				new String[] {
 					PREFIXE
-							+ Configuration.OPTION_SIMULATION_TAILLE_BUFFERS_AGENTS
+							+ Configuration.OPTION_AGENTS_TAILLE_BUFFER
 							+ SEPARATEUR + valeur
 				};
 		configuration.parse(args);
 		assertTrue(Integer.valueOf(valeur).intValue() == configuration
-				.getConfigurationSimulationReseau().getTailleBuffersAgents());
+				.getConfigurationAgents().getTailleBuffer());
 	}
 
 
@@ -575,7 +575,7 @@ public class ConfigurationTest {
 		String[] args =
 				{
 					PREFIXE
-							+ Configuration.OPTION_SIMULATION_TAILLE_BUFFERS_AGENTS
+							+ Configuration.OPTION_AGENTS_TAILLE_BUFFER
 							+ SEPARATEUR + "-1"
 				};
 		try {
@@ -587,7 +587,7 @@ public class ConfigurationTest {
 		args =
 				new String[] {
 					PREFIXE
-							+ Configuration.OPTION_SIMULATION_TAILLE_BUFFERS_AGENTS
+							+ Configuration.OPTION_AGENTS_TAILLE_BUFFER
 							+ SEPARATEUR + "-100"
 				};
 		try {
