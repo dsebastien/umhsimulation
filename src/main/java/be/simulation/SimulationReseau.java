@@ -1,7 +1,9 @@
 package be.simulation;
 
 import be.simulation.core.AbstractSimulation;
+import be.simulation.core.evenements.Evenement;
 import be.simulation.entites.Agent;
+import be.simulation.evenements.FinDeSimulation;
 
 /**
  * Simulation d'un réseau.
@@ -71,6 +73,19 @@ public class SimulationReseau extends
 				new Agent(7000, getConfiguration()
 						.getConfigurationSimulationReseau()
 						.getTailleBuffersAgents());
+		
+		
+		// TODO définir les tables de routage de chaque agent (fixées pour la
+		// première version!)
+		// TODO plus tard, ajouter les évènements de type agent envoie infos
+		// routage et faire en sorte que ça dure x temps de simulation
+		// TODO ajouter les premiers évènements à la FEL (envoi des premiers
+		// messages des hôtes)
+		// On ajoute directement l'évènement de fin de simulation à la FEL
+		FinDeSimulation finDeSimulation =
+				new FinDeSimulation(Double.valueOf(getConfiguration()
+						.getConfigurationSimulationReseau().getDuree()));
+		getFutureEventList().planifierEvenement(finDeSimulation);
 	}
 
 
@@ -83,6 +98,20 @@ public class SimulationReseau extends
 		LOGGER.info("Démarrage de la simulation ("
 				+ getConfiguration().getConfigurationSimulationReseau()
 						.getNom() + ")");
+		// à chaque tour de boucle on récupère
+		// l'évènement imminent dans la FEL et on le traite
+		while (true) {
+			Evenement evenementImminent =
+					getFutureEventList().getEvenementImminent();
+			// FIXME peut être mieux de récupérer une liste d'évènements
+			// imminents (ceux qui doivent arriver au prochain temps de
+			// simulation
+			// ensuite ici on choisira dans quel ordre les trier
+			if (evenementImminent instanceof FinDeSimulation) {
+				break;
+			}
+		}
+		
 		// TODO implementer
 	}
 

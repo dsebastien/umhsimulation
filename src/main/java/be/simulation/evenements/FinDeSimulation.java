@@ -24,6 +24,6 @@ public class FinDeSimulation extends Evenement {
 	 */
 	@Override
 	public String toString() {
-		return "Fin de simulation prévue au temps " + getTempsPrevu();
+		return "Fin de simulation au temps " + getTempsPrevu();
 	}
 }
