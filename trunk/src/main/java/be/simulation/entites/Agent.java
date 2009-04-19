@@ -53,8 +53,8 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		// TODO dans un premier temps on utilise la même taille de buffers pour
 		// tous. ensuite on pourra fixer des valeurs différentes pour chacun
 		this.tailleBuffers =
-			getConfiguration().getConfigurationSimulationReseau()
-						.getTailleBuffersAgents();
+			getConfiguration().getConfigurationAgents()
+						.getTailleBuffer();
 		creerHotes();
 	}
 

@@ -1,5 +1,7 @@
 package be.simulation;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -49,6 +51,7 @@ public class Main {
 			LOGGER.fatal(e.getMessage());
 			System.exit(0);
 		}
+		
 		// Recupération de la simulation pré-configurée par spring
 		SimulationReseau simulation =
 				(SimulationReseau) springApplicationContext

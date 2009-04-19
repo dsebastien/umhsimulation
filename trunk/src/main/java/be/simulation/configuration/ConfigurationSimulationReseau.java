@@ -11,43 +11,24 @@ import be.simulation.core.configuration.AbstractConfiguration;
  */
 public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	/**
+	 * Temps nécessaire pour qu'un message partant d'un hôte arrive à son agent
+	 * (et inversément) (>= 0).
+	 */
+	private int		delaiEntreEntites;
+	/**
 	 * Durée de simulation (> 0).
 	 */
 	private long	duree;
+
 	/**
 	 * Nom de la simulation.
 	 */
 	private String	nom;
 	/**
-	 * Taille des buffers des agents (>=0). 0 = infinie.
-	 * 
-	 * @deprecated On l'utilise dans un premier temps, mais ensuite ça devra
-	 *             être différent pour chaque agent
-	 */
-	@Deprecated
-	private int		tailleBuffersAgents;
-	/**
 	 * Timeout après lequel les messages doivent être réexpédiés si aucun accusé
 	 * de réception n'est reçu (> 80).
 	 */
 	private int		timeoutReemissionMessages;
-	/**
-	 * Temps nécessaire pour qu'un message partant d'un hôte arrive à son agent
-	 * (et inversément) (>= 0).
-	 */
-	private int		delaiEntreEntites;
-
-
-
-	public int getDelaiEntreEntites() {
-		return delaiEntreEntites;
-	}
-
-
-
-	public void setDelaiEntreEntites(int delaiEntreEntites) {
-		this.delaiEntreEntites = delaiEntreEntites;
-	}
 
 
 
@@ -55,6 +36,12 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	 * Constructeur par défaut.
 	 */
 	public ConfigurationSimulationReseau() {
+	}
+
+
+
+	public int getDelaiEntreEntites() {
+		return delaiEntreEntites;
 	}
 
 
@@ -82,20 +69,6 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 
 
 	/**
-	 * Récupérer la taille des buffers des agents.
-	 * 
-	 * @return la taille des buffers des agents
-	 * @deprecated On l'utilise dans un premier temps, mais ensuite ça devra
-	 *             être différent pour chaque agent
-	 */
-	@Deprecated
-	public int getTailleBuffersAgents() {
-		return tailleBuffersAgents;
-	}
-
-
-
-	/**
 	 * Récupérer le timeout après lequel les messages doivent être réexpédiés si
 	 * aucun accusé de réception n'est reçu.
 	 * 
@@ -103,6 +76,15 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	 */
 	public int getTimeoutReemissionMessages() {
 		return timeoutReemissionMessages;
+	}
+
+
+
+
+
+
+	public void setDelaiEntreEntites(int delaiEntreEntites) {
+		this.delaiEntreEntites = delaiEntreEntites;
 	}
 
 
@@ -130,19 +112,6 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	}
 
 
-
-	/**
-	 * Définir la taille des buffers des agents (>=0). 0 = infinie.
-	 * 
-	 * @param tailleBuffersAgents
-	 *        la taille des buffers des agents
-	 * @deprecated On l'utilise dans un premier temps, mais ensuite ça devra
-	 *             être différent pour chaque agent
-	 */
-	@Deprecated
-	public void setTailleBuffersAgents(final int tailleBuffersAgents) {
-		this.tailleBuffersAgents = tailleBuffersAgents;
-	}
 
 
 
