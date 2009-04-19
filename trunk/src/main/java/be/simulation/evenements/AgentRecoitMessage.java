@@ -47,7 +47,6 @@ public class AgentRecoitMessage extends Evenement {
 	 */
 	@Override
 	public String toString() {
-		// FIXME implémenter
-		return null;
+		return "Agent reçoit message au temps " + getTempsPrevu();
 	}
 }
