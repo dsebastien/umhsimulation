@@ -9,13 +9,13 @@ package be.simulation.core.evenements;
  * @author Regnier Frederic
  * @author Mernier Jean-François
  */
-public abstract class Evenement {
+public abstract class Evenement implements Comparable<Evenement> {
 	// FIXME demander à l'assistant ce qu'il conseille pour la gestion du temps
 	// (pas clair du tout pour moi)
 	/**
 	 * Temps auquel cet évènement doit se produire.
 	 */
-	private final Double		tempsPrevu;
+	private final Double	tempsPrevu;
 
 
 
@@ -47,4 +47,22 @@ public abstract class Evenement {
 	 */
 	@Override
 	public abstract String toString();
+
+
+
+	/**
+	 * Comparaison de deux évènements
+	 */
+	public int compareTo(Evenement o) {
+		if (this.equals(o)
+				|| o.getTempsPrevu().doubleValue() == this.getTempsPrevu()
+						.doubleValue()) {
+			return 0;
+		} else if (this.getTempsPrevu().doubleValue() < o.getTempsPrevu()
+				.doubleValue()) {
+			return -1;
+		} else {
+			return 1;
+		}
+	}
 }
