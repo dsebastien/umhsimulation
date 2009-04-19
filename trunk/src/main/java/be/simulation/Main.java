@@ -59,5 +59,8 @@ public class Main {
 		// Lancement de la simulation
 		simulation.demarrer();
 		simulation.afficherResultats();
+		simulation.reset();
+		
+		//FIXME ajouter option "timeoutInfosRoutage" à la configuration des agents
 	}
 }
