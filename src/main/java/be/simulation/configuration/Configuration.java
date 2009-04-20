@@ -179,12 +179,12 @@ public class Configuration {
 				optionParser
 						.accepts(
 								OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE,
-								"Temps de traitement d'un message par un agent (>=0). 0 = traitement instantané")
+								"Temps de traitement d'un message par un agent (0 <= temps traitement <= 1). 0 = traitement instantané")
 						.withRequiredArg().ofType(Float.class);
 		optionHotesTempsTraitementMessage =
 				optionParser
 						.accepts(OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE,
-								"Temps de traitement d'un message par un hote (>=0). 0 = traitement instantané")
+								"Temps de traitement d'un message par un hote (0 <= temps traitement <= 1). 0 = traitement instantané")
 						.withRequiredArg().ofType(Float.class);
 		
 		optionHotesTempxMaximalInterEnvois =
@@ -268,9 +268,9 @@ public class Configuration {
 		if (options.has(optionAgentsTempsTraitementMessage)) {
 			final float tempsTraitementMessage =
 					options.valueOf(optionAgentsTempsTraitementMessage);
-			if (tempsTraitementMessage < 0) {
+			if (tempsTraitementMessage < 0 || tempsTraitementMessage > 1) {
 				throw new ExceptionOptionsInvalides(
-						"Le temps de traitement d'un message pour un agent doit être >=0");
+						"Le temps de traitement d'un message pour un agent doit être tel que <= temps traitement <= 1");
 			}
 			configurationAgents
 					.setTempsTraitementMessage(tempsTraitementMessage);
@@ -312,9 +312,9 @@ public class Configuration {
 		if (options.has(optionHotesTempsTraitementMessage)) {
 			final float tempsTraitementMessage =
 					options.valueOf(optionHotesTempsTraitementMessage);
-			if (tempsTraitementMessage < 0) {
+			if (tempsTraitementMessage < 0 || tempsTraitementMessage > 1) {
 				throw new ExceptionOptionsInvalides(
-						"Le temps de traitement d'un message pour un hote doit être >=0");
+						"Le temps de traitement d'un message pour un agent doit être tel que <= temps traitement <= 1");
 			}
 			configurationHotes
 					.setTempsTraitementMessage(tempsTraitementMessage);

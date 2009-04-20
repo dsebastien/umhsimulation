@@ -11,20 +11,14 @@ import be.simulation.entites.Agent;
  * @author Mernier Jean-François
  */
 public class ConfigurationAgents extends AbstractConfiguration {
-    /**
-     * Nombre d'hôtes par agent.
-     */
-    private long nombreHotes;
-
-    /**
-     * Le taux de perte brutale des agents (0 <= taux < 1).
-     */
-    private float tauxPerteBrutale;
 	/**
-	 * Le temps de traitement d'un message (>=0). 0 = traitement instantané.
+	 * Nombre d'hôtes par agent.
 	 */
-    private float	tempsTraitementMessage;
-
+	private long	nombreHotes;
+	/**
+	 * Le nombre maximal de traitements simultanés.
+	 */
+	private int		nombreMaxTraitementsSimultanes;
 	/**
 	 * Taille du buffer des agents (>=0). 0 = infinie.
 	 * 
@@ -33,16 +27,40 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	 */
 	@Deprecated
 	private int		tailleBuffer;
+	/**
+	 * Le taux de perte brutale des agents (0 <= taux < 1).
+	 */
+	private float	tauxPerteBrutale;
+	/**
+	 * Le temps de traitement d'un message (0 <= temps traitement <= 1). 0 =
+	 * traitement instantané.
+	 */
+	private float	tempsTraitementMessage;
+
+
 
 	/**
 	 * Récupérer le nombre d'hôtes par agent.
 	 * 
 	 * @return le nombre d'hôtes par agent
 	 */
-    public long getNombreHotes() {
-        return nombreHotes;
-    }
-    
+	public long getNombreHotes() {
+		return nombreHotes;
+	}
+
+
+
+	/**
+	 * Récupérer le nombre maximal de traitements simultanés.
+	 * 
+	 * @return le nombre maximal de traitements simultanés
+	 */
+	public int getNombreMaxTraitementsSimultanes() {
+		return nombreMaxTraitementsSimultanes;
+	}
+
+
+
 	/**
 	 * Récupérer la taille du buffer des agents.
 	 * 
@@ -55,17 +73,16 @@ public class ConfigurationAgents extends AbstractConfiguration {
 		return tailleBuffer;
 	}
 
-	
+
 
 	/**
-     * Récupérer le taux de perte brutale.
-     * 
-     * @return le taux de perte brutale
-     */
-    public float getTauxPerteBrutale() {
-        return tauxPerteBrutale;
-    }
-
+	 * Récupérer le taux de perte brutale.
+	 * 
+	 * @return le taux de perte brutale
+	 */
+	public float getTauxPerteBrutale() {
+		return tauxPerteBrutale;
+	}
 
 
 
@@ -82,17 +99,19 @@ public class ConfigurationAgents extends AbstractConfiguration {
 
 
 	/**
-     * Modifier le nombre d'hôtes par agent (effectif seulement après une
-     * réinitialisation de la simulation).
-     * 
-     * @param nombreHotes
-     *            le nombre d'hôtes par agent à utiliser
-     */
-    public void setNombreHotes(final long nombreHotes) {
-        this.nombreHotes = nombreHotes;
-    }
+	 * Modifier le nombre d'hôtes par agent (effectif seulement après une
+	 * réinitialisation de la simulation).
+	 * 
+	 * @param nombreHotes
+	 *        le nombre d'hôtes par agent à utiliser
+	 */
+	public void setNombreHotes(final long nombreHotes) {
+		this.nombreHotes = nombreHotes;
+	}
 
-    /**
+
+
+	/**
 	 * Définir la taille du buffer des agents (>=0). 0 = infinie.
 	 * 
 	 * @param tailleBufferAgents
@@ -105,17 +124,21 @@ public class ConfigurationAgents extends AbstractConfiguration {
 		this.tailleBuffer = tailleBufferAgents;
 	}
 
-    /**
-     * Définir le taux de perte brutale.
-     * 
-     * @param tauxPerteBrutale
-     *            le taux de perte brutale (0 <= taux < 1)
-     */
-    public void setTauxPerteBrutale(final float tauxPerteBrutale) {
-        this.tauxPerteBrutale = tauxPerteBrutale;
-    }
 
-    /**
+
+	/**
+	 * Définir le taux de perte brutale.
+	 * 
+	 * @param tauxPerteBrutale
+	 *        le taux de perte brutale (0 <= taux < 1)
+	 */
+	public void setTauxPerteBrutale(final float tauxPerteBrutale) {
+		this.tauxPerteBrutale = tauxPerteBrutale;
+	}
+
+
+
+	/**
 	 * Définir le temps de traitement d'un message.
 	 * 
 	 * @param tempsTraitementMessage
@@ -123,5 +146,11 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	 */
 	public void setTempsTraitementMessage(final float tempsTraitementMessage) {
 		this.tempsTraitementMessage = tempsTraitementMessage;
+		if (tempsTraitementMessage == 0.0f) {
+			this.nombreMaxTraitementsSimultanes = Integer.MAX_VALUE;
+		} else {
+			this.nombreMaxTraitementsSimultanes =
+					(int) Math.floor(1 / tempsTraitementMessage);
+		}
 	}
 }
