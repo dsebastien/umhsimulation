@@ -21,6 +21,7 @@ public abstract class AbstractSimulation extends AbstractEntiteSimulation {
 	/**
 	 * Horloge de simulation
 	 */
+	//FIXME double ou long?
 	private Double					horloge;
 
 

@@ -629,6 +629,16 @@ public class ConfigurationTest {
 		configuration.parse(args);
 		assertTrue(Float.valueOf(valeur).floatValue() == configuration
 				.getConfigurationAgents().getTempsTraitementMessage());
+		valeur = "1";
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Float.valueOf(valeur).floatValue() == configuration
+				.getConfigurationAgents().getTempsTraitementMessage());
 	}
 
 
@@ -657,6 +667,18 @@ public class ConfigurationTest {
 					PREFIXE
 							+ Configuration.OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE
 							+ SEPARATEUR + "-1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur trop haute
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + "1.1"
 				};
 		try {
 			configuration.parse(args);
@@ -697,6 +719,16 @@ public class ConfigurationTest {
 		configuration.parse(args);
 		assertTrue(Float.valueOf(valeur).floatValue() == configuration
 				.getConfigurationHotes().getTempsTraitementMessage());
+		valeur = "1.0";
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Float.valueOf(valeur).floatValue() == configuration
+				.getConfigurationHotes().getTempsTraitementMessage());
 	}
 
 
@@ -725,6 +757,18 @@ public class ConfigurationTest {
 					PREFIXE
 							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
 							+ SEPARATEUR + "-1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur trop haute
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + "1.1"
 				};
 		try {
 			configuration.parse(args);

@@ -11,31 +11,46 @@ import be.simulation.entites.Hote;
  * @author Mernier Jean-François
  */
 public class ConfigurationHotes extends AbstractConfiguration {
-    /**
-     * Taux de messages d'un hôte qui seront à destination d'un hôte relié à un
-     * autre agent (0 <= taux <= 1).
-     */
-    private float tauxMessagesVersAutreAgent;
+	/**
+	 * Le nombre maximal de traitements simultanés.
+	 */
+	private int		nombreMaxTraitementsSimultanes;
+	/**
+	 * Taux de messages d'un hôte qui seront à destination d'un hôte relié à un
+	 * autre agent (0 <= taux <= 1).
+	 */
+	private float	tauxMessagesVersAutreAgent;
 	/**
 	 * Le temps maximal entre deux envois d'un hôte (> 0).
 	 */
 	private int		tempsMaxInterEnvois;
 	/**
-	 * Le temps de traitement d'un message (>=0). 0 = traitement instantané.
+	 * Le temps de traitement d'un message (0 <= temps traitement <= 1). 0 = traitement instantané.
 	 */
 	private float	tempsTraitementMessage;
 
 
 
 	/**
-     * Récupérer le taux de messages qui seront à destination d'un hôte relié à
-     * un autre agent.
-     * 
-     * @return le taux
-     */
-    public float getTauxMessagesVersAutreAgent() {
-        return this.tauxMessagesVersAutreAgent;
-    }
+	 * Récupérer le nombre maximal de traitements simultanés.
+	 * 
+	 * @return le nombre maximal de traitements simultanés
+	 */
+	public int getNombreMaxTraitementsSimultanes() {
+		return nombreMaxTraitementsSimultanes;
+	}
+
+
+
+	/**
+	 * Récupérer le taux de messages qui seront à destination d'un hôte relié à
+	 * un autre agent.
+	 * 
+	 * @return le taux
+	 */
+	public float getTauxMessagesVersAutreAgent() {
+		return this.tauxMessagesVersAutreAgent;
+	}
 
 
 
@@ -64,15 +79,19 @@ public class ConfigurationHotes extends AbstractConfiguration {
 	 * @param tauxMessagesVersAutreAgent
 	 *        le taux
 	 */
-    public void setTauxMessagesVersAutreAgent(float tauxMessagesVersAutreAgent) {
-        this.tauxMessagesVersAutreAgent = tauxMessagesVersAutreAgent;
-    }
+	public void setTauxMessagesVersAutreAgent(float tauxMessagesVersAutreAgent) {
+		this.tauxMessagesVersAutreAgent = tauxMessagesVersAutreAgent;
+	}
 
-    public void setTempsMaxInterEnvois(int tempsMaxInterEnvois) {
+
+
+	public void setTempsMaxInterEnvois(int tempsMaxInterEnvois) {
 		this.tempsMaxInterEnvois = tempsMaxInterEnvois;
 	}
 
-    /**
+
+
+	/**
 	 * Définir le temps de traitement d'un message.
 	 * 
 	 * @param tempsTraitementMessage
@@ -80,5 +99,11 @@ public class ConfigurationHotes extends AbstractConfiguration {
 	 */
 	public void setTempsTraitementMessage(final float tempsTraitementMessage) {
 		this.tempsTraitementMessage = tempsTraitementMessage;
+		
+		if(tempsTraitementMessage == 0.0f){
+			this.nombreMaxTraitementsSimultanes = Integer.MAX_VALUE;
+		}else{
+			this.nombreMaxTraitementsSimultanes = (int)Math.floor(1/tempsTraitementMessage);
+		}
 	}
 }
