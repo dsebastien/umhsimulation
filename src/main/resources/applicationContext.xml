@@ -20,7 +20,6 @@
 		scope="singleton">
 		<property name="nom" value="${general.nom}" />
 		<property name="duree" value="${general.duree}" />
-		<property name="timeoutReemissionMessages" value="${general.messages_timeout_avant_reemission}" />
 		<property name="delaiEntreEntites" value="${general.delai_entre_entites}" />
 	</bean>
 
@@ -37,6 +36,7 @@
 		<property name="tauxMessagesVersAutreAgent" value="${hotes.taux_messages_vers_autre_agent}" />
 		<property name="tempsTraitementMessage" value="${hotes.temps_traitement_message}" />
 		<property name="tempsMaxInterEnvois" value="${hotes.temps_max_inter_envois}" />
+		<property name="timeoutReemissionMessages" value="${hotes.messages_timeout_avant_reemission}" />
 	</bean>
 
 	<bean id="configuration" class="be.simulation.configuration.Configuration"

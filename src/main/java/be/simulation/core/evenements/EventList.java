@@ -46,10 +46,10 @@ public class EventList {
 		if (!eventList.isEmpty()) {
 			evenementImminent = eventList.pop();
 		}
-		if (evenementImminent == null) {
-			LOGGER
-					.warn("Il n'y a aucun évènement imminent, ceci ne devrait pas se produire car la FEL devrait au moins contenir l'évènement de fin de simulation!");
-		}
+		// if (evenementImminent == null) {
+		// LOGGER
+		// .warn("Il n'y a aucun évènement imminent, ceci ne devrait pas se produire car la FEL devrait au moins contenir l'évènement de fin de simulation!");
+		// }
 		return evenementImminent;
 	}
 

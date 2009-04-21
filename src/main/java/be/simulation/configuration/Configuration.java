@@ -82,8 +82,8 @@ public class Configuration {
 	/**
 	 * OPTION - Timeout pour la réémission des messages.
 	 */
-	public static final String					OPTION_SIMULATION_TIMEOUT_REEMISSION_MESSAGES	=
-																										"timeoutReemissionMessages";
+	public static final String					OPTION_HOTES_TIMEOUT_REEMISSION_MESSAGES	=
+																										"hotesTimeoutReemissionMessages";
 	/**
 	 * OPTION - Aide.
 	 */
@@ -120,7 +120,7 @@ public class Configuration {
 	private final OptionParser					optionParser;
 	private final OptionSpec<Long>				optionSimulationDuree;
 	private final OptionSpec<Integer>			optionAgentsTailleBuffer;
-	private final OptionSpec<Integer>			optionSimulationTimeoutReemissionMessages;
+	private final OptionSpec<Integer>			optionHotesTimeoutReemissionMessages;
 	private final OptionSpec<Integer>			optionSimulationDelaiEntreEntites;
 
 
@@ -168,10 +168,10 @@ public class Configuration {
 								OPTION_HOTES_TAUX_MESSAGES_VERS_AUTRE_AGENT,
 								"Taux de messages d'un hôte qui seront à destination d'un hôte relié à un autre agent (e.g., 0.75) (0 <= valeur <= 1)")
 						.withRequiredArg().ofType(Float.class);
-		optionSimulationTimeoutReemissionMessages =
+		optionHotesTimeoutReemissionMessages =
 				optionParser
 						.accepts(
-								OPTION_SIMULATION_TIMEOUT_REEMISSION_MESSAGES,
+								OPTION_HOTES_TIMEOUT_REEMISSION_MESSAGES,
 								"Timeout après lequel les messages doivent etre réexpédiés si aucun accusé de réception n'est reçu (> 80)")
 						.withRequiredArg().ofType(Integer.class);
 		optionAgentsTailleBuffer =
@@ -301,6 +301,7 @@ public class Configuration {
 	 */
 	private void majConfigurationHotes(final OptionSet options)
 			throws ExceptionOptionsInvalides {
+		// taux de messages à destination d'un autre agent
 		if (options.has(optionHotesTauxMessagesVersAutreAgent)) {
 			final float tauxMessagesVersAutreAgent =
 					options.valueOf(optionHotesTauxMessagesVersAutreAgent);
@@ -312,6 +313,7 @@ public class Configuration {
 			configurationHotes
 					.setTauxMessagesVersAutreAgent(tauxMessagesVersAutreAgent);
 		}
+		// temps de traitement d'un message
 		if (options.has(optionHotesTempsTraitementMessage)) {
 			final float tempsTraitementMessage =
 					options.valueOf(optionHotesTempsTraitementMessage);
@@ -322,6 +324,7 @@ public class Configuration {
 			configurationHotes
 					.setTempsTraitementMessage(tempsTraitementMessage);
 		}
+		// temps maximal entre deux envois
 		if (options.has(optionHotesTempxMaximalInterEnvois)) {
 			final int tempsMaxInterEnvois =
 					options.valueOf(optionHotesTempxMaximalInterEnvois);
@@ -330,6 +333,18 @@ public class Configuration {
 						"Le temps maximal entre deux envois d'un hôte doit être > 0");
 			}
 			configurationHotes.setTempsMaxInterEnvois(tempsMaxInterEnvois);
+		}
+		// timeout réémission
+		if (options.has(optionHotesTimeoutReemissionMessages)) {
+			final int timeoutReemission =
+					options.valueOf(optionHotesTimeoutReemissionMessages);
+			int timeoutMinimal = 80; // FIXME ok??
+			if (timeoutReemission < timeoutMinimal) {
+				throw new ExceptionOptionsInvalides(
+						"Le timeout avant réémission des messages doit être >="
+								+ timeoutMinimal);
+			}
+			configurationHotes.setTimeoutReemissionMessages(timeoutReemission);
 		}
 	}
 
@@ -345,6 +360,7 @@ public class Configuration {
 	 */
 	private void majConfigurationSimulation(final OptionSet options)
 			throws ExceptionOptionsInvalides {
+		// durée de la simulation
 		if (options.has(optionSimulationDuree)) {
 			long duree = options.valueOf(optionSimulationDuree);
 			if (duree <= 0) {
@@ -354,18 +370,7 @@ public class Configuration {
 			configurationSimulationReseau.setDuree(options
 					.valueOf(optionSimulationDuree));
 		}
-		if (options.has(optionSimulationTimeoutReemissionMessages)) {
-			final int timeoutReemission =
-					options.valueOf(optionSimulationTimeoutReemissionMessages);
-			int timeoutMinimal = 80; // FIXME ok??
-			if (timeoutReemission < timeoutMinimal) {
-				throw new ExceptionOptionsInvalides(
-						"Le timeout avant réémission des messages doit être >="
-								+ timeoutMinimal);
-			}
-			configurationSimulationReseau
-					.setTimeoutReemissionMessages(timeoutReemission);
-		}
+		// délai entre entités (hote <-> agent)
 		if (options.has(optionSimulationDelaiEntreEntites)) {
 			final int delaiEntreEntites =
 					options.valueOf(optionSimulationDelaiEntreEntites);
