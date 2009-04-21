@@ -96,7 +96,7 @@ public class SimulationReseau extends
 			// simulation
 			// ensuite ici on choisira dans quel ordre les trier
 			if (evenementImminent instanceof FinDeSimulation) {
-				LOGGER.info("La simulation est terminée!");
+				LOGGER.info("Fin de simulation!");
 				break;
 			}
 		}
