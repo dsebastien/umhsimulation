@@ -135,6 +135,14 @@
 		<finalName>${project.artifactId}-${project.version}-${buildNumber}</finalName>
 
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+		
 			<!-- Options de compilation -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

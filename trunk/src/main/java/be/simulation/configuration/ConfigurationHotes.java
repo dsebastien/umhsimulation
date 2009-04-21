@@ -29,8 +29,11 @@ public class ConfigurationHotes extends AbstractConfiguration {
 	 * traitement instantané.
 	 */
 	private float	tempsTraitementMessage;
-
-
+	/**
+	 * Timeout après lequel les messages doivent être réexpédiés si aucun accusé
+	 * de réception n'est reçu (> 80).
+	 */
+	private int		timeoutReemissionMessages;
 
 	/**
 	 * Récupérer le nombre maximal de traitements simultanés.
@@ -53,8 +56,6 @@ public class ConfigurationHotes extends AbstractConfiguration {
 		return this.tauxMessagesVersAutreAgent;
 	}
 
-
-
 	public int getTempsMaxInterEnvois() {
 		return tempsMaxInterEnvois;
 	}
@@ -69,6 +70,18 @@ public class ConfigurationHotes extends AbstractConfiguration {
 	 */
 	public float getTempsTraitementMessage() {
 		return tempsTraitementMessage;
+	}
+
+
+
+	/**
+	 * Récupérer le timeout après lequel les messages doivent être réexpédiés si
+	 * aucun accusé de réception n'est reçu.
+	 * 
+	 * @return le timeout
+	 */
+	public int getTimeoutReemissionMessages() {
+		return timeoutReemissionMessages;
 	}
 
 
@@ -125,5 +138,23 @@ public class ConfigurationHotes extends AbstractConfiguration {
 			this.nombreMaxTraitementsSimultanes =
 					(int) Math.floor(1 / tempsTraitementMessage);
 		}
+	}
+
+
+
+	/**
+	 * Définir le timeout pour la réémission des messages (> 80).
+	 * 
+	 * @param timeoutReemissionMessages
+	 *        le timeout.
+	 */
+	public void setTimeoutReemissionMessages(final int timeoutReemissionMessages) {
+		int timeoutMinimal = 80; // FIXME ok??
+		if (timeoutReemissionMessages < timeoutMinimal) {
+			throw new IllegalArgumentException(
+					"Le timeout avant réémission des messages doit être >= "
+							+ timeoutMinimal);
+		}
+		this.timeoutReemissionMessages = timeoutReemissionMessages;
 	}
 }

@@ -473,18 +473,18 @@ public class ConfigurationTest {
 	 *         ne doit pas se produire
 	 */
 	@Test
-	public void testSimulationTimeoutReemission()
+	public void testHotesTimeoutReemission()
 			throws ExceptionOptionsInvalides {
 		final String valeur = "85";
 		final String[] args =
 				{
 					PREFIXE
-							+ Configuration.OPTION_SIMULATION_TIMEOUT_REEMISSION_MESSAGES
+							+ Configuration.OPTION_HOTES_TIMEOUT_REEMISSION_MESSAGES
 							+ SEPARATEUR + valeur
 				};
 		configuration.parse(args);
 		assertTrue(Integer.valueOf(valeur).intValue() == configuration
-				.getConfigurationSimulationReseau()
+				.getConfigurationHotes()
 				.getTimeoutReemissionMessages());
 	}
 
@@ -494,13 +494,13 @@ public class ConfigurationTest {
 	 * Spécifier des valeurs incorrectes pour le timeout de réémission.
 	 */
 	@Test
-	public void testSimulationTimeoutReemissionValeursIncorrectes() {
+	public void testHotesTimeoutReemissionValeursIncorrectes() {
 		// valeur presque ok (frontière)
 		String[] args =
 				{
 					PREFIXE
-							+ Configuration.OPTION_SIMULATION_TIMEOUT_REEMISSION_MESSAGES
-							+ SEPARATEUR + "80"
+							+ Configuration.OPTION_HOTES_TIMEOUT_REEMISSION_MESSAGES
+							+ SEPARATEUR + "79"
 				};
 		try {
 			configuration.parse(args);
@@ -511,7 +511,7 @@ public class ConfigurationTest {
 		args =
 				new String[] {
 					PREFIXE
-							+ Configuration.OPTION_SIMULATION_TIMEOUT_REEMISSION_MESSAGES
+							+ Configuration.OPTION_HOTES_TIMEOUT_REEMISSION_MESSAGES
 							+ SEPARATEUR + "50"
 				};
 		try {
