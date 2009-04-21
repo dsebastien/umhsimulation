@@ -22,40 +22,16 @@ import org.apache.log4j.Logger;
  * @author Mernier Jean-François
  */
 public class EventList {
-	private static final Logger			LOG			=
+	private static final Logger			LOGGER		=
 															Logger
 																	.getLogger(EventList.class
 																			.getName());
 	/**
-	 * L'event list est maintenue grâce à une liste chaînée. L'insertion se fait
-	 * de manière triée.
+	 * L'event list (FEL) est maintenue grâce à une liste chaînée. L'insertion
+	 * se fait de manière triée de manière à garder la chronologie.
 	 */
 	private final LinkedList<Evenement>	eventList	=
 															new LinkedList<Evenement>();
-
-
-
-	/**
-	 * Planifier un évènement (le placer à une position appropriée dans la FEL
-	 * -> insertion triée). Les doublons sont ignorés (si on essaie de placer
-	 * deux fois la même instance d'un objet sur la FEL).
-	 * 
-	 * @param evt
-	 *        l'évènement
-	 */
-	public void planifierEvenement(final Evenement evt) {
-		LOG.info("Planification d'un évènement " + evt.toString());
-		
-		int index = Collections.binarySearch(eventList, evt);
-		if (index < 0) {
-			eventList.add(-index - 1, evt);
-		} else if (!eventList.contains(evt)) {
-			// cas où une autre instance du même type d'évènement est déjà sur
-			// la FEL: on fait l'ajout en fin de liste et on trie
-			eventList.add(evt);
-			Collections.sort(eventList);
-		}
-	}
 
 
 
@@ -70,7 +46,50 @@ public class EventList {
 		if (!eventList.isEmpty()) {
 			evenementImminent = eventList.pop();
 		}
+		if (evenementImminent == null) {
+			LOGGER
+					.warn("Il n'y a aucun évènement imminent, ceci ne devrait pas se produire car la FEL devrait au moins contenir l'évènement de fin de simulation!");
+		}
 		return evenementImminent;
+	}
+
+
+
+	/**
+	 * Méthode qui retourne un évènement imminent d'un certain type (ce qui
+	 * permet de traiter en priorité certains évènements comme les accusés de
+	 * réception ou les messages de routage).
+	 * 
+	 * @param typeEvenement
+	 *        le type d'évènement recherché
+	 * @return l'évènement trouvé ou null si aucun
+	 */
+	public Evenement getEvenementImminent(
+			final Class<? extends Evenement> typeEvenement) {
+		Evenement retVal = null;
+		Iterator<Evenement> it = eventList.iterator();
+		int i = 0;
+		while (it.hasNext()) {
+			Evenement tmp = it.next();
+			if (tmp.getClass().equals(typeEvenement)) {
+				// si cet évènement n'est pas le premier on doit vérifier qu'il
+				// est bien prévu au temps imminent également,
+				// sinon inutile de le retourner.
+				if (i > 0) {
+					Evenement imminent = eventList.peekFirst();
+					if (tmp.getTempsPrevu() == imminent.getTempsPrevu()) {
+						retVal = tmp;
+					}
+				} else {
+					retVal = tmp;
+				}
+			}
+			i++;
+		}
+		if (retVal != null) {
+			eventList.remove(retVal);
+		}
+		return retVal;
 	}
 
 
@@ -102,41 +121,28 @@ public class EventList {
 
 
 	/**
-	 * Méthode qui retourne un évènement imminent d'un certain type (ce qui
-	 * permet de traiter en priorité certains évènements comme les accusés de
-	 * réception ou les messages de routage).
+	 * Planifier un évènement (le placer à une position appropriée dans la FEL
+	 * -> insertion triée). Les doublons sont ignorés (si on essaie de placer
+	 * deux fois la même instance d'un objet sur la FEL).
 	 * 
-	 * @param typeEvenement
-	 *        le type d'évènement recherché
-	 * @return l'évènement trouvé ou null si aucun
+	 * @param evt
+	 *        l'évènement
 	 */
-	public Evenement getEvenementImminent(
-			Class<? extends Evenement> typeEvenement) {
-		Evenement retVal = null;
-		
-		Iterator<Evenement> it = eventList.iterator();
-		int i = 0;
-		while (it.hasNext()) {
-			Evenement tmp = it.next();
-			if (tmp.getClass().equals(typeEvenement)) {
-				// si cet évènement n'est pas le premier on doit vérifier qu'il
-				// est bien prévu au temps imminent également,
-				// sinon inutile de le retourner.
-				if (i > 0) {
-					Evenement imminent = eventList.peekFirst();
-					if (tmp.getTempsPrevu() == imminent.getTempsPrevu()) {
-						retVal = tmp;
-					}
-				} else {
-					retVal = tmp;
-				}
-			}
-			i++;
+	public void planifierEvenement(final Evenement evt) {
+		if (evt == null) {
+			throw new IllegalArgumentException(
+					"L'évènement à planifier ne peut pas être null");
 		}
-		if (retVal != null) {
-			eventList.remove(retVal);
+		LOGGER.info("Planification d'un évènement " + evt.toString());
+		int index = Collections.binarySearch(eventList, evt);
+		if (index < 0) {
+			eventList.add(-index - 1, evt);
+		} else if (!eventList.contains(evt)) {
+			// cas où une autre instance du même type d'évènement est déjà sur
+			// la FEL: on fait l'ajout en fin de liste et on trie
+			eventList.add(evt);
+			Collections.sort(eventList);
 		}
-		return retVal;
 	}
 
 

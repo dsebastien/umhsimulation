@@ -34,7 +34,7 @@ public abstract class AbstractEntiteSimulationReseau extends
 	 *        la simulation dont l'entité fait partie.
 	 */
 	@Autowired
-	public void setSimulation(SimulationReseau simulation) {
+	public void setSimulation(final SimulationReseau simulation) {
 		this.simulation = simulation;
 	}
 }

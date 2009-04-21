@@ -24,9 +24,12 @@ public class AgentRecoitMessage extends Evenement {
 	 * @param message
 	 *        le message reçu
 	 **/
-	public AgentRecoitMessage(final long tempsPrevu,
-			final Message message) {
+	public AgentRecoitMessage(final long tempsPrevu, final Message message) {
 		super(tempsPrevu);
+		if (message == null) {
+			throw new IllegalArgumentException(
+					"Le message ne peut pas être null!");
+		}
 		this.message = message;
 	}
 
@@ -40,6 +43,7 @@ public class AgentRecoitMessage extends Evenement {
 	public Message getMessage() {
 		return message;
 	}
+
 
 
 	/**
