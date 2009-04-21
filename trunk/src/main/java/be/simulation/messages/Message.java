@@ -30,7 +30,7 @@ public abstract class Message extends AbstractMessage<Hote> {
 	 * @param tempsSupplementaire
 	 *        le temps à ajouter au total
 	 */
-	public void augmenterTempsPasseDansBuffers(long tempsSupplementaire) {
+	public void augmenterTempsPasseDansBuffers(final long tempsSupplementaire) {
 		if (tempsSupplementaire < 0) {
 			throw new IllegalArgumentException(
 					"Le temps a ajouter ne peut pas etre < 0!");

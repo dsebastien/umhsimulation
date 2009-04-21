@@ -25,14 +25,31 @@ public abstract class AbstractEntiteSimulation implements InitializingBean,
 	private ApplicationContext	applicationContext;
 
 
-	protected final Logger	LOGGER	=
-													Logger
-															.getLogger(getClass().getName());
-	
 	/**
 	 * Configuration de la simulation.
 	 */
-	protected Configuration	configuration;
+	protected Configuration		configuration;
+	
+	protected final Logger	LOGGER	=
+													Logger
+															.getLogger(getClass().getName());
+
+	/**
+	 * Cette méthode est appelée après que toutes les propriétés aient étés
+	 * initialisées. Permet de mettre l'entité dans l'état souhaité.
+	 */
+	public abstract void afterPropertiesSet() throws Exception;
+
+
+
+	/**
+	 * Récupérer l'application context de Spring.
+	 * 
+	 * @return l'application context de Spring
+	 */
+	public ApplicationContext getApplicationContext() {
+		return applicationContext;
+	}
 
 	/**
 	 * Récupérer la configuration de la simulation.
@@ -43,6 +60,20 @@ public abstract class AbstractEntiteSimulation implements InitializingBean,
 		return configuration;
 	}
 
+
+	/**
+	 * Initialise ou réinitialise l'entité à son état initial.
+	 */
+	public abstract void reset();
+
+
+
+	public void setApplicationContext(
+			final ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
+
+
 	/**
 	 * Remplace la configuration de la simulation.
 	 * 
@@ -52,45 +83,17 @@ public abstract class AbstractEntiteSimulation implements InitializingBean,
 	 *         si la configuration donnée est nulle
 	 */
 	@Autowired
-	public void setConfiguration(Configuration config) {
+	public void setConfiguration(final Configuration config) {
 		if (config == null) {
 			throw new IllegalArgumentException(
 					"La configuration ne peut pas être nulle");
 		}
 		configuration = config;
 	}
-
-	/**
-	 * Initialise ou réinitialise l'entité à son état initial.
-	 */
-	public abstract void reset();
-
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public abstract String toString();
-
-	/**
-	 * Cette méthode est appelée après que toutes les propriétés aient étés
-	 * initialisées. Permet de mettre l'entité dans l'état souhaité.
-	 */
-	public abstract void afterPropertiesSet() throws Exception;
-
-
-	public void setApplicationContext(
-			final ApplicationContext applicationContext)
-			throws BeansException {
-		this.applicationContext = applicationContext;
-	}
-	
-	/**
-	 * Récupérer l'application context de Spring.
-	 * 
-	 * @return l'application context de Spring
-	 */
-	public ApplicationContext getApplicationContext() {
-		return applicationContext;
-	}
 }

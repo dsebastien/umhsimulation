@@ -85,7 +85,7 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	 * @param delaiEntreEntites
 	 *        le délai entre entités
 	 */
-	public void setDelaiEntreEntites(int delaiEntreEntites) {
+	public void setDelaiEntreEntites(final int delaiEntreEntites) {
 		if (delaiEntreEntites < 0) {
 			throw new IllegalArgumentException(
 					"Le délai entre entités doit être >= 0");

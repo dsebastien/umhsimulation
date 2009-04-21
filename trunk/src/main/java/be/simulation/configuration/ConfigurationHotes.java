@@ -96,7 +96,7 @@ public class ConfigurationHotes extends AbstractConfiguration {
 	 * @param tempsMaxInterEnvois
 	 *        le temps maximal entre deux envois d'un hôte.
 	 */
-	public void setTempsMaxInterEnvois(int tempsMaxInterEnvois) {
+	public void setTempsMaxInterEnvois(final int tempsMaxInterEnvois) {
 		if (tempsMaxInterEnvois <= 0) {
 			throw new IllegalArgumentException(
 					"Le temps maximal entre deux envois d'un hôte doit être > 0");

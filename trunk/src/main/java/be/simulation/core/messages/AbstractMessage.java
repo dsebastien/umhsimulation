@@ -13,13 +13,13 @@ import be.simulation.core.entites.AbstractEntiteSimulation;
  */
 public abstract class AbstractMessage<T extends AbstractEntiteSimulation> {
 	/**
-	 * Entité à l'origine du message.
-	 */
-	private final T	source;
-	/**
 	 * Entité qui doit reçevoir le message.
 	 */
 	private final T	destination;
+	/**
+	 * Entité à l'origine du message.
+	 */
+	private final T	source;
 
 
 
@@ -49,17 +49,6 @@ public abstract class AbstractMessage<T extends AbstractEntiteSimulation> {
 
 
 	/**
-	 * Récupérer la source du message.
-	 * 
-	 * @return la source du message
-	 */
-	public T getSource() {
-		return source;
-	}
-
-
-
-	/**
 	 * Récupérer le destinataire du message.
 	 * 
 	 * @return le destinataire du message
@@ -67,6 +56,15 @@ public abstract class AbstractMessage<T extends AbstractEntiteSimulation> {
 	public T getDestination() {
 		return destination;
 	}
-	
-	// TODO ajouter toString ? (abstract)
+
+
+
+	/**
+	 * Récupérer la source du message.
+	 * 
+	 * @return la source du message
+	 */
+	public T getSource() {
+		return source;
+	}
 }

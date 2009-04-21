@@ -16,7 +16,7 @@ public abstract class AbstractSimulation extends AbstractEntiteSimulation {
 	/**
 	 * La FEL.
 	 */
-	private EventList				futureEventList;
+	private final EventList	futureEventList;
 
 	/**
 	 * Horloge de simulation
@@ -42,6 +42,18 @@ public abstract class AbstractSimulation extends AbstractEntiteSimulation {
 
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		LOGGER.info("Initialisation de la simulation...");
+		reset();
+		LOGGER.info("Simulation initialisée");
+	}
+
+
+
+	/**
 	 * Ajouter un certain temps à l'horloge de simulation.
 	 * 
 	 * @param temps
@@ -49,7 +61,7 @@ public abstract class AbstractSimulation extends AbstractEntiteSimulation {
 	 * @throws IllegalArgumentException
 	 *         si le temps donné est null ou négatif (non autorisé)
 	 */
-	protected void ajouterTempsHorloge(long temps) {
+	protected void ajouterTempsHorloge(final long temps) {
 		if (temps < 0) {
 			throw new IllegalArgumentException(
 					"Le temps à ajouter à l'horloge ne peut pas être négatif!");
@@ -76,7 +88,6 @@ public abstract class AbstractSimulation extends AbstractEntiteSimulation {
 	}
 
 
-
 	/**
 	 * Retourne l'horloge de simulation.
 	 * 
@@ -85,6 +96,7 @@ public abstract class AbstractSimulation extends AbstractEntiteSimulation {
 	public long getHorloge() {
 		return horloge;
 	}
+
 
 
 	/**
@@ -103,9 +115,7 @@ public abstract class AbstractSimulation extends AbstractEntiteSimulation {
 	protected void resetHorloge() {
 		horloge = 0L;
 	}
-
-
-
+	
 	/**
 	 * Place le temps de simulation au temps donné.
 	 * 
@@ -114,21 +124,11 @@ public abstract class AbstractSimulation extends AbstractEntiteSimulation {
 	 * @throws IllegalArgumentException
 	 *         si le temps donné est null ou <= 0
 	 */
-	protected void setHorloge(long temps) {
+	protected void setHorloge(final long temps) {
 		if (temps < 0) {
 			throw new IllegalArgumentException(
 					"Le temps auquel placer l'horloge doit être >= 0");
 		}
 		horloge = temps;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		LOGGER.info("Initialisation de la simulation...");
-		reset();
-		LOGGER.info("Simulation initialisée");
 	}
 }

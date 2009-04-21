@@ -37,6 +37,21 @@ public abstract class Evenement implements Comparable<Evenement> {
 
 
 	/**
+	 * Comparaison de deux évènements
+	 */
+	public int compareTo(final Evenement o) {
+		if (this.equals(o) || o.getTempsPrevu() == this.getTempsPrevu()) {
+			return 0;
+		} else if (this.getTempsPrevu() < o.getTempsPrevu()) {
+			return -1;
+		} else {
+			return 1;
+		}
+	}
+
+
+
+	/**
 	 * Récupérer le temps auquel cet évènement doit se produire.
 	 * 
 	 * @return le temps auquel cet évènement doit se produire
@@ -45,26 +60,11 @@ public abstract class Evenement implements Comparable<Evenement> {
 		return tempsPrevu;
 	}
 
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public abstract String toString();
-
-
-
-	/**
-	 * Comparaison de deux évènements
-	 */
-	public int compareTo(Evenement o) {
-		if (this.equals(o)
-				|| o.getTempsPrevu() == this.getTempsPrevu()) {
-			return 0;
-		} else if (this.getTempsPrevu() < o.getTempsPrevu()) {
-			return -1;
-		} else {
-			return 1;
-		}
-	}
 }

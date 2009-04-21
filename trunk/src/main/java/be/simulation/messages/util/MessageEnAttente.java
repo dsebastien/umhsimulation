@@ -31,6 +31,14 @@ public final class MessageEnAttente {
 	 *        le temps de simulation auquel ce message a été mis en attente.
 	 */
 	public MessageEnAttente(final Message message, final long tempsArrivee) {
+		if (message == null) {
+			throw new IllegalArgumentException(
+					"Le message qu'on met en attente ne peut pas être null!");
+		}
+		if (tempsArrivee < 0) {
+			throw new IllegalArgumentException(
+					"Le temps d'arrivée du message ne peut pas etre < 0");
+		}
 		this.message = message;
 		this.tempsArrivee = tempsArrivee;
 	}
