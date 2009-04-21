@@ -13,7 +13,7 @@ public class FinDeSimulation extends Evenement {
 	/**
 	 * Evenement de fin de simulation.
 	 */
-	public FinDeSimulation(final Double tempsPrevu) {
+	public FinDeSimulation(final long tempsPrevu) {
 		super(tempsPrevu);
 	}
 

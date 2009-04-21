@@ -12,7 +12,7 @@ import be.simulation.entites.Hote;
  */
 public class AccuseReception extends Message {
 	/**
-	 * Message d'origine pour lequel cet accusé de réception est envoyé.
+	 * Message d'origine pour lequel cet accusé de réception a été envoyé.
 	 */
 	private final MessageSimple	messageOrigine;
 
@@ -31,6 +31,10 @@ public class AccuseReception extends Message {
 	public AccuseReception(final Hote source, final Hote destination,
 			final MessageSimple messageOrigine) {
 		super(source, destination);
+		if (messageOrigine == null) {
+			throw new IllegalArgumentException(
+					"Le message d'origine ne peut pas être null");
+		}
 		this.messageOrigine = messageOrigine;
 	}
 

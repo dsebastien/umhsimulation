@@ -106,6 +106,10 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	 *        le nombre d'hôtes par agent à utiliser
 	 */
 	public void setNombreHotes(final long nombreHotes) {
+		if (nombreHotes <= 0) {
+			throw new IllegalArgumentException(
+					"Le nombre d'hôtes doit être >0!");
+		}
 		this.nombreHotes = nombreHotes;
 	}
 
@@ -121,6 +125,10 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	 */
 	@Deprecated
 	public void setTailleBuffer(final int tailleBufferAgents) {
+		if (tailleBufferAgents < 0) {
+			throw new IllegalArgumentException(
+					"La taille du buffer des agents doit etre >=0");
+		}
 		this.tailleBuffer = tailleBufferAgents;
 	}
 
@@ -133,6 +141,10 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	 *        le taux de perte brutale (0 <= taux < 1)
 	 */
 	public void setTauxPerteBrutale(final float tauxPerteBrutale) {
+		if (tauxPerteBrutale < 0 || tauxPerteBrutale >= 1) {
+			throw new IllegalArgumentException(
+					"Le taux de perte brutale doit être tel que: 0 <= taux < 1");
+		}
 		this.tauxPerteBrutale = tauxPerteBrutale;
 	}
 
@@ -145,7 +157,13 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	 *        le temps de traitement d'un message (>=0)
 	 */
 	public void setTempsTraitementMessage(final float tempsTraitementMessage) {
+		if (tempsTraitementMessage < 0 || tempsTraitementMessage > 1) {
+			throw new IllegalArgumentException(
+					"Le temps de traitement d'un message pour un agent doit être tel que <= temps traitement <= 1");
+		}
 		this.tempsTraitementMessage = tempsTraitementMessage;
+		
+		// FIXME vérifier si ok
 		if (tempsTraitementMessage == 0.0f) {
 			this.nombreMaxTraitementsSimultanes = Integer.MAX_VALUE;
 		} else {

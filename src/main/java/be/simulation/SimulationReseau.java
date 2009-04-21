@@ -71,8 +71,8 @@ public class SimulationReseau extends
 		
 		// On ajoute directement l'évènement de fin de simulation à la FEL
 		FinDeSimulation finDeSimulation =
-				new FinDeSimulation(Double.valueOf(getConfiguration()
-						.getConfigurationSimulationReseau().getDuree()));
+				new FinDeSimulation(getConfiguration()
+						.getConfigurationSimulationReseau().getDuree());
 		getFutureEventList().planifierEvenement(finDeSimulation);
 	}
 
@@ -96,6 +96,7 @@ public class SimulationReseau extends
 			// simulation
 			// ensuite ici on choisira dans quel ordre les trier
 			if (evenementImminent instanceof FinDeSimulation) {
+				LOGGER.info("La simulation est terminée!");
 				break;
 			}
 		}
