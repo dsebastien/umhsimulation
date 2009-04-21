@@ -49,7 +49,6 @@ public class Configuration {
 	 */
 	public static final String					OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE			=
 																										"agentsTempsTraitementMessage";
-	
 	/**
 	 * OPTION - Delai entre un agent et un hôte (et inversément).
 	 */
@@ -65,7 +64,6 @@ public class Configuration {
 	 */
 	public static final String					OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE			=
 																										"hotesTempsTraitementMessage";
-	
 	/**
 	 * OPTION - Temps maximum entre deux envois d'un hôte.
 	 */
@@ -79,7 +77,7 @@ public class Configuration {
 	/**
 	 * OPTION - Taille des buffers des agents.
 	 */
-	public static final String					OPTION_AGENTS_TAILLE_BUFFER			=
+	public static final String					OPTION_AGENTS_TAILLE_BUFFER						=
 																										"agentsTailleBuffer";
 	/**
 	 * OPTION - Timeout pour la réémission des messages.
@@ -140,6 +138,11 @@ public class Configuration {
 			ConfigurationSimulationReseau configurationSimulationReseau,
 			ConfigurationAgents configurationAgents,
 			ConfigurationHotes configurationHotes) {
+		if (configurationSimulationReseau == null
+				|| configurationAgents == null || configurationHotes == null) {
+			throw new IllegalArgumentException(
+					"Les configurations de départ ne peuvent pas être null");
+		}
 		this.configurationAgents = configurationAgents;
 		this.configurationHotes = configurationHotes;
 		this.configurationSimulationReseau = configurationSimulationReseau;
@@ -183,10 +186,10 @@ public class Configuration {
 						.withRequiredArg().ofType(Float.class);
 		optionHotesTempsTraitementMessage =
 				optionParser
-						.accepts(OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE,
+						.accepts(
+								OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE,
 								"Temps de traitement d'un message par un hote (0 <= temps traitement <= 1). 0 = traitement instantané")
 						.withRequiredArg().ofType(Float.class);
-		
 		optionHotesTempxMaximalInterEnvois =
 				optionParser.accepts(OPTION_HOTES_TEMPS_MAX_INTER_ENVOIS,
 						"Temps maximal entre deux envois d'un hôte (> 0)")
@@ -324,7 +327,7 @@ public class Configuration {
 					options.valueOf(optionHotesTempxMaximalInterEnvois);
 			if (tempsMaxInterEnvois <= 0) {
 				throw new ExceptionOptionsInvalides(
-						"Le temps maximal entre deux envois d'un hôte doit être >0");
+						"Le temps maximal entre deux envois d'un hôte doit être > 0");
 			}
 			configurationHotes.setTempsMaxInterEnvois(tempsMaxInterEnvois);
 		}
@@ -354,15 +357,15 @@ public class Configuration {
 		if (options.has(optionSimulationTimeoutReemissionMessages)) {
 			final int timeoutReemission =
 					options.valueOf(optionSimulationTimeoutReemissionMessages);
-			int timeoutMinimal = 80;
-			if (timeoutReemission <= timeoutMinimal) {
+			int timeoutMinimal = 80; // FIXME ok??
+			if (timeoutReemission < timeoutMinimal) {
 				throw new ExceptionOptionsInvalides(
-						"Le timeout avant réémission des messages doit être >"
+						"Le timeout avant réémission des messages doit être >="
 								+ timeoutMinimal);
 			}
 			configurationSimulationReseau
 					.setTimeoutReemissionMessages(timeoutReemission);
-		}		
+		}
 		if (options.has(optionSimulationDelaiEntreEntites)) {
 			final int delaiEntreEntites =
 					options.valueOf(optionSimulationDelaiEntreEntites);

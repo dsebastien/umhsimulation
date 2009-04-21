@@ -11,10 +11,10 @@ import org.junit.Test;
 public class EvenementTest {
 	@Test
 	public void testComparaison(){
-		Evenement e1 = new EvenementBidon(new Double(0));
-		Evenement e2 = new EvenementBidon(new Double(0));
-		Evenement e3 = new EvenementBidon(new Double(1));
-		Evenement e4 = new EvenementBidon(new Double(2));
+		Evenement e1 = new EvenementBidon(0L);
+		Evenement e2 = new EvenementBidon(0L);
+		Evenement e3 = new EvenementBidon(1L);
+		Evenement e4 = new EvenementBidon(2L);
 		
 		assertTrue(e1.compareTo(e2) == 0);
 		assertTrue(e2.compareTo(e1) == 0);

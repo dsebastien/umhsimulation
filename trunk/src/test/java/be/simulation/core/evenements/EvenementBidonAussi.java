@@ -6,7 +6,7 @@ package be.simulation.core.evenements;
  * @author Dubois Sebastien
  */
 public class EvenementBidonAussi extends EvenementBidon {
-	public EvenementBidonAussi(Double tempsPrevu) {
+	public EvenementBidonAussi(long tempsPrevu) {
 		super(tempsPrevu);
 	}
 }

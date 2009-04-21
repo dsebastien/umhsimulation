@@ -24,7 +24,7 @@ public class AgentRecoitMessage extends Evenement {
 	 * @param message
 	 *        le message reçu
 	 **/
-	public AgentRecoitMessage(final Double tempsPrevu,
+	public AgentRecoitMessage(final long tempsPrevu,
 			final Message message) {
 		super(tempsPrevu);
 		this.message = message;

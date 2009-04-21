@@ -19,7 +19,6 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	 * Durée de simulation (> 0).
 	 */
 	private long	duree;
-
 	/**
 	 * Nom de la simulation.
 	 */
@@ -80,10 +79,17 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 
 
 
-
-
-
+	/**
+	 * Définir le délai entre entités (agent <-> hôte).
+	 * 
+	 * @param delaiEntreEntites
+	 *        le délai entre entités
+	 */
 	public void setDelaiEntreEntites(int delaiEntreEntites) {
+		if (delaiEntreEntites < 0) {
+			throw new IllegalArgumentException(
+					"Le délai entre entités doit être >= 0");
+		}
 		this.delaiEntreEntites = delaiEntreEntites;
 	}
 
@@ -96,6 +102,10 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	 *        durée de la simulation
 	 */
 	public void setDuree(final long duree) {
+		if (duree <= 0) {
+			throw new IllegalArgumentException(
+					"La durée de la simulation doit etre > 0");
+		}
 		this.duree = duree;
 	}
 
@@ -108,10 +118,12 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	 *        le nom de la simulation
 	 */
 	public void setNom(final String nom) {
+		if (nom == null || "".equals(nom.trim())) {
+			throw new IllegalArgumentException(
+					"Le nom de la simulation ne peut pas etre null ou vide");
+		}
 		this.nom = nom;
 	}
-
-
 
 
 
@@ -122,6 +134,12 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	 *        le timeout.
 	 */
 	public void setTimeoutReemissionMessages(final int timeoutReemissionMessages) {
+		int timeoutMinimal = 80; // FIXME ok??
+		if (timeoutReemissionMessages < timeoutMinimal) {
+			throw new IllegalArgumentException(
+					"Le timeout avant réémission des messages doit être >= "
+							+ timeoutMinimal);
+		}
 		this.timeoutReemissionMessages = timeoutReemissionMessages;
 	}
 }

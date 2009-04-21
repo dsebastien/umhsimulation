@@ -1,7 +1,5 @@
 package be.simulation;
 
-import java.io.IOException;
-
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -59,7 +57,6 @@ public class Main {
 		// Lancement de la simulation
 		simulation.demarrer();
 		simulation.afficherResultats();
-		simulation.reset();
 		
 		//FIXME ajouter option "timeoutInfosRoutage" à la configuration des agents
 	}

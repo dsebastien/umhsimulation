@@ -15,7 +15,7 @@ public abstract class Evenement implements Comparable<Evenement> {
 	/**
 	 * Temps auquel cet évènement doit se produire.
 	 */
-	private final Double	tempsPrevu;
+	private final long	tempsPrevu;
 
 
 
@@ -26,7 +26,11 @@ public abstract class Evenement implements Comparable<Evenement> {
 	 * @param tempsPrevu
 	 *        le temps où cet évènement doit se produire
 	 */
-	public Evenement(final Double tempsPrevu) {
+	public Evenement(final long tempsPrevu) {
+		if (tempsPrevu < 0) {
+			throw new IllegalArgumentException(
+					"Le temps prévu pour un évènement ne peut pas être < 0");
+		}
 		this.tempsPrevu = tempsPrevu;
 	}
 
@@ -37,7 +41,7 @@ public abstract class Evenement implements Comparable<Evenement> {
 	 * 
 	 * @return le temps auquel cet évènement doit se produire
 	 */
-	public Double getTempsPrevu() {
+	public long getTempsPrevu() {
 		return tempsPrevu;
 	}
 
@@ -55,11 +59,9 @@ public abstract class Evenement implements Comparable<Evenement> {
 	 */
 	public int compareTo(Evenement o) {
 		if (this.equals(o)
-				|| o.getTempsPrevu().doubleValue() == this.getTempsPrevu()
-						.doubleValue()) {
+				|| o.getTempsPrevu() == this.getTempsPrevu()) {
 			return 0;
-		} else if (this.getTempsPrevu().doubleValue() < o.getTempsPrevu()
-				.doubleValue()) {
+		} else if (this.getTempsPrevu() < o.getTempsPrevu()) {
 			return -1;
 		} else {
 			return 1;

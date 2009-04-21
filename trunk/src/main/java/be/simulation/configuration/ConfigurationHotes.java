@@ -25,7 +25,8 @@ public class ConfigurationHotes extends AbstractConfiguration {
 	 */
 	private int		tempsMaxInterEnvois;
 	/**
-	 * Le temps de traitement d'un message (0 <= temps traitement <= 1). 0 = traitement instantané.
+	 * Le temps de traitement d'un message (0 <= temps traitement <= 1). 0 =
+	 * traitement instantané.
 	 */
 	private float	tempsTraitementMessage;
 
@@ -80,12 +81,26 @@ public class ConfigurationHotes extends AbstractConfiguration {
 	 *        le taux
 	 */
 	public void setTauxMessagesVersAutreAgent(float tauxMessagesVersAutreAgent) {
+		if (tauxMessagesVersAutreAgent < 0 || tauxMessagesVersAutreAgent > 1) {
+			throw new IllegalArgumentException(
+					"Le taux de messages vers un autre agent doit être tel que: 0 <= taux <= 1");
+		}
 		this.tauxMessagesVersAutreAgent = tauxMessagesVersAutreAgent;
 	}
 
 
 
+	/**
+	 * Définir le temps maximal entre deux envois d'un hôte.
+	 * 
+	 * @param tempsMaxInterEnvois
+	 *        le temps maximal entre deux envois d'un hôte.
+	 */
 	public void setTempsMaxInterEnvois(int tempsMaxInterEnvois) {
+		if (tempsMaxInterEnvois <= 0) {
+			throw new IllegalArgumentException(
+					"Le temps maximal entre deux envois d'un hôte doit être > 0");
+		}
 		this.tempsMaxInterEnvois = tempsMaxInterEnvois;
 	}
 
@@ -98,12 +113,17 @@ public class ConfigurationHotes extends AbstractConfiguration {
 	 *        le temps de traitement d'un message (>=0)
 	 */
 	public void setTempsTraitementMessage(final float tempsTraitementMessage) {
+		if (tempsTraitementMessage < 0 || tempsTraitementMessage > 1) {
+			throw new IllegalArgumentException(
+					"Le temps de traitement d'un message pour un agent doit être tel que <= temps traitement <= 1");
+		}
 		this.tempsTraitementMessage = tempsTraitementMessage;
-		
-		if(tempsTraitementMessage == 0.0f){
+		// FIXME vérifier si ok
+		if (tempsTraitementMessage == 0.0f) {
 			this.nombreMaxTraitementsSimultanes = Integer.MAX_VALUE;
-		}else{
-			this.nombreMaxTraitementsSimultanes = (int)Math.floor(1/tempsTraitementMessage);
+		} else {
+			this.nombreMaxTraitementsSimultanes =
+					(int) Math.floor(1 / tempsTraitementMessage);
 		}
 	}
 }

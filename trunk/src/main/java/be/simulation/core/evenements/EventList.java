@@ -124,8 +124,7 @@ public class EventList {
 				// sinon inutile de le retourner.
 				if (i > 0) {
 					Evenement imminent = eventList.peekFirst();
-					if (tmp.getTempsPrevu().doubleValue() == imminent
-							.getTempsPrevu().doubleValue()) {
+					if (tmp.getTempsPrevu() == imminent.getTempsPrevu()) {
 						retVal = tmp;
 					}
 				} else {

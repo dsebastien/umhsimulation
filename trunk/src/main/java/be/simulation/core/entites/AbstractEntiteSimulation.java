@@ -79,7 +79,8 @@ public abstract class AbstractEntiteSimulation implements InitializingBean,
 	public abstract void afterPropertiesSet() throws Exception;
 
 
-	public void setApplicationContext(ApplicationContext applicationContext)
+	public void setApplicationContext(
+			final ApplicationContext applicationContext)
 			throws BeansException {
 		this.applicationContext = applicationContext;
 	}

@@ -21,8 +21,7 @@ public abstract class AbstractSimulation extends AbstractEntiteSimulation {
 	/**
 	 * Horloge de simulation
 	 */
-	//FIXME double ou long?
-	private Double					horloge;
+	private long		horloge;
 
 
 
@@ -50,17 +49,12 @@ public abstract class AbstractSimulation extends AbstractEntiteSimulation {
 	 * @throws IllegalArgumentException
 	 *         si le temps donné est null ou négatif (non autorisé)
 	 */
-	protected void ajouterTempsHorloge(Double temps) {
-		if (temps == null) {
+	protected void ajouterTempsHorloge(long temps) {
+		if (temps < 0) {
 			throw new IllegalArgumentException(
-					"Le temps à ajouter à l'horloge ne peut pas être null!");
-		} else {
-			if (temps < 0) {
-				throw new IllegalArgumentException(
-						"Le temps à ajouter à l'horloge ne peut pas être négatif!");
-			}
+					"Le temps à ajouter à l'horloge ne peut pas être négatif!");
 		}
-		horloge = Double.valueOf(horloge + temps);
+		horloge += temps;
 	}
 
 
@@ -88,7 +82,7 @@ public abstract class AbstractSimulation extends AbstractEntiteSimulation {
 	 * 
 	 * @return l'horloge de simulation
 	 */
-	public Double getHorloge() {
+	public long getHorloge() {
 		return horloge;
 	}
 
@@ -107,7 +101,7 @@ public abstract class AbstractSimulation extends AbstractEntiteSimulation {
 	 * Réinitialise l'horloge de simulation (0).
 	 */
 	protected void resetHorloge() {
-		horloge = Double.valueOf(0);
+		horloge = 0L;
 	}
 
 
@@ -120,10 +114,10 @@ public abstract class AbstractSimulation extends AbstractEntiteSimulation {
 	 * @throws IllegalArgumentException
 	 *         si le temps donné est null ou <= 0
 	 */
-	protected void setHorloge(Double temps) {
-		if (temps == null || temps < 0) {
+	protected void setHorloge(long temps) {
+		if (temps < 0) {
 			throw new IllegalArgumentException(
-					"Le temps auquel placer l'horloge doit être > 0");
+					"Le temps auquel placer l'horloge doit être >= 0");
 		}
 		horloge = temps;
 	}

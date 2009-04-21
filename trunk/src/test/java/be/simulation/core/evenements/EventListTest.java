@@ -29,7 +29,7 @@ public class EventListTest {
 	 */
 	@Test
 	public void ajoutBasique() {
-		Evenement evt = new EvenementBidon(new Double(5)); 
+		Evenement evt = new EvenementBidon(5L); 
 		
 		futureEventList.planifierEvenement(evt);
 		futureEventList.planifierEvenement(evt);
@@ -42,7 +42,7 @@ public class EventListTest {
 	 */
 	@Test
 	public void recuperationEvenementImminentDeType() {
-		Evenement evt = new EvenementBidon(new Double(5));
+		Evenement evt = new EvenementBidon(5L);
 		futureEventList.planifierEvenement(evt);
 		Evenement result = futureEventList.getEvenementImminent(evt.getClass());
 		assertNotNull(result);
@@ -50,7 +50,7 @@ public class EventListTest {
 		result = futureEventList.getEvenementImminent(evt.getClass());
 		assertNull(result);
 		
-		Evenement premierEvenement = new EvenementBidonAussi(new Double(1));
+		Evenement premierEvenement = new EvenementBidonAussi(1L);
 		futureEventList.planifierEvenement(premierEvenement);
 		futureEventList.planifierEvenement(evt);
 		result = futureEventList.getEvenementImminent(evt.getClass());
@@ -65,8 +65,8 @@ public class EventListTest {
 		assertNotNull(futureEventList.getEvenementsImminents());
 		assertTrue(futureEventList.getEvenementsImminents().isEmpty());
 		
-		Evenement e1 = new EvenementBidon(new Double(1));
-		Evenement e2 = new EvenementBidon(new Double(1));
+		Evenement e1 = new EvenementBidon(1L);
+		Evenement e2 = new EvenementBidon(1L);
 		futureEventList.planifierEvenement(e1);
 		futureEventList.planifierEvenement(e2);
 		List<Evenement> imminents = futureEventList.getEvenementsImminents();
@@ -75,7 +75,7 @@ public class EventListTest {
 		assertEquals(imminents.size(), 2);
 		assertNull(futureEventList.getEvenementImminent());
 		
-		Evenement e0 = new EvenementBidon(new Double(0));
+		Evenement e0 = new EvenementBidon(0L);
 		futureEventList.planifierEvenement(e1);
 		futureEventList.planifierEvenement(e2);
 		futureEventList.planifierEvenement(e0);
@@ -89,11 +89,11 @@ public class EventListTest {
 	 */
 	@Test
 	public void insertionTriee() {
-		Evenement e1 = new EvenementBidon(new Double(1));
-		Evenement e2 = new EvenementBidon(new Double(2));
-		Evenement e3 = new EvenementBidon(new Double(3));
-		Evenement e4 = new EvenementBidon(new Double(4));
-		Evenement e5 = new EvenementBidon(new Double(5));
+		Evenement e1 = new EvenementBidon(1L);
+		Evenement e2 = new EvenementBidon(2L);
+		Evenement e3 = new EvenementBidon(3L);
+		Evenement e4 = new EvenementBidon(4L);
+		Evenement e5 = new EvenementBidon(5L);
 		futureEventList.planifierEvenement(e5);
 		futureEventList.planifierEvenement(e1);
 		futureEventList.planifierEvenement(e3);
