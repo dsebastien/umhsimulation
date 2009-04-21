@@ -21,7 +21,7 @@ public abstract class AbstractEntiteSimulationReseau extends
 	 * 
 	 * @return la simulation dont l'entité fait partie
 	 */
-	public SimulationReseau getSimulation() {
+	protected SimulationReseau getSimulation() {
 		return simulation;
 	}
 
@@ -34,7 +34,7 @@ public abstract class AbstractEntiteSimulationReseau extends
 	 *        la simulation dont l'entité fait partie.
 	 */
 	@Autowired
-	public void setSimulation(final SimulationReseau simulation) {
+	protected void setSimulation(final SimulationReseau simulation) {
 		this.simulation = simulation;
 	}
 }

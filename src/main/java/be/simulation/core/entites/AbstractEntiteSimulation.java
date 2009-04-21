@@ -28,7 +28,7 @@ public abstract class AbstractEntiteSimulation implements InitializingBean,
 	/**
 	 * Configuration de la simulation.
 	 */
-	protected Configuration		configuration;
+	private Configuration		configuration;
 	
 	protected final Logger	LOGGER	=
 													Logger
@@ -47,7 +47,7 @@ public abstract class AbstractEntiteSimulation implements InitializingBean,
 	 * 
 	 * @return l'application context de Spring
 	 */
-	public ApplicationContext getApplicationContext() {
+	protected ApplicationContext getApplicationContext() {
 		return applicationContext;
 	}
 
@@ -56,7 +56,7 @@ public abstract class AbstractEntiteSimulation implements InitializingBean,
 	 * 
 	 * @return la configuration de la simulation
 	 */
-	public Configuration getConfiguration() {
+	protected Configuration getConfiguration() {
 		return configuration;
 	}
 
@@ -68,6 +68,9 @@ public abstract class AbstractEntiteSimulation implements InitializingBean,
 
 
 
+	/**
+	 * Placer l'application context (appelé automatiquement par Spring)
+	 */
 	public void setApplicationContext(
 			final ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
@@ -83,7 +86,7 @@ public abstract class AbstractEntiteSimulation implements InitializingBean,
 	 *         si la configuration donnée est nulle
 	 */
 	@Autowired
-	public void setConfiguration(final Configuration config) {
+	protected void setConfiguration(final Configuration config) {
 		if (config == null) {
 			throw new IllegalArgumentException(
 					"La configuration ne peut pas être nulle");
