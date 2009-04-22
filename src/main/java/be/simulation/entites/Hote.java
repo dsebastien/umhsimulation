@@ -1,5 +1,7 @@
 package be.simulation.entites;
 
+import java.util.Random;
+
 /**
  * Hote du système, relié à un et un seul agent (liens statiques).
  * 
@@ -8,6 +10,12 @@ package be.simulation.entites;
  * @author Mernier Jean-François
  */
 public class Hote extends AbstractEntiteSimulationReseau {
+	/**
+	 * PRNG utilisé pour générer les temps d'envoi.
+	 */
+	private final Random	generateurTempsEnvoi		= new Random();
+	
+	
 	/**
 	 * Nombre d'accusés de réception reçus.
 	 */
@@ -175,5 +183,24 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	@Override
 	public String toString() {
 		return "Hote " + getNumero();
+	}
+	// FIXME comment choisir l'agent à qui on envoie un nouveau message
+	// original?
+
+
+	/**
+	 * Générer le prochain temps d'envoi.
+	 * 
+	 * @return le prochain temps d'envoi.
+	 */
+	public long genererTempsProchainEnvoi() {
+		int tempsInterEnvois =
+				generateurTempsEnvoi.nextInt(getConfiguration()
+				.getConfigurationHotes().getTempsMaxInterEnvois());
+		if (tempsInterEnvois == 0) {
+			// FIXME ok? (pas deux envois simultanés d'un même hôte)
+			tempsInterEnvois = 1;
+		}
+		return getSimulation().getHorloge() + tempsInterEnvois;
 	}
 }
