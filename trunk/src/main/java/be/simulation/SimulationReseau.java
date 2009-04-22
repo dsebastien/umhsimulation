@@ -46,6 +46,64 @@ public class SimulationReseau extends
 
 
 
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		super.afterPropertiesSet();
+		agent1000.setNumero(1000);
+		agent2000.setNumero(2000);
+		agent3000.setNumero(3000);
+		agent4000.setNumero(4000);
+		agent5000.setNumero(5000);
+		agent6000.setNumero(6000);
+		agent7000.setNumero(7000);
+		
+		// on initialise les tables de routage des agents
+		reinitialiserTablesRoutageAgents();
+	}
+
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void demarrer() {
+		LOGGER.info("Démarrage de la simulation ("
+				+ getConfiguration().getConfigurationSimulationReseau()
+						.getNom() + ")");
+		// à chaque tour de boucle on récupère
+		// l'évènement imminent dans la FEL et on le traite
+		while (true) {
+			// TODO récupérer d'abord les évènements qu'on veut traiter en
+			// priorité (infos routage, accusés de réception, ...)
+			Evenement evenementImminent =
+					getFutureEventList().getEvenementImminent();
+			this.setHorloge(evenementImminent.getTempsPrevu());
+			if (evenementImminent instanceof FinDeSimulation) {
+				LOGGER.info(evenementImminent.toString());
+				break;
+			}
+		}
+		
+		// TODO implementer
+	}
+
+
+
+	/**
+	 * Remise à zéro des tables de routage des agents.
+	 */
+	public void reinitialiserTablesRoutageAgents() {
+		agent1000.getRouteur().reset();
+		agent1000.getRouteur().addRoute(
+				new Route(agent2000, agent2000, 10));
+		// FIXME continuer
+		
+		
+	}
+
+
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -80,68 +138,10 @@ public class SimulationReseau extends
 
 
 	/**
-	 * Remise à zéro des tables de routage des agents.
-	 */
-	public void reinitialiserTablesRoutageAgents() {
-		agent1000.getRouteur().reset();
-		agent1000.getRouteur().addRoute(
-				new Route(agent2000, agent2000, 10));
-		// FIXME continuer
-		
-		
-	}
-
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void demarrer() {
-		LOGGER.info("Démarrage de la simulation ("
-				+ getConfiguration().getConfigurationSimulationReseau()
-						.getNom() + ")");
-		// à chaque tour de boucle on récupère
-		// l'évènement imminent dans la FEL et on le traite
-		while (true) {
-			// TODO récupérer d'abord les évènements qu'on veut traiter en
-			// priorité (infos routage, accusés de réception, ...)
-			Evenement evenementImminent =
-					getFutureEventList().getEvenementImminent();
-			this.setHorloge(evenementImminent.getTempsPrevu());
-			if (evenementImminent instanceof FinDeSimulation) {
-				LOGGER.info(evenementImminent.toString());
-				break;
-			}
-		}
-		
-		// TODO implementer
-	}
-
-
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
 		return getConfiguration().getConfigurationSimulationReseau().getNom();
-	}
-
-
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-		agent1000.setNumero(1000);
-		agent2000.setNumero(2000);
-		agent3000.setNumero(3000);
-		agent4000.setNumero(4000);
-		agent5000.setNumero(5000);
-		agent6000.setNumero(6000);
-		agent7000.setNumero(7000);
-		
-		// on initialise les tables de routage des agents
-		reinitialiserTablesRoutageAgents();
 	}
 }
