@@ -11,13 +11,11 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	/**
 	 * Nombre d'accusés de réception reçus.
 	 */
-	private int		accusesReceptionRecus	= 0;
+	private int		accusesReceptionRecus		= 0;
 	/**
 	 * Agent auquel cet hote est relié (pour pouvoir communiquer avec lui).
 	 */
 	private Agent	agent;
-
-	
 	/**
 	 * Le nombre de messages en cours de traitement.
 	 */
@@ -25,26 +23,22 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	/**
 	 * Nombre de messages envoyés.
 	 */
-	private int		messagesEnvoyes		= 0;
-
+	private int		messagesEnvoyes				= 0;
 	/**
 	 * Nombre de messages réexpédiés.
 	 */
 	// FIXME à cause de timeouts trop courts?
-	private int		messagesReexpedies	= 0;
-
-
+	private int		messagesReexpedies			= 0;
 	/**
 	 * Numero identifiant de l'hote.
 	 */
 	private int		numero;
-
-
 	/**
 	 * Le temps total de voyage des messages.
 	 */
 	private long	tempsTotalVoyageMessages	= 0;
-	
+
+
 
 	/**
 	 * Créer un nouvel hote.
@@ -131,6 +125,9 @@ public class Hote extends AbstractEntiteSimulationReseau {
 
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void reset() {
 		// TODO ici tout remettre à zéro (compteurs, ...)
