@@ -70,7 +70,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		.getNombreHotes(); i++) {
 			Hote hote = (Hote) getApplicationContext().getBean("hote");
 			hote.setAgent(this);
-			hote.setNumeroHote(i);
+			hote.setNumero(i);
 			hotes.add(hote);
 		}
 	}

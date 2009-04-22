@@ -1,6 +1,7 @@
 package be.simulation.evenements;
 
 import be.simulation.core.evenements.Evenement;
+import be.simulation.entites.Hote;
 import be.simulation.messages.Message;
 
 /**
@@ -11,6 +12,10 @@ import be.simulation.messages.Message;
  * @author Mernier Jean-François
  */
 public class HoteRecoitMessage extends Evenement {
+	/**
+	 * L'hôte qui reçoit ce message.
+	 */
+	private final Hote		hote;
 	/**
 	 * Le message reçu.
 	 */
@@ -24,13 +29,36 @@ public class HoteRecoitMessage extends Evenement {
 	 * @param message
 	 *        le message reçu
 	 **/
-	public HoteRecoitMessage(final long tempsPrevu, final Message message) {
+	public HoteRecoitMessage(final Message message, final Hote hote,
+			final long tempsPrevu) {
 		super(tempsPrevu);
 		if (message == null) {
 			throw new IllegalArgumentException(
 					"Le message ne peut pas être null!");
 		}
+		if (hote == null) {
+			throw new IllegalArgumentException("L'hôte ne peut pas être null!");
+		}
+		if (hote.getNumero() == 0) {
+			throw new IllegalArgumentException("L'hôte doit avoir un numéro!");
+		}
+		if (hote.getAgent() == null) {
+			throw new IllegalArgumentException(
+					"L'hôte doit être connecté à un agent!");
+		}
 		this.message = message;
+		this.hote = hote;
+	}
+
+
+
+	/**
+	 * Récupérer l'hôte qui reçoit ce message.
+	 * 
+	 * @return l'hôte qui reçoit ce message
+	 */
+	public Hote getHote() {
+		return hote;
 	}
 
 
@@ -51,6 +79,6 @@ public class HoteRecoitMessage extends Evenement {
 	 */
 	@Override
 	public String toString() {
-		return "Hôte reçoit message au temps " + getTempsPrevu();
+		return "Hôte "+hote.getNumero()+" reçoit message au temps " + getTempsPrevu();
 	}
 }

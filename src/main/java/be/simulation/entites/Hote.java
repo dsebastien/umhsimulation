@@ -1,6 +1,5 @@
 package be.simulation.entites;
 
-
 /**
  * Hote du système, relié à un et un seul agent (liens statiques).
  * 
@@ -9,16 +8,14 @@ package be.simulation.entites;
  * @author Mernier Jean-François
  */
 public class Hote extends AbstractEntiteSimulationReseau {
-	
-    /**
-     * Agent auquel cet hote est relié (pour pouvoir communiquer avec lui).
-     */
+	/**
+	 * Agent auquel cet hote est relié (pour pouvoir communiquer avec lui).
+	 */
 	private Agent	agent;
-
 	/**
 	 * Numero identifiant de l'hote.
 	 */
-	private int		numeroHote;
+	private int		numero;
 
 
 
@@ -39,6 +36,8 @@ public class Hote extends AbstractEntiteSimulationReseau {
 		// configuration
 	}
 
+
+
 	/**
 	 * Récupérer l'agent auquel cet hôte est connecté.
 	 * 
@@ -48,19 +47,25 @@ public class Hote extends AbstractEntiteSimulationReseau {
 		return agent;
 	}
 
+
+
 	/**
 	 * Récupérer le numero de l'hote.
 	 * 
 	 * @return le numéro de l'hote
 	 */
-	public int getNumeroHote() {
-		return numeroHote;
+	public int getNumero() {
+		return numero;
 	}
+
+
 
 	@Override
 	public void reset() {
 		// TODO ici tout remettre à zéro (compteurs, ...)
 	}
+
+
 
 	/**
 	 * Définir l'agent auquel cet hôte est connecté.
@@ -81,12 +86,12 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	 *        le numéro de cet hôte
 	 * @throw IllegalArgumentException si le numéro d'hote fourni est <= 0
 	 */
-	public void setNumeroHote(final int numeroHote) {
+	public void setNumero(final int numeroHote) {
 		if (numeroHote <= 0) {
 			throw new IllegalArgumentException(
 					"Le numero d'hote fourni est invalide (il doit etre > 0)");
 		}
-		this.numeroHote = numeroHote;
+		this.numero = numeroHote;
 	}
 
 
@@ -96,6 +101,6 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	 */
 	@Override
 	public String toString() {
-		return "Hote " + getNumeroHote();
+		return "Hote " + getNumero();
 	}
 }

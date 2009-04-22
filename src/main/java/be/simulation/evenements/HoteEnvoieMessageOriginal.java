@@ -11,6 +11,10 @@ import be.simulation.entites.Hote;
  * @author Mernier Jean-François
  */
 public class HoteEnvoieMessageOriginal extends Evenement {
+	
+	/**
+	 * L'hôte qui envoie un message original.
+	 */
 	private final Hote	hote;
 
 
@@ -28,7 +32,7 @@ public class HoteEnvoieMessageOriginal extends Evenement {
 		if (hote == null) {
 			throw new IllegalArgumentException("L'hôte ne peut pas être null!");
 		}
-		if (hote.getNumeroHote() == 0) {
+		if (hote.getNumero() == 0) {
 			throw new IllegalArgumentException("L'hôte doit avoir un numéro!");
 		}
 		if (hote.getAgent() == null) {
