@@ -1,6 +1,7 @@
 package be.simulation.evenements;
 
 import be.simulation.core.evenements.Evenement;
+import be.simulation.entites.Agent;
 import be.simulation.messages.Message;
 
 /**
@@ -11,6 +12,10 @@ import be.simulation.messages.Message;
  * @author Mernier Jean-François
  */
 public class AgentRecoitMessage extends Evenement {
+	/**
+	 * L'agent qui reçoit le message.
+	 */
+	private final Agent		agent;
 	/**
 	 * Le message reçu.
 	 */
@@ -23,14 +28,29 @@ public class AgentRecoitMessage extends Evenement {
 	 * 
 	 * @param message
 	 *        le message reçu
+	 * @param agent
+	 *        l'agent qui reçoit ce message
+	 * @param tempsPrevu
+	 *        le temps auquel l'agent reçoit ce message
 	 **/
-	public AgentRecoitMessage(final long tempsPrevu, final Message message) {
+	public AgentRecoitMessage(final Message message, final Agent agent,
+			final long tempsPrevu) {
 		super(tempsPrevu);
 		if (message == null) {
 			throw new IllegalArgumentException(
 					"Le message ne peut pas être null!");
 		}
+		if (agent == null) {
+			throw new IllegalArgumentException("L'agent ne peut pas être null!");
+		}
+		this.agent = agent;
 		this.message = message;
+	}
+
+
+
+	public Agent getAgent() {
+		return agent;
 	}
 
 
@@ -51,6 +71,7 @@ public class AgentRecoitMessage extends Evenement {
 	 */
 	@Override
 	public String toString() {
-		return "Agent reçoit message au temps " + getTempsPrevu();
+		return "Agent " + agent.getNumero()
+				+ " reçoit un message au temps " + getTempsPrevu();
 	}
 }

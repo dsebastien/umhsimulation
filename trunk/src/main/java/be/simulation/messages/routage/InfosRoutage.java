@@ -1,4 +1,4 @@
-package be.simulation.messages;
+package be.simulation.messages.routage;
 
 import be.simulation.core.messages.AbstractMessage;
 import be.simulation.entites.Agent;
