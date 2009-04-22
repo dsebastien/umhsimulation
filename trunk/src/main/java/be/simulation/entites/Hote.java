@@ -3,7 +3,7 @@ package be.simulation.entites;
 import java.util.Random;
 
 /**
- * Hote du système, relié à un et un seul agent (liens statiques).
+ * Hote du système, relié à un et un seul agent (lien statique).
  * 
  * @author Dubois Sebastien
  * @author Regnier Frederic
@@ -14,37 +14,40 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	 * PRNG utilisé pour générer les temps d'envoi.
 	 */
 	private final Random	generateurTempsEnvoi		= new Random();
-	
-	
+	/**
+	 * PRNG utilisé pour déterminer si un nouveau message doit être ou non à
+	 * destination d'un hôte d'un autre agent.
+	 */
+	private final Random	generateurTypeDestination	= new Random();
 	/**
 	 * Nombre d'accusés de réception reçus.
 	 */
-	private int		accusesReceptionRecus		= 0;
+	private int				accusesReceptionRecus		= 0;
 	/**
 	 * Agent auquel cet hote est relié (pour pouvoir communiquer avec lui).
 	 */
-	private Agent	agent;
+	private Agent			agent;
 	/**
 	 * Le nombre de messages en cours de traitement.
 	 */
-	private int		messagesEnCoursTraitement	= 0;
+	private int				messagesEnCoursTraitement	= 0;
 	/**
 	 * Nombre de messages envoyés.
 	 */
-	private int		messagesEnvoyes				= 0;
+	private int				messagesEnvoyes				= 0;
 	/**
 	 * Nombre de messages réexpédiés.
 	 */
 	// FIXME à cause de timeouts trop courts?
-	private int		messagesReexpedies			= 0;
+	private int				messagesReexpedies			= 0;
 	/**
 	 * Numero identifiant de l'hote.
 	 */
-	private int		numero;
+	private int				numero;
 	/**
 	 * Le temps total de voyage des messages.
 	 */
-	private long	tempsTotalVoyageMessages	= 0;
+	private long			tempsTotalVoyageMessages	= 0;
 
 
 
@@ -184,23 +187,52 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	public String toString() {
 		return "Hote " + getNumero();
 	}
+
+
+
 	// FIXME comment choisir l'agent à qui on envoie un nouveau message
 	// original?
-
-
 	/**
 	 * Générer le prochain temps d'envoi.
 	 * 
 	 * @return le prochain temps d'envoi.
 	 */
 	public long genererTempsProchainEnvoi() {
+		// FIXME ok? (+1 donc par exemple 0-5 devient 1-6)
 		int tempsInterEnvois =
 				generateurTempsEnvoi.nextInt(getConfiguration()
-				.getConfigurationHotes().getTempsMaxInterEnvois());
-		if (tempsInterEnvois == 0) {
-			// FIXME ok? (pas deux envois simultanés d'un même hôte)
-			tempsInterEnvois = 1;
-		}
+						.getConfigurationHotes().getTempsMaxInterEnvois()) + 1;
 		return getSimulation().getHorloge() + tempsInterEnvois;
+	}
+	
+	/**
+	 * Envoi d'un message original par un hôte.
+	 */
+	public void envoyerMessageOriginal() {
+		// FIXME vérifier si correct
+		
+		// par exemple 0.75 = 75 (75% vers hote d'un autre agent)
+		int randomDigitsAutreAgent =
+				(int) (getConfiguration().getConfigurationHotes()
+						.getTauxMessagesVersAutreAgent() * 100); 
+		int random = generateurTypeDestination.nextInt(100) + 1;
+		
+		boolean messagePourHoteAutreAgent = false;
+		
+		// par exemple digits 1 à 75 = pour autre agent
+		if (random <= randomDigitsAutreAgent) {
+			messagePourHoteAutreAgent = true;
+		}
+		
+		// FIXME implement
+		if (messagePourHoteAutreAgent) {
+			// FIXME comment choisir l'autre agent?
+			// FIXME comment choisir un hôte de l'agent?
+		} else {
+			// FIXME comment choisir un autre hote de cet agent ci? (méthode
+			// dans agent?)
+		}
+		
+		// FIXME voir diagramme
 	}
 }

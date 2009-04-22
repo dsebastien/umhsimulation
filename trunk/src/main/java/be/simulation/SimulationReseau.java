@@ -77,14 +77,82 @@ public class SimulationReseau extends
 			// priorité (infos routage, accusés de réception, ...)
 			Evenement evenementImminent =
 					getFutureEventList().getEvenementImminent();
+			LOGGER.trace(evenementImminent.toString());
+			// On avance le temps de simulation au temps de l'évènement imminent
 			this.setHorloge(evenementImminent.getTempsPrevu());
-			if (evenementImminent instanceof FinDeSimulation) {
-				LOGGER.info(evenementImminent.toString());
+			
+			// Traitement de l'évènement imminent récupéré
+			if (evenementImminent instanceof HoteEnvoieMessageOriginal) {
+				// FIXME ok?
+				HoteEnvoieMessageOriginal evt =
+						(HoteEnvoieMessageOriginal) evenementImminent;
+				evt.getHote().envoyerMessageOriginal();
+			} else if (evenementImminent instanceof FinDeSimulation) {
+				// on quitte la boucle principale (simulation terminée)
 				break;
 			}
 		}
 		
 		// TODO implementer
+	}
+
+
+
+	/**
+	 * Méthode utilisée pour générer et placer sur la FEL les premiers
+	 * évènements d'envoi des hôtes d'un agent donné.
+	 * 
+	 * @param agent
+	 *        l'agent
+	 */
+	private void genererPremiersEvenementsEnvoiDesHotes(Agent agent) {
+		for (Hote h : agent.getHotes()) {
+			long tempsEnvoi = h.genererTempsProchainEnvoi();
+			getFutureEventList().planifierEvenement(
+					new HoteEnvoieMessageOriginal(h, tempsEnvoi));
+		}
+	}
+
+
+
+	public Agent getAgent1000() {
+		return agent1000;
+	}
+
+
+
+	public Agent getAgent2000() {
+		return agent2000;
+	}
+
+
+
+	public Agent getAgent3000() {
+		return agent3000;
+	}
+
+
+
+	public Agent getAgent4000() {
+		return agent4000;
+	}
+
+
+
+	public Agent getAgent5000() {
+		return agent5000;
+	}
+
+
+
+	public Agent getAgent6000() {
+		return agent6000;
+	}
+
+
+
+	public Agent getAgent7000() {
+		return agent7000;
 	}
 
 
@@ -139,23 +207,6 @@ public class SimulationReseau extends
 				new FinDeSimulation(getConfiguration()
 						.getConfigurationSimulationReseau().getDuree());
 		getFutureEventList().planifierEvenement(finDeSimulation);
-	}
-
-
-
-	/**
-	 * Méthode utilisée pour générer et placer sur la FEL les premiers
-	 * évènements d'envoi des hôtes d'un agent donné.
-	 * 
-	 * @param agent
-	 *        l'agent
-	 */
-	private void genererPremiersEvenementsEnvoiDesHotes(Agent agent) {
-		for (Hote h : agent.getHotes()) {
-			long tempsEnvoi = h.genererTempsProchainEnvoi();
-			getFutureEventList().planifierEvenement(
-					new HoteEnvoieMessageOriginal(h, tempsEnvoi));
-		}
 	}
 
 
