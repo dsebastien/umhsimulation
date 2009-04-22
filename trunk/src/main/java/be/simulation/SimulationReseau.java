@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import be.simulation.core.AbstractSimulation;
 import be.simulation.core.evenements.Evenement;
 import be.simulation.entites.Agent;
+import be.simulation.entites.Hote;
 import be.simulation.evenements.FinDeSimulation;
+import be.simulation.evenements.HoteEnvoieMessageOriginal;
 import be.simulation.routage.Route;
 
 /**
@@ -56,9 +58,6 @@ public class SimulationReseau extends
 		agent5000.setNumero(5000);
 		agent6000.setNumero(6000);
 		agent7000.setNumero(7000);
-		
-		// on initialise les tables de routage des agents
-		reinitialiserTablesRoutageAgents();
 	}
 
 
@@ -120,13 +119,20 @@ public class SimulationReseau extends
 		agent6000.reset();
 		agent7000.reset();
 		
-		// TODO définir les tables de routage de chaque agent (fixées pour la
-		// première version!)
-		// TODO plus tard, ajouter les évènements de type agent envoie infos
-		// routage et faire en sorte que ça dure x temps de simulation
-		// TODO ajouter les premiers évènements à la FEL (envoi des premiers
-		// messages des hôtes)
+		// TODO v2.0: à modifier
+		reinitialiserTablesRoutageAgents();
 		
+		// TODO v2.0: ajouter les évènements de type agent envoie infos
+		// routage et faire en sorte que ça dure x temps de simulation
+		
+		// Génération des premiers évènement d'envoi des hôtes
+		genererPremiersEvenementsEnvoiDesHotes(agent1000);
+		genererPremiersEvenementsEnvoiDesHotes(agent2000);
+		genererPremiersEvenementsEnvoiDesHotes(agent3000);
+		genererPremiersEvenementsEnvoiDesHotes(agent4000);
+		genererPremiersEvenementsEnvoiDesHotes(agent5000);
+		genererPremiersEvenementsEnvoiDesHotes(agent6000);
+		genererPremiersEvenementsEnvoiDesHotes(agent7000);
 		
 		// On ajoute directement l'évènement de fin de simulation à la FEL
 		FinDeSimulation finDeSimulation =
@@ -135,6 +141,22 @@ public class SimulationReseau extends
 		getFutureEventList().planifierEvenement(finDeSimulation);
 	}
 
+
+
+	/**
+	 * Méthode utilisée pour générer et placer sur la FEL les premiers
+	 * évènements d'envoi des hôtes d'un agent donné.
+	 * 
+	 * @param agent
+	 *        l'agent
+	 */
+	private void genererPremiersEvenementsEnvoiDesHotes(Agent agent) {
+		for (Hote h : agent.getHotes()) {
+			long tempsEnvoi = h.genererTempsProchainEnvoi();
+			getFutureEventList().planifierEvenement(
+					new HoteEnvoieMessageOriginal(h, tempsEnvoi));
+		}
+	}
 
 
 	/**

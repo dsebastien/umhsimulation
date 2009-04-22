@@ -58,6 +58,7 @@ public class HoteEnvoieMessageOriginal extends Evenement {
 	 */
 	@Override
 	public String toString() {
-		return "Fin de simulation au temps " + getTempsPrevu();
+		return "Hote " + hote.getNumero()
+				+ " envoie message original au temps " + getTempsPrevu();
 	}
 }
