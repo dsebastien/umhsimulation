@@ -13,9 +13,27 @@ import be.simulation.routage.Routeur;
  */
 public class Agent extends AbstractEntiteSimulationReseau {
 	/**
+	 * Dernier temps de simulation ou le taux d'utilisation du buffer a été mis
+	 * à jour.
+	 */
+	private long				dernierTempsMiseAJourTauxUtilisationBuffer	= 0;
+	/**
 	 * Hôtes connectés à cet agent.
 	 */
-	private final List<Hote>	hotes	= new ArrayList<Hote>();
+	private final List<Hote>	hotes										=
+																					new ArrayList<Hote>();
+	/**
+	 * Le nombre de messages en cours de traitement.
+	 */
+	private int					messagesEnCoursTraitement					= 0;
+	/**
+	 * Le nombre de messages perdus brutalement.
+	 */
+	private int					messagesPerdusBrutalement					= 0;
+	/**
+	 * Le nombre de messages reçus.
+	 */
+	private int					messagesRecus								= 0;
 	/**
 	 * Le numéro identifiant de cet agent.
 	 */
@@ -24,7 +42,13 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * Les informations de routage dont dispose cet agent (lui permet de savoir
 	 * vers où forwarder les messages).
 	 */
-	private final Routeur		routeur	= new Routeur();
+	private final Routeur		routeur										=
+																					new Routeur();
+	/**
+	 * La somme des taux d'utilisation du buffer.
+	 */
+	private double				sommeTauxUtilisationBuffer					=
+																					0.0;
 
 
 
@@ -58,6 +82,28 @@ public class Agent extends AbstractEntiteSimulationReseau {
 
 
 	/**
+	 * Récupérer le nombre de messages perdus brutalement.
+	 * 
+	 * @return le nombre de messages perdus brutalement.
+	 */
+	public int getMessagesPerdusBrutalement() {
+		return messagesPerdusBrutalement;
+	}
+
+
+
+	/**
+	 * Récupérer le nombre de messages reçus.
+	 * 
+	 * @return le nombre de messages reçus.
+	 */
+	public int getMessagesRecus() {
+		return messagesRecus;
+	}
+
+
+
+	/**
 	 * Récupérer le numéro de cet agent.
 	 * 
 	 * @return le numéro de cet agent
@@ -80,6 +126,17 @@ public class Agent extends AbstractEntiteSimulationReseau {
 
 
 	/**
+	 * Récupérer la somme des taux d'utilisation du buffer.
+	 * 
+	 * @return la somme des taux d'utilisation du buffer.
+	 */
+	public double getSommeTauxUtilisationBuffer() {
+		return sommeTauxUtilisationBuffer;
+	}
+
+
+
+	/**
 	 * On crée les hôtes connectés à cet agent en fonction de la configuration.
 	 */
 	private void initialiserHotes() {
@@ -95,13 +152,19 @@ public class Agent extends AbstractEntiteSimulationReseau {
 
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void reset() {
 		LOGGER.trace("Réinitialisation de l'agent " + getNumero());
 		// on recrée les hôtes
 		this.hotes.clear();
 		initialiserHotes();
-		// TODO ici tout remettre à zéro (compteurs, ...)
+		sommeTauxUtilisationBuffer = 0.0;
+		messagesPerdusBrutalement = 0;
+		dernierTempsMiseAJourTauxUtilisationBuffer = 0;
+		messagesRecus = 0;
 	}
 
 
@@ -115,6 +178,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	public void setNumero(final int numeroAgent) {
 		numero = numeroAgent;
 	}
+
 
 
 	/**
