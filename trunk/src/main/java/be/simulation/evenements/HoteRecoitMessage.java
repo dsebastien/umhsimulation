@@ -28,6 +28,8 @@ public class HoteRecoitMessage extends Evenement {
 	 * 
 	 * @param message
 	 *        le message reçu
+	 * @param hote l'hôte qui reçoit ce message
+	 * @param tempsPrevu le temps de simulation auquel cet évènement doit se produire
 	 **/
 	public HoteRecoitMessage(final Message message, final Hote hote,
 			final long tempsPrevu) {

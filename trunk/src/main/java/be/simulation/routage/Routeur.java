@@ -1,7 +1,7 @@
 package be.simulation.routage;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import be.simulation.entites.Agent;
 import be.simulation.entites.Hote;
 
@@ -17,10 +17,7 @@ public class Routeur {
 	/**
 	 * Les différentes routes disponibles.
 	 */
-	private final List<Route>	routes	= new ArrayList<Route>();
-
-
-
+	private final Set<Route>	routes	= new TreeSet<Route>();
 	/**
 	 * Constructeur par défaut.
 	 */
@@ -30,5 +27,28 @@ public class Routeur {
 	public Agent trouverMeilleureRoute(final Hote destinataire) {
 		// FIXME implementer
 		throw new UnsupportedOperationException("Pas encore implémenté!");
+	}
+	
+	/**
+	 * Remise à zéro de ce routeur (effacement de la table de routage).
+	 */
+	public void reset() {
+		this.routes.clear();
+	}
+
+
+
+	/**
+	 * Ajouter une route à la table de routage.
+	 * 
+	 * @param route
+	 *        la route à ajouter
+	 */
+	public void addRoute(final Route route) {
+		if (route == null) {
+			throw new IllegalArgumentException(
+					"La route ne peut pas être null!");
+		}
+		this.routes.add(route);
 	}
 }

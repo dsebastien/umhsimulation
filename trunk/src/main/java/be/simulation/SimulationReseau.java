@@ -5,6 +5,7 @@ import be.simulation.core.AbstractSimulation;
 import be.simulation.core.evenements.Evenement;
 import be.simulation.entites.Agent;
 import be.simulation.evenements.FinDeSimulation;
+import be.simulation.routage.Route;
 
 /**
  * Simulation d'un réseau.
@@ -79,6 +80,20 @@ public class SimulationReseau extends
 
 
 	/**
+	 * Remise à zéro des tables de routage des agents.
+	 */
+	public void reinitialiserTablesRoutageAgents() {
+		agent1000.getRouteur().reset();
+		agent1000.getRouteur().addRoute(
+				new Route(agent2000, agent2000, 10));
+		// FIXME continuer
+		
+		
+	}
+
+
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -89,14 +104,13 @@ public class SimulationReseau extends
 		// à chaque tour de boucle on récupère
 		// l'évènement imminent dans la FEL et on le traite
 		while (true) {
+			// TODO récupérer d'abord les évènements qu'on veut traiter en
+			// priorité (infos routage, accusés de réception, ...)
 			Evenement evenementImminent =
 					getFutureEventList().getEvenementImminent();
-			// FIXME peut être mieux de récupérer une liste d'évènements
-			// imminents (ceux qui doivent arriver au prochain temps de
-			// simulation
-			// ensuite ici on choisira dans quel ordre les trier
+			this.setHorloge(evenementImminent.getTempsPrevu());
 			if (evenementImminent instanceof FinDeSimulation) {
-				LOGGER.info("Fin de simulation!");
+				LOGGER.info(evenementImminent.toString());
 				break;
 			}
 		}
@@ -126,5 +140,8 @@ public class SimulationReseau extends
 		agent5000.setNumero(5000);
 		agent6000.setNumero(6000);
 		agent7000.setNumero(7000);
+		
+		// on initialise les tables de routage des agents
+		reinitialiserTablesRoutageAgents();
 	}
 }

@@ -35,6 +35,8 @@ public class AgentFinTraitementMessage extends Evenement {
 	 * 
 	 * @param message
 	 *        le message qu'on termine de traiter
+	 * @param agent l'agent qui termine de traiter ce message
+	 * @param tempsPrevu le temps de simulation auquel cet évènement doit se produire
 	 **/
 	public AgentFinTraitementMessage(final Message message, final Agent agent, final long tempsPrevu) {
 		super(tempsPrevu);

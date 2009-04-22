@@ -35,6 +35,9 @@ public abstract class AbstractEntiteSimulationReseau extends
 	 */
 	@Autowired
 	protected void setSimulation(final SimulationReseau simulation) {
+		if(simulation == null){
+			throw new IllegalArgumentException("La simulation ne peut pas être null!");
+		}
 		this.simulation = simulation;
 	}
 }
