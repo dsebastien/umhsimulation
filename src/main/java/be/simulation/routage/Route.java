@@ -8,33 +8,77 @@ import be.simulation.entites.Agent;
  * @author Dubois Sebastien
  * @author Regnier Frederic
  * @author Mernier Jean-François
+ * @version 1.0 On utilise une table de routage fixée dès le début et statique
  */
 public class Route {
 	/**
-	 * Destination de cette route.
+	 * Destination finale.
 	 */
-	private final Agent	agent;
+	private final Agent	destination;
+
 	/**
-	 * Coût de cette route.
+	 * Voisin chez qui envoyer le message pour atteindre le plus efficacement
+	 * possible l'agent de destination.
 	 */
-	private final int	cout;
+	private final Agent	voisin;
+	/**
+	 * Le coût du lien entre l'agent actuel et le voisin par lequel passer.
+	 */
+	private final int		cout;
+
+
+
+	/**
+	 * Récupérer le coût du lien entre l'agent actuel et le voisin par lequel
+	 * passer.
+	 * 
+	 * @return le coût du lien entre l'agent actuel et le voisin par lequel
+	 *         passer.
+	 */
+	public int getCout() {
+		return cout;
+	}
+
+
+
+	/**
+	 * Récupérer le voisin par lequel passer pour atteindre la destination
+	 * voulue.
+	 * 
+	 * @return le voisin par lequel passer pour atteindre la destination voulue.
+	 */
+	public Agent getVoisin() {
+		return voisin;
+	}
 
 
 
 	/**
 	 * Création d'une route.
 	 * 
-	 * @param agent
+	 * @param destination
 	 *        agent de destination de cette route
+	 * @param voisin
+	 *        l'agent voisin par lequel passer pour atteindre cette destination
 	 * @param cout
-	 *        cout de cette route
+	 *        le coût du lien entre l'agent actuel et le voisin par lequel
+	 *        passer
 	 */
-	public Route(final Agent agent, final int cout) {
-		if (agent == null) {
+	public Route(final Agent destination, final Agent voisin, final int cout) {
+		if (destination == null) {
 			throw new IllegalArgumentException(
 					"L'agent de destination ne peut pas etre null!");
 		}
-		this.agent = agent;
+		if (voisin == null) {
+			throw new IllegalArgumentException(
+					"Le voisin ne peut pas être null!");
+		}
+		if (cout < 0) {
+			throw new IllegalArgumentException(
+					"Le coût ne peut pas être < 0!");
+		}
+		this.destination = destination;
+		this.voisin = voisin;
 		this.cout = cout;
 	}
 
@@ -45,18 +89,7 @@ public class Route {
 	 * 
 	 * @return l'agent de destination de cette route
 	 */
-	public Agent getAgent() {
-		return agent;
-	}
-
-
-
-	/**
-	 * Récupéret le coût de cette route.
-	 * 
-	 * @return le coût de cette route.
-	 */
-	public int getCout() {
-		return cout;
+	public Agent getDestination() {
+		return destination;
 	}
 }

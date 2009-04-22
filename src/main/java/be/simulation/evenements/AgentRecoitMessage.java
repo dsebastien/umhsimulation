@@ -49,6 +49,11 @@ public class AgentRecoitMessage extends Evenement {
 
 
 
+	/**
+	 * Récupérer l'agent qui reçoit ce message.
+	 * 
+	 * @return l'agent qui reçoit ce message.
+	 */
 	public Agent getAgent() {
 		return agent;
 	}
@@ -71,7 +76,7 @@ public class AgentRecoitMessage extends Evenement {
 	 */
 	@Override
 	public String toString() {
-		return "Agent " + agent.getNumero()
-				+ " reçoit un message au temps " + getTempsPrevu();
+		return "Agent " + agent.getNumero() + " reçoit un message au temps "
+				+ getTempsPrevu();
 	}
 }
