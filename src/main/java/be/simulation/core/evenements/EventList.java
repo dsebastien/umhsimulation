@@ -133,7 +133,7 @@ public class EventList {
 			throw new IllegalArgumentException(
 					"L'évènement à planifier ne peut pas être null");
 		}
-		LOGGER.info("Planification d'un évènement: " + evt.toString());
+		LOGGER.trace("Planification d'un évènement: " + evt.toString());
 		int index = Collections.binarySearch(eventList, evt);
 		if (index < 0) {
 			eventList.add(-index - 1, evt);
