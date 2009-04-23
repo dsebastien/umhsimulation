@@ -1,6 +1,7 @@
 package be.simulation.entites;
 
 import java.util.Random;
+import be.simulation.messages.MessageSimple;
 
 /**
  * Hote du système, relié à un et un seul agent (lien statique).
@@ -48,6 +49,11 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	 * Le temps total de voyage des messages.
 	 */
 	private long			tempsTotalVoyageMessages	= 0;
+	
+	/**
+	 * Permet de placer un identifiant unique sur chaque message que cet hôte envoie.
+	 */
+	private int identifiantMessages = 0;
 
 
 
@@ -147,6 +153,7 @@ public class Hote extends AbstractEntiteSimulationReseau {
 		this.accusesReceptionRecus = 0;
 		this.tempsTotalVoyageMessages = 0;
 		this.messagesEnCoursTraitement = 0;
+		this.identifiantMessages = 0;
 	}
 
 
@@ -225,14 +232,20 @@ public class Hote extends AbstractEntiteSimulationReseau {
 		}
 		
 		// FIXME implement
+		Agent agentDestination = null;
 		if (messagePourHoteAutreAgent) {
-			// FIXME comment choisir l'autre agent?
+			LOGGER.info("Message de l'hôte "+numero+" pour un autre agent");
+			// FIXME continuer
+			// FIXME comment choisir l'autre agent? --> méthode getAgentAleatoire dans simulation (on lui donne une exception)
 			// FIXME comment choisir un hôte de l'agent?
 		} else {
-			// FIXME comment choisir un autre hote de cet agent ci? (méthode
-			// dans agent?)
+			LOGGER.info("Message de l'hôte "+numero+" pour le même agent");
+			agentDestination = this.getAgent();
 		}
 		
-		// FIXME voir diagramme
+		
+		// FIXME continuer
+		//MessageSimple message = new MessageSimple(this,, ++identifiantMessages);
+		
 	}
 }

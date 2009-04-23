@@ -2,6 +2,7 @@ package be.simulation.entites;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import be.simulation.routage.Routeur;
 
 /**
@@ -12,6 +13,10 @@ import be.simulation.routage.Routeur;
  * @author Mernier Jean-François
  */
 public class Agent extends AbstractEntiteSimulationReseau {
+	/**
+	 * PRNG utilisé pour choisir un hôte au hasard parmi les hôtes connectés à cet agent.
+	 */
+	private Random generateurChoixHote = new Random();
 	/**
 	 * Dernier temps de simulation ou le taux d'utilisation du buffer a été mis
 	 * à jour.
@@ -45,7 +50,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	private final Routeur		routeur										=
 																					new Routeur();
 	/**
-	 * La somme des taux d'utilisation du buffer.
+	 * La somme des taux d'utilisationdestination du buffer.
 	 */
 	private double				sommeTauxUtilisationBuffer					=
 																					0.0;
@@ -65,7 +70,6 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		initialiserHotes();
 	}
 
 
@@ -141,11 +145,12 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 */
 	private void initialiserHotes() {
 		LOGGER.trace("Initialisation des hôtes de l'agent");
+		this.hotes.clear();
 		for (int i = 1; i <= getConfiguration().getConfigurationAgents()
-				.getNombreHotes(); i++) {
+				.getNombreHotes() + 1; i++) {
 			Hote hote = (Hote) getApplicationContext().getBean("hote");
 			hote.setAgent(this);
-			hote.setNumero(i);
+			hote.setNumero(numero + i); // ex: 1001, ...
 			hotes.add(hote);
 		}
 	}
@@ -159,7 +164,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	public void reset() {
 		LOGGER.trace("Réinitialisation de l'agent " + getNumero());
 		// on recrée les hôtes
-		this.hotes.clear();
+		
 		initialiserHotes();
 		sommeTauxUtilisationBuffer = 0.0;
 		messagesPerdusBrutalement = 0;
@@ -177,6 +182,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 */
 	public void setNumero(final int numeroAgent) {
 		numero = numeroAgent;
+		initialiserHotes();
 	}
 
 
@@ -187,5 +193,37 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	@Override
 	public String toString() {
 		return "Agent " + getNumero();
+	}
+	
+	/**
+	 * Récupérer un hôte aléatoire de cet agent.
+	 * @return un hôte aléatoire de cet agent
+	 */
+	public Hote getHoteAleatoire(){
+		//FIXME implement (voir pour les bornes)
+		// de 0 à hotes.size() ?
+		
+		//generateurChoixHote.nextInt()
+		
+		
+		return null; //FIXME return!!
+	}
+	
+	/**
+	 * Récupérer un hôte aléatoire de cet agent pouvant être n'importe quel hôte sauf celui fourni en argument.
+	 * @param exception le seul hôte ne pouvant pas être retourné
+	 * @return un hôte aléatoire autre que celui donné en argument
+	 */
+	public Hote getHoteAleatoire(final Hote exception){
+		if(exception == null){
+			throw new IllegalArgumentException("L'hôte exclus (l'exception) ne peut pas être null!");
+		}
+		
+		Hote retVal = null;
+		do{
+			retVal = getHoteAleatoire();
+		}while(retVal == null || exception.equals(retVal));
+		
+		return retVal;
 	}
 }
