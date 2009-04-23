@@ -269,8 +269,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 					((double) getBuffer().size() / (double) getConfiguration()
 							.getConfigurationAgents().getTailleBuffer()) / 100;
 		}
-		// TODO effacer:
-		// LOGGER.info("Taux occupation actuel: " + tauxOccupationActuel);
+		
 		// on actualise la variable retenant le dernier temps de simulation où
 		// l'occupation du buffer a été enregistrée pour les statistiques
 		dernierTempsMiseAJourTauxUtilisationBuffer =
