@@ -2,9 +2,7 @@ package be.simulation.entites;
 
 import java.util.LinkedList;
 import java.util.Queue;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import be.simulation.SimulationReseau;
 import be.simulation.core.entites.AbstractEntiteSimulation;
 import be.simulation.messages.util.MessageEnAttente;
@@ -19,12 +17,18 @@ public abstract class AbstractEntiteSimulationReseau extends
 	/**
 	 * Buffer de l'entité.
 	 */
-	private final Queue<MessageEnAttente> buffer = new LinkedList<MessageEnAttente>();
-
+	private final Queue<MessageEnAttente>	buffer	=
+															new LinkedList<MessageEnAttente>();
+	/**
+	 * Numero identifiant de l'entité.
+	 */
+	private long							numero;
 	/**
 	 * La simulation dont l'entité fait partie.
 	 */
-	private SimulationReseau simulation;
+	private SimulationReseau				simulation;
+
+
 
 	/**
 	 * Récupérer le buffer.
@@ -35,6 +39,19 @@ public abstract class AbstractEntiteSimulationReseau extends
 		return buffer;
 	}
 
+
+
+	/**
+	 * Récupérer le numero de l'entité.
+	 * 
+	 * @return le numéro de l'entité
+	 */
+	public long getNumero() {
+		return numero;
+	}
+
+
+
 	/**
 	 * Récupérer la simulation dont l'entité fait partie.
 	 * 
@@ -44,6 +61,8 @@ public abstract class AbstractEntiteSimulationReseau extends
 		return simulation;
 	}
 
+
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -52,11 +71,30 @@ public abstract class AbstractEntiteSimulationReseau extends
 		buffer.clear();
 	}
 
+
+
+	/**
+	 * Définir le numéro de cette entité
+	 * 
+	 * @param numeroHote
+	 *        le numéro de cette entité
+	 * @throw IllegalArgumentException si le numéro d'entité fourni est <= 0
+	 */
+	public void setNumero(final long numeroHote) {
+		if (numeroHote <= 0) {
+			throw new IllegalArgumentException(
+					"Le numero d'entité fourni est invalide (il doit etre > 0)");
+		}
+		this.numero = numeroHote;
+	}
+
+
+
 	/**
 	 * Définir la simulation dont l'entité fait partie.
 	 * 
 	 * @param simulation
-	 *            la simulation dont l'entité fait partie.
+	 *        la simulation dont l'entité fait partie.
 	 */
 	@Autowired
 	protected void setSimulation(final SimulationReseau simulation) {

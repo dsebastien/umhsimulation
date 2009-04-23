@@ -49,7 +49,6 @@ public class Main {
 			LOGGER.fatal(e.getMessage());
 			System.exit(0);
 		}
-		
 		// Recupération de la simulation pré-configurée par spring
 		SimulationReseau simulation =
 				(SimulationReseau) springApplicationContext
@@ -57,7 +56,7 @@ public class Main {
 		// Lancement de la simulation
 		simulation.demarrer();
 		simulation.afficherResultats();
-		
-		//FIXME ajouter option "timeoutInfosRoutage" à la configuration des agents
+		// FIXME v2.0 ajouter option "timeoutInfosRoutage" à la configuration
+		// des agents
 	}
 }
