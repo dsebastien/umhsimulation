@@ -58,5 +58,7 @@ public class Main {
 		simulation.afficherResultats();
 		// FIXME v2.0 ajouter option "timeoutInfosRoutage" à la configuration
 		// des agents
+		
+		//TODO ajouter logging
 	}
 }

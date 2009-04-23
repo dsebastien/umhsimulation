@@ -101,8 +101,7 @@ public class SimulationReseau extends
 			} else if (evenementImminent instanceof HoteTimeoutReceptionAccuse){
 				// timeout réception d'un accusé
 				HoteTimeoutReceptionAccuse evt = (HoteTimeoutReceptionAccuse) evenementImminent;
-				//FIXME implémenter
-				//evt.getHote().t
+				evt.getHote().timeoutReceptionAccuse(evt.getMessage());
 			} else if (evenementImminent instanceof FinDeSimulation) {
 				// on quitte la boucle principale (simulation terminée)
 				break;
@@ -239,6 +238,9 @@ public class SimulationReseau extends
 	public void reset() {
 		resetBasicSimulation(); // temps, FEL
 		
+		//TODO réfléchir au problème de numéros
+		//si on fixe à X et que le nombre d'hôtes par agent est fixé à plus de X
+		//alors c'est moche (mais sans aucune incidence!)
 		agent1.setNumero(10000);
 		agent2.setNumero(20000);
 		agent3.setNumero(30000);

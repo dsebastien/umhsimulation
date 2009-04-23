@@ -307,9 +307,11 @@ private int messagesPerdusBufferPlein = 0;
 			messageATraiter.augmenterTempsPasseDansBuffers(getSimulation()
 					.getHorloge()
 					- messageEnAttente.getTempsArrivee());
-			// on génère l'évènement de fin de traitement et on l'ajoute à la
-			// FEL
-			genererEvenementAgentFinTraitementMessageEtPlacerSurFEL(messageATraiter);
+			// on génère l'évènement de fin de traitement pour ce message à traiter
+			AgentFinTraitementMessage evtAgentFinTraitementMessage = genererEvenementAgentFinTraitementMessage(messageATraiter);
+			
+			// on l'ajoute sur la FEL
+			getSimulation().getFutureEventList().planifierEvenement(evtAgentFinTraitementMessage);
 		}
 	}
 
@@ -321,12 +323,10 @@ private int messagesPerdusBufferPlein = 0;
 	 * @param message
 	 *        le message qu'on finira de traiter
 	 */
-	private void genererEvenementAgentFinTraitementMessageEtPlacerSurFEL(
+	private AgentFinTraitementMessage genererEvenementAgentFinTraitementMessage(
 			final Message message) {
-		AgentFinTraitementMessage evenement =
-				new AgentFinTraitementMessage(message, this, getSimulation()
+		return new AgentFinTraitementMessage(message, this, getSimulation()
 						.getHorloge() + 1);
-		getSimulation().getFutureEventList().planifierEvenement(evenement);
 	}
 
 
@@ -350,8 +350,11 @@ private int messagesPerdusBufferPlein = 0;
 		}else{
 			if(messagesEnCoursTraitement < getConfiguration().getConfigurationAgents().getNombreMaxTraitementsSimultanes()){
 				// on peut traiter le message directement donc on génère
-				// l'évènement de fin de traitement et on l'ajoute à la FEL
-				genererEvenementAgentFinTraitementMessageEtPlacerSurFEL(message);
+				// l'évènement de fin de traitement
+				AgentFinTraitementMessage evtAgentFinTraitementMessage = genererEvenementAgentFinTraitementMessage(message);
+				
+				// on l'ajoute sur la FEL
+				getSimulation().getFutureEventList().planifierEvenement(evtAgentFinTraitementMessage);
 				
 				// on incrémente le compteur de messages en cours de traitement
 				messagesEnCoursTraitement++;
