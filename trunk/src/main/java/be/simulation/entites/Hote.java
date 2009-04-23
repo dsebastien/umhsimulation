@@ -375,4 +375,25 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	public String toString() {
 		return "Hote " + getNumero();
 	}
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Appelé quand cet hôte termine de traiter un message.
+	 * 
+	 * @param message
+	 *        le message que cet hôte finit de traiter
+	 */
+	public void finitTraiterMessage(final Message message) {
+		if (message == null) {
+			throw new IllegalArgumentException(
+					"Le message que l'hôte termine de traiter ne peut pas être null!");
+		}
+		LOGGER.trace("Hote "+getNumero()+" termine de traiter un message");
+		//FIXME implémenter!
+	}
 }
