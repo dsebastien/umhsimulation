@@ -3,9 +3,11 @@ package be.simulation.entites;
 import java.util.Random;
 import be.simulation.evenements.AgentRecoitMessage;
 import be.simulation.evenements.HoteEnvoieMessageOriginal;
+import be.simulation.evenements.HoteFinTraitementMessage;
 import be.simulation.evenements.HoteTimeoutReceptionAccuse;
 import be.simulation.messages.Message;
 import be.simulation.messages.MessageSimple;
+import be.simulation.messages.util.MessageEnAttente;
 
 /**
  * Hote du système, relié à un et un seul agent (lien statique).
@@ -74,72 +76,133 @@ public class Hote extends AbstractEntiteSimulationReseau {
 		// configuration
 	}
 
-	
+
+
 	/**
 	 * Timeout pour la réception d'un accusé.
-	 * @param message le message pour lequel on a pas encore reçu d'accusé
+	 * 
+	 * @param message
+	 *        le message pour lequel on a pas encore reçu d'accusé
 	 */
 	public void timeoutReceptionAccuse(final Message message) {
 		// on incrémente le compteur de messages réexpédiés
 		messagesReexpedies++;
-		
-		// on recrée le message pour le renvoyer (ça doit être une instance différence!)
+		// on recrée le message pour le renvoyer (ça doit être une instance
+		// différence!)
 		Message nouveauMessage = creerMessage(message.getDestination());
-		
 		// création de l'évènement de réception par l'agent de l'hôte
-		AgentRecoitMessage evenementReceptionAgent = genererEvenementAgentRecoitMessage(nouveauMessage);
-		
+		AgentRecoitMessage evenementReceptionAgent =
+				genererEvenementAgentRecoitMessage(nouveauMessage);
 		// ajout de l'évènement de réception par l'agent à la FEL
 		getSimulation().getFutureEventList().planifierEvenement(
 				evenementReceptionAgent);
-		
 		// création de l'évènement timeout correspondant
-		HoteTimeoutReceptionAccuse evenementTimeout = genererEvenementHoteTimeoutReceptionAccuse(nouveauMessage);
-		
+		HoteTimeoutReceptionAccuse evenementTimeout =
+				genererEvenementHoteTimeoutReceptionAccuse(nouveauMessage);
 		// ajout de l'évènement timeout à la FEL (nouveau timeout)
 		getSimulation().getFutureEventList().planifierEvenement(
 				evenementTimeout);
+		// FIXME implémenter
+	}
+
+
+
+	/**
+	 * Appelé quand cet hôte reçoit un message.
+	 * 
+	 * @param message
+	 *        le message qu'il reçoit
+	 */
+	public void recoitMessage(final Message message) {
+		if (message == null) {
+			throw new IllegalArgumentException(
+					"Le message ne peut pas être null!");
+		}
 		
-		//FIXME implémenter
+		if (messagesEnCoursTraitement < getConfiguration()
+				.getConfigurationHotes().getNombreMaxTraitementsSimultanes()) {
+			LOGGER.trace("Hote "+getNumero()+" commence le traitement d'un message");
+			// on peut traiter le message directement donc on génère
+			// l'évènement de fin de traitement
+			HoteFinTraitementMessage evtHoteFinTraitementMessage =
+					genererEvenementHoteFinTraitementMessage(message);
+			// on l'ajoute sur la FEL
+			getSimulation().getFutureEventList().planifierEvenement(
+					evtHoteFinTraitementMessage);
+			// on incrémente le compteur de messages en cours de traitement
+			messagesEnCoursTraitement++;
+			return; // le traitement a commencé, on quitte la méthode
+		}
 		
+		// on ne peut pas le traiter directement donc on le place dans le buffer
+		// (le buffer des hôtes est supposé infini)
+		LOGGER.trace("Hote "+getNumero()+" place un message dans son buffer");
+		getBuffer()
+		.add(
+				new MessageEnAttente(message, getSimulation()
+						.getHorloge()));
 	}
 	
+	/**
+	 * Génère et ajoute à la FEL un évènement de type HoteFinTraitementMessage
+	 * 
+	 * @param message
+	 *        le message qu'on finira de traiter
+	 */
+	private HoteFinTraitementMessage genererEvenementHoteFinTraitementMessage(
+			final Message message) {
+		return new HoteFinTraitementMessage(message, this, getSimulation()
+				.getHorloge() + 1);
+	}
+
+
+
 	/**
 	 * Génère un évènement de type AgentRecoitMessage.
-	 * @param message le message que l'agent doit recevoir
+	 * 
+	 * @param message
+	 *        le message que l'agent doit recevoir
 	 * @return l'évènement créé
 	 */
-	private AgentRecoitMessage genererEvenementAgentRecoitMessage(final Message message){
-		return
-			new AgentRecoitMessage(message, this.getAgent(),
-					getSimulation().getHorloge()
-							+ getConfiguration()
-									.getConfigurationSimulationReseau()
-									.getDelaiEntreEntites());
-	
+	private AgentRecoitMessage genererEvenementAgentRecoitMessage(
+			final Message message) {
+		return new AgentRecoitMessage(message, this.getAgent(), getSimulation()
+				.getHorloge()
+				+ getConfiguration().getConfigurationSimulationReseau()
+						.getDelaiEntreEntites());
 	}
-	
+
+
+
 	/**
 	 * Génère un évènement de type HoteTimeoutReceptionAccuse.
-	 * @param message le message pour lequel aucun accusé de réception n'a été reçu
+	 * 
+	 * @param message
+	 *        le message pour lequel aucun accusé de réception n'a été reçu
 	 * @return l'évènement créé
 	 */
-	private HoteTimeoutReceptionAccuse genererEvenementHoteTimeoutReceptionAccuse(final Message message){
+	private HoteTimeoutReceptionAccuse genererEvenementHoteTimeoutReceptionAccuse(
+			final Message message) {
 		return new HoteTimeoutReceptionAccuse(message, this, getSimulation()
 				.getHorloge()
 				+ getConfiguration().getConfigurationHotes()
 						.getTimeoutReemissionMessages());
 	}
-	
+
+
+
 	/**
 	 * Créer un message.
-	 * @param destinataire le destinataire
+	 * 
+	 * @param destinataire
+	 *        le destinataire
 	 * @return le message généré
 	 */
-	private MessageSimple creerMessage(final Hote destinataire){
+	private MessageSimple creerMessage(final Hote destinataire) {
 		return new MessageSimple(this, destinataire, ++identifiantMessages,
 				getSimulation().getHorloge());
 	}
+
 
 
 	/**
@@ -175,21 +238,18 @@ public class Hote extends AbstractEntiteSimulationReseau {
 		}
 		// création du message
 		MessageSimple message = creerMessage(hoteDestination);
-		
 		// création de l'évènement de réception par l'agent de l'hôte
-		AgentRecoitMessage evenementReceptionAgent = genererEvenementAgentRecoitMessage(message);
-		
+		AgentRecoitMessage evenementReceptionAgent =
+				genererEvenementAgentRecoitMessage(message);
 		// ajout de l'évènement de réception par l'agent à la FEL
 		getSimulation().getFutureEventList().planifierEvenement(
 				evenementReceptionAgent);
-		
 		// création de l'évènement timeout correspondant
-		HoteTimeoutReceptionAccuse evenementTimeout = genererEvenementHoteTimeoutReceptionAccuse(message);
-		
+		HoteTimeoutReceptionAccuse evenementTimeout =
+				genererEvenementHoteTimeoutReceptionAccuse(message);
 		// ajout de l'évènement timeout à la FEL
 		getSimulation().getFutureEventList().planifierEvenement(
 				evenementTimeout);
-		
 		// incrémentation du nombre de messages envoyés
 		messagesEnvoyes++;
 		// génération du prochain évènement d'envoi pour cet hôte
@@ -202,10 +262,9 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	 * Génère et place sur la FEL un évènement de type HoteEnvoieMessageOriginal
 	 * pour cet hôte.
 	 */
-	public void genererEvenementHoteEnvoieMessageOriginal() {
+	public HoteEnvoieMessageOriginal genererEvenementHoteEnvoieMessageOriginal() {
 		long tempsEnvoi = genererTempsProchainEnvoi();
-		getSimulation().getFutureEventList().planifierEvenement(
-				new HoteEnvoieMessageOriginal(this, tempsEnvoi));
+		return new HoteEnvoieMessageOriginal(this, tempsEnvoi);
 	}
 
 
