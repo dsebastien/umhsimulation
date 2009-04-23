@@ -20,14 +20,17 @@ import be.simulation.routage.Routeur;
  */
 public class Agent extends AbstractEntiteSimulationReseau {
 	/**
-	 * PRNG utilisé pour choisir un hôte au hasard parmi les hôtes connectés à cet agent.
+	 * PRNG utilisé pour choisir un hôte au hasard parmi les hôtes connectés à
+	 * cet agent.
 	 */
-	private final Random generateurChoixHote = new Random();
-	
+	private final Random		generateurChoixHote							=
+																					new Random();
 	/**
-	 * PRNG utilisé pour déterminer si un message reçu est perdu ou non (suivant la configuration).
+	 * PRNG utilisé pour déterminer si un message reçu est perdu ou non (suivant
+	 * la configuration).
 	 */
-	private final Random generateurMessagesPerdus = new Random();
+	private final Random		generateurMessagesPerdus					=
+																					new Random();
 	/**
 	 * Dernier temps de simulation ou le taux d'utilisation du buffer a été mis
 	 * à jour.
@@ -50,7 +53,6 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * Le nombre de messages reçus.
 	 */
 	private int					messagesRecus								= 0;
-
 	/**
 	 * Les informations de routage dont dispose cet agent (lui permet de savoir
 	 * vers où forwarder les messages).
@@ -62,16 +64,18 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 */
 	private double				sommeTauxUtilisationBuffer					=
 																					0.0;
-
 	/**
 	 * Le nombre de messages perdus car le buffer était plein.
 	 */
-private int messagesPerdusBufferPlein = 0;
+	private int					messagesPerdusBufferPlein					= 0;
 
-/**
- * Récupérer le nombre de messages perdus car le buffer était plein.
- * @return le nombre de messages perdus car le buffer était plein.
- */
+
+
+	/**
+	 * Récupérer le nombre de messages perdus car le buffer était plein.
+	 * 
+	 * @return le nombre de messages perdus car le buffer était plein.
+	 */
 	public int getMessagesPerdusBufferPlein() {
 		return messagesPerdusBufferPlein;
 	}
@@ -127,6 +131,7 @@ private int messagesPerdusBufferPlein = 0;
 	}
 
 
+
 	/**
 	 * Récupérer les infos de routage de cet agent.
 	 * 
@@ -173,14 +178,13 @@ private int messagesPerdusBufferPlein = 0;
 	public void reset() {
 		LOGGER.trace("Réinitialisation de l'agent " + getNumero());
 		super.reset();
-		
 		sommeTauxUtilisationBuffer = 0.0;
 		messagesPerdusBrutalement = 0;
 		dernierTempsMiseAJourTauxUtilisationBuffer = 0;
 		messagesRecus = 0;
 		messagesPerdusBufferPlein = 0;
-		
-		// on réinitialise les hôtes (le nombre d'hôtes par agent dans la configuration peut avoir changé)
+		// on réinitialise les hôtes (le nombre d'hôtes par agent dans la
+		// configuration peut avoir changé)
 		initialiserHotes();
 	}
 
@@ -206,36 +210,45 @@ private int messagesPerdusBufferPlein = 0;
 	public String toString() {
 		return "Agent " + getNumero();
 	}
-	
+
+
+
 	/**
 	 * Récupérer un hôte aléatoire de cet agent.
+	 * 
 	 * @return un hôte aléatoire de cet agent
 	 */
-	public Hote getHoteAleatoire(){
-		// choix d'une position entre 0 et nombre d'hôtes - 1 (Random commence à 0)
-		int position = generateurChoixHote.nextInt(hotes.size()); 
+	public Hote getHoteAleatoire() {
+		// choix d'une position entre 0 et nombre d'hôtes - 1 (Random commence à
+		// 0)
+		int position = generateurChoixHote.nextInt(hotes.size());
 		return hotes.get(position);
 	}
-	
+
+
+
 	/**
-	 * Récupérer un hôte aléatoire de cet agent pouvant être n'importe quel hôte sauf celui fourni en argument.
-	 * @param exception le seul hôte ne pouvant pas être retourné
+	 * Récupérer un hôte aléatoire de cet agent pouvant être n'importe quel hôte
+	 * sauf celui fourni en argument.
+	 * 
+	 * @param exception
+	 *        le seul hôte ne pouvant pas être retourné
 	 * @return un hôte aléatoire autre que celui donné en argument
 	 */
-	public Hote getHoteAleatoire(final Hote exception){
-		if(exception == null){
-			throw new IllegalArgumentException("L'hôte exclus (l'exception) ne peut pas être null!");
+	public Hote getHoteAleatoire(final Hote exception) {
+		if (exception == null) {
+			throw new IllegalArgumentException(
+					"L'hôte exclus (l'exception) ne peut pas être null!");
 		}
-		
 		Hote retVal = null;
-		do{
+		do {
 			retVal = getHoteAleatoire();
-		}while(retVal == null || exception.equals(retVal));
-		
+		} while (retVal == null || exception.equals(retVal));
 		return retVal;
 	}
-	
-	
+
+
+
 	/**
 	 * Appelé quand cet agent termine de traiter un message.
 	 * 
@@ -247,7 +260,6 @@ private int messagesPerdusBufferPlein = 0;
 			throw new IllegalArgumentException(
 					"Le message que l'agent termine de traiter ne peut pas être null!");
 		}
-		
 		// FIXME ne prend pas en compte le dernier temps de mise à jour du
 		// buffer! (sans doute incorrect donc!!)
 		// on ajoute taux actuel d'occupation du buffer au total
@@ -255,18 +267,17 @@ private int messagesPerdusBufferPlein = 0;
 		if (getBuffer().size() > 0) {
 			tauxOccupationActuel =
 					((double) getBuffer().size() / (double) getConfiguration()
-						.getConfigurationAgents().getTailleBuffer()) / 100;
+							.getConfigurationAgents().getTailleBuffer()) / 100;
 		}
-		//TODO effacer:
-		//LOGGER.info("Taux occupation actuel: " + tauxOccupationActuel);
-		
-		// on actualise la variable retenant le dernier temps de simulation où 
+		// TODO effacer:
+		// LOGGER.info("Taux occupation actuel: " + tauxOccupationActuel);
+		// on actualise la variable retenant le dernier temps de simulation où
 		// l'occupation du buffer a été enregistrée pour les statistiques
-		dernierTempsMiseAJourTauxUtilisationBuffer = getSimulation().getHorloge();
-		
+		dernierTempsMiseAJourTauxUtilisationBuffer =
+				getSimulation().getHorloge();
 		// vérification du destinataire final de ce message
 		if (this == message.getDestination().getAgent()) {
-			// message à destination d'un hôte de cet agent 
+			// message à destination d'un hôte de cet agent
 			// donc on peut le lui remettre
 			HoteRecoitMessage evtHoteRecoitMessage =
 					new HoteRecoitMessage(message, message.getDestination(),
@@ -280,18 +291,17 @@ private int messagesPerdusBufferPlein = 0;
 		} else {
 			// le message est à destination d'un hôte connecté à un autre agent
 			// on cherche où forwarder le message
-			Route route = routeur.trouverMeilleureRoute(message.getDestination());
-		
-			// on génère l'évènement de réception par le voisin correspondant à cette route
+			Route route =
+					routeur.trouverMeilleureRoute(message.getDestination());
+			// on génère l'évènement de réception par le voisin correspondant à
+			// cette route
 			AgentRecoitMessage evtReceptionAgent =
 					new AgentRecoitMessage(message, route.getVoisin(),
-							getSimulation().getHorloge()
-									+ route.getCout());
-			
+							getSimulation().getHorloge() + route.getCout());
 			// on l'ajoute à la FEL
-			getSimulation().getFutureEventList().planifierEvenement(evtReceptionAgent);
+			getSimulation().getFutureEventList().planifierEvenement(
+					evtReceptionAgent);
 		}
-		
 		// on vérifie le contenu du buffer
 		if (getBuffer().isEmpty()) {
 			// plus rien à traiter, on décrémente le nombre de messages en cours
@@ -301,17 +311,18 @@ private int messagesPerdusBufferPlein = 0;
 			// puisqu'il y a encore des messages en attente, on en prend un et
 			// on commence à le traiter tout de suite
 			MessageEnAttente messageEnAttente = getBuffer().poll();
-			
 			Message messageATraiter = messageEnAttente.getMessage();
 			// on met à jour le temps que ce message à passé dans des buffers
 			messageATraiter.augmenterTempsPasseDansBuffers(getSimulation()
 					.getHorloge()
 					- messageEnAttente.getTempsArrivee());
-			// on génère l'évènement de fin de traitement pour ce message à traiter
-			AgentFinTraitementMessage evtAgentFinTraitementMessage = genererEvenementAgentFinTraitementMessage(messageATraiter);
-			
+			// on génère l'évènement de fin de traitement pour ce message à
+			// traiter
+			AgentFinTraitementMessage evtAgentFinTraitementMessage =
+					genererEvenementAgentFinTraitementMessage(messageATraiter);
 			// on l'ajoute sur la FEL
-			getSimulation().getFutureEventList().planifierEvenement(evtAgentFinTraitementMessage);
+			getSimulation().getFutureEventList().planifierEvenement(
+					evtAgentFinTraitementMessage);
 		}
 	}
 
@@ -326,68 +337,89 @@ private int messagesPerdusBufferPlein = 0;
 	private AgentFinTraitementMessage genererEvenementAgentFinTraitementMessage(
 			final Message message) {
 		return new AgentFinTraitementMessage(message, this, getSimulation()
-						.getHorloge() + 1);
+				.getHorloge() + 1);
 	}
+
 
 
 	/**
 	 * Appelé quand cet agent reçoit un message.
-	 * @param message le message qu'il reçoit
+	 * 
+	 * @param message
+	 *        le message qu'il reçoit
 	 */
 	public void recoitMessage(final Message message) {
-		if(message == null){
-			throw new IllegalArgumentException("Le message ne peut pas être null!");
+		if (message == null) {
+			throw new IllegalArgumentException(
+					"Le message ne peut pas être null!");
 		}
-		
 		// on incrémente le nombre de messages reçus
 		messagesRecus++;
-		
-		// on détermine si ce message est perdu ou non (utilisation d'une variable aléatoire)
-		if(estPerdu()){
-			LOGGER.trace("L'agent "+getNumero()+" perd brutalement un message au temps "+getSimulation().getHorloge());
+		// on détermine si ce message est perdu ou non
+		// (utilisation d'une variable aléatoire)
+		if (estPerdu()) {
+			LOGGER.trace("L'agent " + getNumero()
+					+ " perd brutalement un message au temps "
+					+ getSimulation().getHorloge());
 			// on incrémente le compteur de messages perdus brutalement
 			messagesPerdusBrutalement++;
-		}else{
-			if(messagesEnCoursTraitement < getConfiguration().getConfigurationAgents().getNombreMaxTraitementsSimultanes()){
-				// on peut traiter le message directement donc on génère
-				// l'évènement de fin de traitement
-				AgentFinTraitementMessage evtAgentFinTraitementMessage = genererEvenementAgentFinTraitementMessage(message);
-				
-				// on l'ajoute sur la FEL
-				getSimulation().getFutureEventList().planifierEvenement(evtAgentFinTraitementMessage);
-				
-				// on incrémente le compteur de messages en cours de traitement
-				messagesEnCoursTraitement++;
-			}else{
-				//FIXME v2.0 ajouter les détails de la vérification de l'occupation du buffer
-				//pour générer des évènements AgentEnvoieInfosRoutage (voir UML)
-				
-				// on ne peut plus traiter de message pour l'instant donc on doit le mettre en attente
-				// on essaie donc de le placer dans le buffer si possible
-				boolean bufferInfini = getConfiguration().getConfigurationAgents().getTailleBuffer() == Long.MAX_VALUE;
-				boolean bufferRempli = getBuffer().size() < getConfiguration().getConfigurationAgents().getTailleBuffer();
-				// si le buffer n'est pas rempli ou est infini, pas de problème
-				if(!bufferRempli || bufferInfini){
-					// le buffer n'est pas plein alors on peut placer le message dedans
-					// on enregistre le temps de simulation auquel on l'y a placé (pour les stats)
-					getBuffer().add(new MessageEnAttente(message, getSimulation().getHorloge()));
-				}else{
-					// le buffer est plein donc le message est perdu
-					messagesPerdusBufferPlein++;
-				}
-			}
+			return; // on ne peut rien faire de plus dans ce cas
+		}
+		// est-ce qu'on peut encore traiter un message?
+		if (messagesEnCoursTraitement < getConfiguration()
+				.getConfigurationAgents().getNombreMaxTraitementsSimultanes()) {
+			// on peut traiter le message directement donc on génère
+			// l'évènement de fin de traitement
+			AgentFinTraitementMessage evtAgentFinTraitementMessage =
+					genererEvenementAgentFinTraitementMessage(message);
+			// on l'ajoute sur la FEL
+			getSimulation().getFutureEventList().planifierEvenement(
+					evtAgentFinTraitementMessage);
+			// on incrémente le compteur de messages en cours de traitement
+			messagesEnCoursTraitement++;
+			return;
+		}
+		
+		// FIXME v2.0 ajouter les détails de la vérification de l'occupation
+		// du buffer pour générer des évènements AgentEnvoieInfosRoutage
+		
+		// on ne peut plus traiter de message pour l'instant donc on doit le
+		// mettre en attente on essaie donc de le placer dans le buffer si
+		// possible
+		boolean bufferInfini =
+				getConfiguration().getConfigurationAgents().getTailleBuffer() == Long.MAX_VALUE;
+		boolean bufferRempli =
+				getBuffer().size() < getConfiguration()
+						.getConfigurationAgents().getTailleBuffer();
+		// si le buffer n'est pas rempli ou est infini, pas de problème
+		if (!bufferRempli || bufferInfini) {
+			// le buffer n'est pas plein alors on peut y placer le message.
+			// on enregistre le temps de simulation auquel on l'y a placé
+			getBuffer()
+					.add(
+							new MessageEnAttente(message, getSimulation()
+									.getHorloge()));
+		} else {
+			// le buffer est plein donc le message est perdu
+			messagesPerdusBufferPlein++;
 		}
 	}
-	
+
+
+
 	/**
-	 * Détermine si on perd le message ou non (sur base de la configuration) en utilisant un PRNG.
+	 * Détermine si on perd le message ou non (sur base de la configuration) en
+	 * utilisant un PRNG.
+	 * 
 	 * @return vrai si le message est perdu
 	 */
-	private boolean estPerdu(){
-		//FIXME vérifier si calcul ok
-		int randomDigits = Math.round(getConfiguration().getConfigurationAgents().getTauxPerteBrutale() * 100);
+	private boolean estPerdu() {
+		// FIXME vérifier si calcul ok
+		int randomDigits =
+				Math.round(getConfiguration().getConfigurationAgents()
+						.getTauxPerteBrutale() * 100);
 		boolean retVal = false;
-		if(generateurMessagesPerdus.nextInt(100) + 1 <= randomDigits){
+		if (generateurMessagesPerdus.nextInt(100) + 1 <= randomDigits) {
 			retVal = true;
 		}
 		return retVal;
