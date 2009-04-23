@@ -76,7 +76,7 @@ public class ConfigurationAgents extends AbstractConfiguration {
 
 
 	/**
-	 * Récupérer le taux de perte brutale.
+	 * Récupérer le taux de perte brutale (0 <= taux < 1).
 	 * 
 	 * @return le taux de perte brutale
 	 */

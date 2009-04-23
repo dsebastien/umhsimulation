@@ -1,10 +1,13 @@
 package be.simulation;
 
+import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import be.simulation.core.AbstractSimulation;
 import be.simulation.core.evenements.Evenement;
 import be.simulation.entites.Agent;
 import be.simulation.entites.Hote;
+import be.simulation.evenements.AgentFinTraitementMessage;
+import be.simulation.evenements.AgentRecoitMessage;
 import be.simulation.evenements.FinDeSimulation;
 import be.simulation.evenements.HoteEnvoieMessageOriginal;
 import be.simulation.routage.Route;
@@ -37,6 +40,11 @@ public class SimulationReseau extends
 	private Agent	agent7000;
 
 
+	/**
+	 * PRNG utilisé pour choisir un agent au hasard (utilisé pour les choix des
+	 * agents de destination pour les nouveaux messages des hôtes).
+	 */
+	private final Random	generateurChoixAgent	= new Random();
 
 	/**
 	 * {@inheritDoc}
@@ -80,6 +88,13 @@ public class SimulationReseau extends
 				HoteEnvoieMessageOriginal evt =
 						(HoteEnvoieMessageOriginal) evenementImminent;
 				evt.getHote().envoyerMessageOriginal();
+			} else if (evenementImminent instanceof AgentRecoitMessage){
+				AgentRecoitMessage evt = (AgentRecoitMessage) evenementImminent;
+				evt.getAgent().recoitMessage(evt.getMessage());
+			} else if (evenementImminent instanceof AgentFinTraitementMessage) {
+				AgentFinTraitementMessage evt =
+						(AgentFinTraitementMessage) evenementImminent;
+				evt.getAgent().finitTraiterMessage(evt.getMessage());
 			} else if (evenementImminent instanceof FinDeSimulation) {
 				// on quitte la boucle principale (simulation terminée)
 				break;
@@ -100,60 +115,58 @@ public class SimulationReseau extends
 	 */
 	private void genererPremiersEvenementsEnvoiDesHotes(Agent agent) {
 		for (Hote h : agent.getHotes()) {
-			long tempsEnvoi = h.genererTempsProchainEnvoi();
-			getFutureEventList().planifierEvenement(
-					new HoteEnvoieMessageOriginal(h, tempsEnvoi));
+			h.genererEvenementHoteEnvoieMessageOriginal();
 		}
 	}
 
 
 
-	public Agent getAgent1000() {
-		return agent1000;
-	}
-
-
-
-	public Agent getAgent2000() {
-		return agent2000;
-	}
-
-
-
-	public Agent getAgent3000() {
-		return agent3000;
-	}
-
-
-
-	public Agent getAgent4000() {
-		return agent4000;
-	}
-
-
-
-	public Agent getAgent5000() {
-		return agent5000;
-	}
-
-
-
-	public Agent getAgent6000() {
-		return agent6000;
-	}
-
-
-
-	public Agent getAgent7000() {
-		return agent7000;
-	}
+//	public Agent getAgent1000() {
+//		return agent1000;
+//	}
+//
+//
+//
+//	public Agent getAgent2000() {
+//		return agent2000;
+//	}
+//
+//
+//
+//	public Agent getAgent3000() {
+//		return agent3000;
+//	}
+//
+//
+//
+//	public Agent getAgent4000() {
+//		return agent4000;
+//	}
+//
+//
+//
+//	public Agent getAgent5000() {
+//		return agent5000;
+//	}
+//
+//
+//
+//	public Agent getAgent6000() {
+//		return agent6000;
+//	}
+//
+//
+//
+//	public Agent getAgent7000() {
+//		return agent7000;
+//	}
 
 
 
 	/**
 	 * Remise à zéro des tables de routage des agents.
 	 */
-	public void reinitialiserTablesRoutageAgents() {
+	private void reinitialiserTablesRoutageAgents() {
 		agent1000.getRouteur().reset();
 		agent1000.getRouteur().addRoute(
 				new Route(agent2000, agent2000, 10));
@@ -217,5 +230,37 @@ public class SimulationReseau extends
 	@Override
 	public String toString() {
 		return getConfiguration().getConfigurationSimulationReseau().getNom();
+	}
+	
+	/**
+	 * Récupérer un agent aléatoire pouvant être n'importe lequel sauf celui
+	 * fourni en argument.
+	 * 
+	 * @param exception
+	 *        le seul agent ne pouvant pas être retourné
+	 * @return un agent aléatoire autre que celui donné en argument
+	 */
+	public Agent getAgentAleatoire(final Agent exception){
+		if(exception == null){
+			throw new IllegalArgumentException("L'agent exclus (l'exception) ne peut pas être null!");
+		}
+		
+		Agent retVal = null;
+		do{
+			switch(generateurChoixAgent.nextInt(7) + 1){
+				case 1: retVal = agent1000; break;
+				case 2: retVal = agent2000; break;
+				case 3: retVal = agent3000; break;
+				case 4: retVal = agent4000; break;
+				case 5: retVal = agent5000; break;
+				case 6: retVal = agent6000; break;
+				case 7: retVal = agent7000; break;
+				default:
+					LOGGER
+							.error("Un problème a eu lieu pendant la sélection aléatoire d'un agent.");
+			}
+		}while(retVal == null || exception.equals(retVal));
+		
+		return retVal;
 	}
 }

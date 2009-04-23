@@ -17,18 +17,10 @@ public class AgentFinTraitementMessage extends Evenement {
 	 */
 	private final Agent agent;
 	/**
-	 * Récupérer l'agent qui termine de traiter ce message.
-	 * @return l'agent qui termine de traiter ce message.
-	 */
-	public Agent getAgent() {
-		return agent;
-	}
-
-
-	/**
 	 * Le message qu'on termine de traiter.
 	 */
 	private final Message	message;
+
 
 	/**
 	 * Evènement de fin de traitement.
@@ -49,6 +41,14 @@ public class AgentFinTraitementMessage extends Evenement {
 		}
 		this.message = message;
 		this.agent = agent;
+	}
+
+	/**
+	 * Récupérer l'agent qui termine de traiter ce message.
+	 * @return l'agent qui termine de traiter ce message.
+	 */
+	public Agent getAgent() {
+		return agent;
 	}
 
 
