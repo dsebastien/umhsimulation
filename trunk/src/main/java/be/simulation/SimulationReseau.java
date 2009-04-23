@@ -51,13 +51,6 @@ public class SimulationReseau extends
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		super.afterPropertiesSet();
-		agent1000.setNumero(1000);
-		agent2000.setNumero(2000);
-		agent3000.setNumero(3000);
-		agent4000.setNumero(4000);
-		agent5000.setNumero(5000);
-		agent6000.setNumero(6000);
-		agent7000.setNumero(7000);
 	}
 
 
@@ -177,6 +170,14 @@ public class SimulationReseau extends
 	@Override
 	public void reset() {
 		resetBasicSimulation(); // temps, FEL
+		
+		agent1000.setNumero(1000);
+		agent2000.setNumero(2000);
+		agent3000.setNumero(3000);
+		agent4000.setNumero(4000);
+		agent5000.setNumero(5000);
+		agent6000.setNumero(6000);
+		agent7000.setNumero(7000);
 
 		// remise à zéro des agents
 		agent1000.reset();
