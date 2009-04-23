@@ -10,6 +10,7 @@ import be.simulation.evenements.AgentFinTraitementMessage;
 import be.simulation.evenements.AgentRecoitMessage;
 import be.simulation.evenements.FinDeSimulation;
 import be.simulation.evenements.HoteEnvoieMessageOriginal;
+import be.simulation.evenements.HoteFinTraitementMessage;
 import be.simulation.evenements.HoteRecoitMessage;
 import be.simulation.evenements.HoteTimeoutReceptionAccuse;
 import be.simulation.routage.Route;
@@ -82,6 +83,7 @@ public class SimulationReseau extends AbstractSimulation {
 			// On avance le temps de simulation au temps de l'évènement imminent
 			this.setHorloge(evenementImminent.getTempsPrevu());
 			// Traitement de l'évènement imminent récupéré
+			
 			if (evenementImminent instanceof HoteEnvoieMessageOriginal) {
 				// envoi d'un message original par un hôte
 				HoteEnvoieMessageOriginal evt =
@@ -105,6 +107,10 @@ public class SimulationReseau extends AbstractSimulation {
 				// réception d'un message par un hôte
 				HoteRecoitMessage evt = (HoteRecoitMessage) evenementImminent;
 				evt.getHote().recoitMessage(evt.getMessage());
+			} else if (evenementImminent instanceof HoteFinTraitementMessage) {
+				// fin de traitement d'un message par un hote
+				HoteFinTraitementMessage evt = (HoteFinTraitementMessage) evenementImminent;
+				evt.getHote().finitTraiterMessage(evt.getMessage());
 			} else if (evenementImminent instanceof FinDeSimulation) {
 				// on quitte la boucle principale (simulation terminée)
 				break;
