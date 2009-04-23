@@ -27,7 +27,6 @@ public class MessageSimple extends Message {
 	public MessageSimple(final Hote source, final Hote destination,
 			final int numeroMessage, final long tempsEmission) {
 		super(source, destination);
-		// TODO ajouter une restriction sur le numéro du message? (> 0, != 0)
 		if (tempsEmission < 0) {
 			throw new IllegalArgumentException(
 					"Le temps d'émission ne peut pas etre < 0");

@@ -72,7 +72,7 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		// TODO Faire ici toute initialisation qui requiert l'utilisation de la
+		// Faire ici toute initialisation qui requiert l'utilisation de la
 		// configuration
 	}
 
@@ -102,7 +102,6 @@ public class Hote extends AbstractEntiteSimulationReseau {
 		// ajout de l'évènement timeout à la FEL (nouveau timeout)
 		getSimulation().getFutureEventList().planifierEvenement(
 				evenementTimeout);
-		// FIXME implémenter
 	}
 
 
@@ -275,10 +274,10 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	 * @return le prochain temps d'envoi.
 	 */
 	private long genererTempsProchainEnvoi() {
-		// FIXME ok? (+1 donc par exemple 0-5 devient 1-6)
 		int tempsInterEnvois =
 				generateurTempsEnvoi.nextInt(getConfiguration()
 						.getConfigurationHotes().getTempsMaxInterEnvois()) + 1;
+		// on fait +1 et donc par exemple 0-5 devient 1-6
 		return getSimulation().getHorloge() + tempsInterEnvois;
 	}
 
