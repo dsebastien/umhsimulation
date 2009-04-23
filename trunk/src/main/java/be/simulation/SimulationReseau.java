@@ -10,6 +10,7 @@ import be.simulation.evenements.AgentFinTraitementMessage;
 import be.simulation.evenements.AgentRecoitMessage;
 import be.simulation.evenements.FinDeSimulation;
 import be.simulation.evenements.HoteEnvoieMessageOriginal;
+import be.simulation.evenements.HoteTimeoutReceptionAccuse;
 import be.simulation.routage.Route;
 
 /**
@@ -25,19 +26,19 @@ public class SimulationReseau extends
 	// Les agents de la simulation
 	// (fixes, basés sur la figure 2 de l'énoncé)
 	@Autowired
-	private Agent	agent1000;
+	private Agent	agent1;
 	@Autowired
-	private Agent	agent2000;
+	private Agent	agent2;
 	@Autowired
-	private Agent	agent3000;
+	private Agent	agent3;
 	@Autowired
-	private Agent	agent4000;
+	private Agent	agent4;
 	@Autowired
-	private Agent	agent5000;
+	private Agent	agent5;
 	@Autowired
-	private Agent	agent6000;
+	private Agent	agent6;
 	@Autowired
-	private Agent	agent7000;
+	private Agent	agent7;
 
 
 	/**
@@ -84,24 +85,29 @@ public class SimulationReseau extends
 			
 			// Traitement de l'évènement imminent récupéré
 			if (evenementImminent instanceof HoteEnvoieMessageOriginal) {
-				// FIXME ok?
+				// envoi d'un message original par un hôte
 				HoteEnvoieMessageOriginal evt =
 						(HoteEnvoieMessageOriginal) evenementImminent;
 				evt.getHote().envoyerMessageOriginal();
 			} else if (evenementImminent instanceof AgentRecoitMessage){
+				// réception d'un message par un agent
 				AgentRecoitMessage evt = (AgentRecoitMessage) evenementImminent;
 				evt.getAgent().recoitMessage(evt.getMessage());
 			} else if (evenementImminent instanceof AgentFinTraitementMessage) {
+				// fin de traitement d'un message par un agent
 				AgentFinTraitementMessage evt =
 						(AgentFinTraitementMessage) evenementImminent;
 				evt.getAgent().finitTraiterMessage(evt.getMessage());
+			} else if (evenementImminent instanceof HoteTimeoutReceptionAccuse){
+				// timeout réception d'un accusé
+				HoteTimeoutReceptionAccuse evt = (HoteTimeoutReceptionAccuse) evenementImminent;
+				//FIXME implémenter
+				//evt.getHote().t
 			} else if (evenementImminent instanceof FinDeSimulation) {
 				// on quitte la boucle principale (simulation terminée)
 				break;
 			}
 		}
-		
-		// TODO implementer
 	}
 
 
@@ -120,118 +126,6 @@ public class SimulationReseau extends
 	}
 
 
-
-//	public Agent getAgent1000() {
-//		return agent1000;
-//	}
-//
-//
-//
-//	public Agent getAgent2000() {
-//		return agent2000;
-//	}
-//
-//
-//
-//	public Agent getAgent3000() {
-//		return agent3000;
-//	}
-//
-//
-//
-//	public Agent getAgent4000() {
-//		return agent4000;
-//	}
-//
-//
-//
-//	public Agent getAgent5000() {
-//		return agent5000;
-//	}
-//
-//
-//
-//	public Agent getAgent6000() {
-//		return agent6000;
-//	}
-//
-//
-//
-//	public Agent getAgent7000() {
-//		return agent7000;
-//	}
-
-
-
-	/**
-	 * Remise à zéro des tables de routage des agents.
-	 */
-	private void reinitialiserTablesRoutageAgents() {
-		agent1000.getRouteur().reset();
-		agent1000.getRouteur().addRoute(
-				new Route(agent2000, agent2000, 10));
-		// FIXME continuer
-		
-		
-	}
-
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void reset() {
-		resetBasicSimulation(); // temps, FEL
-		
-		agent1000.setNumero(1000);
-		agent2000.setNumero(2000);
-		agent3000.setNumero(3000);
-		agent4000.setNumero(4000);
-		agent5000.setNumero(5000);
-		agent6000.setNumero(6000);
-		agent7000.setNumero(7000);
-
-		// remise à zéro des agents
-		agent1000.reset();
-		agent2000.reset();
-		agent3000.reset();
-		agent4000.reset();
-		agent5000.reset();
-		agent6000.reset();
-		agent7000.reset();
-		
-		// TODO v2.0: à modifier
-		reinitialiserTablesRoutageAgents();
-		
-		// TODO v2.0: ajouter les évènements de type agent envoie infos
-		// routage et faire en sorte que ça dure x temps de simulation
-		
-		// Génération des premiers évènement d'envoi des hôtes
-		genererPremiersEvenementsEnvoiDesHotes(agent1000);
-		genererPremiersEvenementsEnvoiDesHotes(agent2000);
-		genererPremiersEvenementsEnvoiDesHotes(agent3000);
-		genererPremiersEvenementsEnvoiDesHotes(agent4000);
-		genererPremiersEvenementsEnvoiDesHotes(agent5000);
-		genererPremiersEvenementsEnvoiDesHotes(agent6000);
-		genererPremiersEvenementsEnvoiDesHotes(agent7000);
-		
-		// On ajoute directement l'évènement de fin de simulation à la FEL
-		FinDeSimulation finDeSimulation =
-				new FinDeSimulation(getConfiguration()
-						.getConfigurationSimulationReseau().getDuree());
-		getFutureEventList().planifierEvenement(finDeSimulation);
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString() {
-		return getConfiguration().getConfigurationSimulationReseau().getNom();
-	}
-	
 	/**
 	 * Récupérer un agent aléatoire pouvant être n'importe lequel sauf celui
 	 * fourni en argument.
@@ -248,13 +142,13 @@ public class SimulationReseau extends
 		Agent retVal = null;
 		do{
 			switch(generateurChoixAgent.nextInt(7) + 1){
-				case 1: retVal = agent1000; break;
-				case 2: retVal = agent2000; break;
-				case 3: retVal = agent3000; break;
-				case 4: retVal = agent4000; break;
-				case 5: retVal = agent5000; break;
-				case 6: retVal = agent6000; break;
-				case 7: retVal = agent7000; break;
+				case 1: retVal = agent1; break;
+				case 2: retVal = agent2; break;
+				case 3: retVal = agent3; break;
+				case 4: retVal = agent4; break;
+				case 5: retVal = agent5; break;
+				case 6: retVal = agent6; break;
+				case 7: retVal = agent7; break;
 				default:
 					LOGGER
 							.error("Un problème a eu lieu pendant la sélection aléatoire d'un agent.");
@@ -262,5 +156,133 @@ public class SimulationReseau extends
 		}while(retVal == null || exception.equals(retVal));
 		
 		return retVal;
+	}
+
+
+
+	/**
+	 * Remise à zéro des tables de routage des agents.
+	 */
+	private void reinitialiserTablesRoutageAgents() {
+		// pour aller de l'agent A à l'agent B, on passe par le voisin X avec un
+		// coût de Y: agentA...addRoute(agentB,agentX,Y);
+		
+		// routes de l'agent 1
+		agent1.getRouteur().reset();
+		agent1.getRouteur().ajouterRoute(agent2, agent2, 10);
+		agent1.getRouteur().ajouterRoute(agent3, agent3, 20);
+		agent1.getRouteur().ajouterRoute(agent4, agent2, 10);
+		agent1.getRouteur().ajouterRoute(agent5, agent2, 10);
+		agent1.getRouteur().ajouterRoute(agent6, agent2, 10);
+		agent1.getRouteur().ajouterRoute(agent7, agent2, 10);
+		
+		// routes de l'agent 2
+		agent2.getRouteur().reset();
+		agent2.getRouteur().ajouterRoute(agent1, agent1, 10);
+		agent2.getRouteur().ajouterRoute(agent3, agent4, 10);
+		agent2.getRouteur().ajouterRoute(agent4, agent4, 10);
+		agent2.getRouteur().ajouterRoute(agent5, agent4, 10);
+		agent2.getRouteur().ajouterRoute(agent6, agent7, 30);
+		agent2.getRouteur().ajouterRoute(agent7, agent7, 30);
+		
+		// routes de l'agent 3
+		agent3.getRouteur().reset();
+		agent3.getRouteur().ajouterRoute(agent1, agent1, 20);
+		agent3.getRouteur().ajouterRoute(agent2, agent4, 10);
+		agent3.getRouteur().ajouterRoute(agent4, agent4, 10);
+		agent3.getRouteur().ajouterRoute(agent5, agent4, 10);
+		agent3.getRouteur().ajouterRoute(agent6, agent4, 10);
+		agent3.getRouteur().ajouterRoute(agent7, agent4, 10);
+		
+		// routes de l'agent 4
+		agent4.getRouteur().reset();
+		agent4.getRouteur().ajouterRoute(agent1, agent2, 10);
+		agent4.getRouteur().ajouterRoute(agent2, agent2, 10);
+		agent4.getRouteur().ajouterRoute(agent3, agent3, 10);
+		agent4.getRouteur().ajouterRoute(agent5, agent5, 20);
+		agent4.getRouteur().ajouterRoute(agent6, agent2, 10);
+		agent4.getRouteur().ajouterRoute(agent7, agent5, 20);
+		
+		// routes de l'agent 5
+		agent5.getRouteur().reset();
+		agent5.getRouteur().ajouterRoute(agent1, agent4, 20);
+		agent5.getRouteur().ajouterRoute(agent2, agent4, 20);
+		agent5.getRouteur().ajouterRoute(agent3, agent4, 20);
+		agent5.getRouteur().ajouterRoute(agent4, agent4, 20);
+		agent5.getRouteur().ajouterRoute(agent6, agent7, 10);
+		agent5.getRouteur().ajouterRoute(agent7, agent7, 10);
+		
+		// routes de l'agent 6
+		agent6.getRouteur().reset();
+		agent6.getRouteur().ajouterRoute(agent1, agent7, 20);
+		agent6.getRouteur().ajouterRoute(agent2, agent7, 20);
+		agent6.getRouteur().ajouterRoute(agent3, agent7, 20);
+		agent6.getRouteur().ajouterRoute(agent4, agent7, 20);
+		agent6.getRouteur().ajouterRoute(agent5, agent7, 20);
+		agent6.getRouteur().ajouterRoute(agent7, agent7, 20);
+		
+		// routes de l'agent 7
+		agent7.getRouteur().reset();
+		agent7.getRouteur().ajouterRoute(agent1, agent2, 30);
+		agent7.getRouteur().ajouterRoute(agent2, agent2, 30);
+		agent7.getRouteur().ajouterRoute(agent3, agent5, 10);
+		agent7.getRouteur().ajouterRoute(agent4, agent5, 10);
+		agent7.getRouteur().ajouterRoute(agent5, agent5, 10);
+		agent7.getRouteur().ajouterRoute(agent6, agent6, 20);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void reset() {
+		resetBasicSimulation(); // temps, FEL
+		
+		agent1.setNumero(10000);
+		agent2.setNumero(20000);
+		agent3.setNumero(30000);
+		agent4.setNumero(40000);
+		agent5.setNumero(50000);
+		agent6.setNumero(60000);
+		agent7.setNumero(70000);
+
+		// remise à zéro des agents
+		agent1.reset();
+		agent2.reset();
+		agent3.reset();
+		agent4.reset();
+		agent5.reset();
+		agent6.reset();
+		agent7.reset();
+		
+		// TODO v2.0: à modifier
+		reinitialiserTablesRoutageAgents();
+		
+		// TODO v2.0: ajouter les premiers évènements de type AgentEnvoieInfosRoutage 
+		// et faire en sorte que ça dure x temps de simulation
+		
+		// Génération des premiers évènement d'envoi des hôtes
+		genererPremiersEvenementsEnvoiDesHotes(agent1);
+		genererPremiersEvenementsEnvoiDesHotes(agent2);
+		genererPremiersEvenementsEnvoiDesHotes(agent3);
+		genererPremiersEvenementsEnvoiDesHotes(agent4);
+		genererPremiersEvenementsEnvoiDesHotes(agent5);
+		genererPremiersEvenementsEnvoiDesHotes(agent6);
+		genererPremiersEvenementsEnvoiDesHotes(agent7);
+		
+		// On ajoute directement l'évènement de fin de simulation à la FEL
+		FinDeSimulation finDeSimulation =
+				new FinDeSimulation(getConfiguration()
+						.getConfigurationSimulationReseau().getDuree());
+		getFutureEventList().planifierEvenement(finDeSimulation);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return getConfiguration().getConfigurationSimulationReseau().getNom();
 	}
 }

@@ -119,7 +119,7 @@ public class Configuration {
 	 */
 	private final OptionParser					optionParser;
 	private final OptionSpec<Long>				optionSimulationDuree;
-	private final OptionSpec<Integer>			optionAgentsTailleBuffer;
+	private final OptionSpec<Long>			optionAgentsTailleBuffer;
 	private final OptionSpec<Integer>			optionHotesTimeoutReemissionMessages;
 	private final OptionSpec<Integer>			optionSimulationDelaiEntreEntites;
 
@@ -177,7 +177,7 @@ public class Configuration {
 		optionAgentsTailleBuffer =
 				optionParser.accepts(OPTION_AGENTS_TAILLE_BUFFER,
 						"Taille des buffers des agents (>= 0)")
-						.withRequiredArg().ofType(Integer.class);
+						.withRequiredArg().ofType(Long.class);
 		optionAgentsTempsTraitementMessage =
 				optionParser
 						.accepts(
@@ -280,9 +280,9 @@ public class Configuration {
 		}
 		// taille du buffer
 		if (options.has(optionAgentsTailleBuffer)) {
-			final int tailleBufferAgents =
+			final long tailleBufferAgents =
 					options.valueOf(optionAgentsTailleBuffer);
-			if (tailleBufferAgents < 0) {
+			if (tailleBufferAgents < 0L) {
 				throw new ExceptionOptionsInvalides(
 						"La taille des buffers des agents ne peut pas être < 0");
 			}

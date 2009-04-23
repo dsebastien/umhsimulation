@@ -8,6 +8,7 @@ import be.simulation.evenements.AgentRecoitMessage;
 import be.simulation.evenements.HoteRecoitMessage;
 import be.simulation.messages.Message;
 import be.simulation.messages.util.MessageEnAttente;
+import be.simulation.routage.Route;
 import be.simulation.routage.Routeur;
 
 /**
@@ -49,10 +50,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * Le nombre de messages reçus.
 	 */
 	private int					messagesRecus								= 0;
-	/**
-	 * Le numéro identifiant de cet agent.
-	 */
-	private int					numero;
+
 	/**
 	 * Les informations de routage dont dispose cet agent (lui permet de savoir
 	 * vers où forwarder les messages).
@@ -129,18 +127,6 @@ private int messagesPerdusBufferPlein = 0;
 	}
 
 
-
-	/**
-	 * Récupérer le numéro de cet agent.
-	 * 
-	 * @return le numéro de cet agent
-	 */
-	public int getNumero() {
-		return numero;
-	}
-
-
-
 	/**
 	 * Récupérer les infos de routage de cet agent.
 	 * 
@@ -173,7 +159,7 @@ private int messagesPerdusBufferPlein = 0;
 				.getNombreHotes() + 1; i++) {
 			Hote hote = (Hote) getApplicationContext().getBean("hote");
 			hote.setAgent(this);
-			hote.setNumero(numero + i); // ex: 1001, ...
+			hote.setNumero(getNumero() + i); // ex: 1001, ...
 			hotes.add(hote);
 		}
 	}
@@ -206,8 +192,8 @@ private int messagesPerdusBufferPlein = 0;
 	 * @param numeroAgent
 	 *        le numéro de cet agent
 	 */
-	public void setNumero(final int numeroAgent) {
-		numero = numeroAgent;
+	public void setNumero(final long numeroAgent) {
+		super.setNumero(numeroAgent);
 		initialiserHotes();
 	}
 
@@ -272,7 +258,7 @@ private int messagesPerdusBufferPlein = 0;
 						.getConfigurationAgents().getTailleBuffer()) / 100;
 		}
 		//TODO effacer:
-		LOGGER.info("Taux occupation actuel: " + tauxOccupationActuel);
+		//LOGGER.info("Taux occupation actuel: " + tauxOccupationActuel);
 		
 		// on actualise la variable retenant le dernier temps de simulation où 
 		// l'occupation du buffer a été enregistrée pour les statistiques
@@ -280,8 +266,8 @@ private int messagesPerdusBufferPlein = 0;
 		
 		// vérification du destinataire final de ce message
 		if (this == message.getDestination().getAgent()) {
-			// message à destination d'un hôte de cet agent donc on peut le lui
-			// remettre
+			// message à destination d'un hôte de cet agent 
+			// donc on peut le lui remettre
 			HoteRecoitMessage evtHoteRecoitMessage =
 					new HoteRecoitMessage(message, message.getDestination(),
 							getSimulation().getHorloge()
@@ -294,15 +280,13 @@ private int messagesPerdusBufferPlein = 0;
 		} else {
 			// le message est à destination d'un hôte connecté à un autre agent
 			// on cherche où forwarder le message
-			Agent agentIntermediaire =
-					routeur.trouverMeilleureRoute(message.getDestination());
+			Route route = routeur.trouverMeilleureRoute(message.getDestination());
 		
-			// on génère l'évènement de réception par cet agent
-			//FIXME probleme, il faut le cout!!!!!
+			// on génère l'évènement de réception par le voisin correspondant à cette route
 			AgentRecoitMessage evtReceptionAgent =
-					new AgentRecoitMessage(message, agentIntermediaire,
+					new AgentRecoitMessage(message, route.getVoisin(),
 							getSimulation().getHorloge()
-									+ routeur.);
+									+ route.getCout());
 			
 			// on l'ajoute à la FEL
 			getSimulation().getFutureEventList().planifierEvenement(evtReceptionAgent);
@@ -360,7 +344,8 @@ private int messagesPerdusBufferPlein = 0;
 		
 		// on détermine si ce message est perdu ou non (utilisation d'une variable aléatoire)
 		if(estPerdu()){
-			// dans ce cas on augmente le compteur de messages perdus brutalement
+			LOGGER.trace("L'agent "+getNumero()+" perd brutalement un message au temps "+getSimulation().getHorloge());
+			// on incrémente le compteur de messages perdus brutalement
 			messagesPerdusBrutalement++;
 		}else{
 			if(messagesEnCoursTraitement < getConfiguration().getConfigurationAgents().getNombreMaxTraitementsSimultanes()){
@@ -371,13 +356,18 @@ private int messagesPerdusBufferPlein = 0;
 				// on incrémente le compteur de messages en cours de traitement
 				messagesEnCoursTraitement++;
 			}else{
-				// on ne peut plus traiter de message pour l'instant donc on doit le mettre en attente
-				
-				//FIXME V2.0 ajouter les détails de la vérification de l'occupation du buffer
+				//FIXME v2.0 ajouter les détails de la vérification de l'occupation du buffer
 				//pour générer des évènements AgentEnvoieInfosRoutage (voir UML)
-				if(getBuffer().size() < getConfiguration().getConfigurationAgents().getTailleBuffer()){
-					// le buffer n'est pas plein
-					// FIXME implémenter!
+				
+				// on ne peut plus traiter de message pour l'instant donc on doit le mettre en attente
+				// on essaie donc de le placer dans le buffer si possible
+				boolean bufferInfini = getConfiguration().getConfigurationAgents().getTailleBuffer() == Long.MAX_VALUE;
+				boolean bufferRempli = getBuffer().size() < getConfiguration().getConfigurationAgents().getTailleBuffer();
+				// si le buffer n'est pas rempli ou est infini, pas de problème
+				if(!bufferRempli || bufferInfini){
+					// le buffer n'est pas plein alors on peut placer le message dedans
+					// on enregistre le temps de simulation auquel on l'y a placé (pour les stats)
+					getBuffer().add(new MessageEnAttente(message, getSimulation().getHorloge()));
 				}else{
 					// le buffer est plein donc le message est perdu
 					messagesPerdusBufferPlein++;
@@ -392,7 +382,7 @@ private int messagesPerdusBufferPlein = 0;
 	 */
 	private boolean estPerdu(){
 		//FIXME vérifier si calcul ok
-		int randomDigits = (int) getConfiguration().getConfigurationAgents().getTauxPerteBrutale() * 100;
+		int randomDigits = Math.round(getConfiguration().getConfigurationAgents().getTauxPerteBrutale() * 100);
 		boolean retVal = false;
 		if(generateurMessagesPerdus.nextInt(100) + 1 <= randomDigits){
 			retVal = true;

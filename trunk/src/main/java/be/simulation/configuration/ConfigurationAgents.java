@@ -26,7 +26,7 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	 *             être différent pour chaque agent
 	 */
 	@Deprecated
-	private int		tailleBuffer;
+	private long		tailleBuffer;
 	/**
 	 * Le taux de perte brutale des agents (0 <= taux < 1).
 	 */
@@ -69,7 +69,7 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	 *             être différent pour chaque agent
 	 */
 	@Deprecated
-	public int getTailleBuffer() {
+	public long getTailleBuffer() {
 		return tailleBuffer;
 	}
 
@@ -118,18 +118,23 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	/**
 	 * Définir la taille du buffer des agents (>=0). 0 = infinie.
 	 * 
-	 * @param tailleBufferAgents
+	 * @param tailleBuffer
 	 *        la taille du buffer des agents
 	 * @deprecated On l'utilise dans un premier temps, mais ensuite ça devra
 	 *             être différent pour chaque agent
 	 */
 	@Deprecated
-	public void setTailleBuffer(final int tailleBufferAgents) {
-		if (tailleBufferAgents < 0) {
+	public void setTailleBuffer(final long tailleBuffer) {
+		if (tailleBuffer < 0L) {
 			throw new IllegalArgumentException(
 					"La taille du buffer des agents doit etre >=0");
+		}else if(tailleBuffer == 0L){
+			this.tailleBuffer = Long.MAX_VALUE;
+			
+		}else{
+			this.tailleBuffer = tailleBuffer;
 		}
-		this.tailleBuffer = tailleBufferAgents;
+		
 	}
 
 

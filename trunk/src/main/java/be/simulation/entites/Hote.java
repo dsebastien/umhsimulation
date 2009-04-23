@@ -15,6 +15,14 @@ import be.simulation.messages.MessageSimple;
  */
 public class Hote extends AbstractEntiteSimulationReseau {
 	/**
+	 * Nombre d'accusés de réception reçus.
+	 */
+	private int				accusesReceptionRecus		= 0;
+	/**
+	 * Agent auquel cet hote est relié (pour pouvoir communiquer avec lui).
+	 */
+	private Agent			agent;
+	/**
 	 * PRNG utilisé pour générer les temps d'envoi.
 	 */
 	private final Random	generateurTempsEnvoi		= new Random();
@@ -24,13 +32,10 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	 */
 	private final Random	generateurTypeDestination	= new Random();
 	/**
-	 * Nombre d'accusés de réception reçus.
+	 * Permet de placer un identifiant unique sur chaque message que cet hôte
+	 * envoie.
 	 */
-	private int				accusesReceptionRecus		= 0;
-	/**
-	 * Agent auquel cet hote est relié (pour pouvoir communiquer avec lui).
-	 */
-	private Agent			agent;
+	private int				identifiantMessages			= 0;
 	/**
 	 * Le nombre de messages en cours de traitement.
 	 */
@@ -45,18 +50,9 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	// FIXME à cause de timeouts trop courts?
 	private int				messagesReexpedies			= 0;
 	/**
-	 * Numero identifiant de l'hote.
-	 */
-	private int				numero;
-	/**
 	 * Le temps total de voyage des messages.
 	 */
 	private long			tempsTotalVoyageMessages	= 0;
-	
-	/**
-	 * Permet de placer un identifiant unique sur chaque message que cet hôte envoie.
-	 */
-	private int identifiantMessages = 0;
 
 
 
@@ -75,6 +71,95 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	public void afterPropertiesSet() throws Exception {
 		// TODO Faire ici toute initialisation qui requiert l'utilisation de la
 		// configuration
+	}
+
+
+
+	/**
+	 * Envoi d'un message original par un hôte.
+	 */
+	public void envoyerMessageOriginal() {
+		// FIXME vérifier si correct
+		// par exemple 0.75 = 75 (75% vers hote d'un autre agent)
+		int randomDigitsAutreAgent =
+				(int) (getConfiguration().getConfigurationHotes()
+						.getTauxMessagesVersAutreAgent() * 100);
+		int random = generateurTypeDestination.nextInt(100) + 1;
+		boolean messagePourHoteAutreAgent = false;
+		// par exemple digits 1 à 75 = message à envoyer à un autre agent
+		if (random <= randomDigitsAutreAgent) {
+			messagePourHoteAutreAgent = true;
+		}
+		Hote hoteDestination = null;
+		if (messagePourHoteAutreAgent) {
+			LOGGER.trace("Message de l'hôte " + getNumero()
+					+ " pour un autre agent (génération au temps "
+					+ getSimulation().getHorloge() + ")");
+			// choix aléatoire, on ajoute l'agent de cet hôte comme exception
+			hoteDestination =
+					getSimulation().getAgentAleatoire(this.getAgent())
+							.getHoteAleatoire();
+		} else {
+			LOGGER.trace("Message de l'hôte " + getNumero()
+					+ " pour le même agent (génération au temps "
+					+ getSimulation().getHorloge() + ")");
+			// choix aléatoire, on ajoute cet hôte comme exception
+			hoteDestination = this.getAgent().getHoteAleatoire(this);
+		}
+		// création du message
+		MessageSimple message =
+				new MessageSimple(this, hoteDestination, ++identifiantMessages,
+						getSimulation().getHorloge());
+		// création de l'évènement de réception par l'agent de l'hôte
+		AgentRecoitMessage evenementReceptionAgent =
+				new AgentRecoitMessage(message, this.getAgent(),
+						getSimulation().getHorloge()
+								+ getConfiguration()
+										.getConfigurationSimulationReseau()
+										.getDelaiEntreEntites());
+		// ajout de l'évènement de réception par l'agent à la FEL
+		getSimulation().getFutureEventList().planifierEvenement(
+				evenementReceptionAgent);
+		// création de l'évènement timeout correspondant
+		HoteTimeoutReceptionAccuse evenementTimeout =
+				new HoteTimeoutReceptionAccuse(message, this, getSimulation()
+						.getHorloge()
+						+ getConfiguration().getConfigurationHotes()
+								.getTimeoutReemissionMessages());
+		// ajout de l'évènement timeout à la FEL
+		getSimulation().getFutureEventList().planifierEvenement(
+				evenementTimeout);
+		// incrémentation du nombre de messages envoyés
+		messagesEnvoyes++;
+		// génération du prochain évènement d'envoi pour cet hôte
+		genererEvenementHoteEnvoieMessageOriginal();
+	}
+
+
+
+	/**
+	 * Génère et place sur la FEL un évènement de type HoteEnvoieMessageOriginal
+	 * pour cet hôte.
+	 */
+	public void genererEvenementHoteEnvoieMessageOriginal() {
+		long tempsEnvoi = genererTempsProchainEnvoi();
+		getSimulation().getFutureEventList().planifierEvenement(
+				new HoteEnvoieMessageOriginal(this, tempsEnvoi));
+	}
+
+
+
+	/**
+	 * Générer le prochain temps d'envoi.
+	 * 
+	 * @return le prochain temps d'envoi.
+	 */
+	private long genererTempsProchainEnvoi() {
+		// FIXME ok? (+1 donc par exemple 0-5 devient 1-6)
+		int tempsInterEnvois =
+				generateurTempsEnvoi.nextInt(getConfiguration()
+						.getConfigurationHotes().getTempsMaxInterEnvois()) + 1;
+		return getSimulation().getHorloge() + tempsInterEnvois;
 	}
 
 
@@ -124,17 +209,6 @@ public class Hote extends AbstractEntiteSimulationReseau {
 
 
 	/**
-	 * Récupérer le numero de l'hote.
-	 * 
-	 * @return le numéro de l'hote
-	 */
-	public int getNumero() {
-		return numero;
-	}
-
-
-
-	/**
 	 * Récupérer le temps total de voyage des messages.
 	 * 
 	 * @return le temps total de voyage des messages
@@ -175,114 +249,10 @@ public class Hote extends AbstractEntiteSimulationReseau {
 
 
 	/**
-	 * Définir le numéro de cet hote
-	 * 
-	 * @param numeroHote
-	 *        le numéro de cet hôte
-	 * @throw IllegalArgumentException si le numéro d'hote fourni est <= 0
-	 */
-	public void setNumero(final int numeroHote) {
-		if (numeroHote <= 0) {
-			throw new IllegalArgumentException(
-					"Le numero d'hote fourni est invalide (il doit etre > 0)");
-		}
-		this.numero = numeroHote;
-	}
-
-
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
 		return "Hote " + getNumero();
-	}
-	
-	/**
-	 * Envoi d'un message original par un hôte.
-	 */
-	public void envoyerMessageOriginal() {
-		// FIXME vérifier si correct
-		
-		// par exemple 0.75 = 75 (75% vers hote d'un autre agent)
-		int randomDigitsAutreAgent =
-				(int) (getConfiguration().getConfigurationHotes()
-						.getTauxMessagesVersAutreAgent() * 100); 
-		int random = generateurTypeDestination.nextInt(100) + 1;
-		
-		boolean messagePourHoteAutreAgent = false;
-		
-		// par exemple digits 1 à 75 = message à envoyer à un autre agent
-		if (random <= randomDigitsAutreAgent) {
-			messagePourHoteAutreAgent = true;
-		}
-		
-		Hote hoteDestination = null;
-		if (messagePourHoteAutreAgent) {
-			LOGGER.trace("Message de l'hôte "+numero+" pour un autre agent (génération au temps "+getSimulation().getHorloge()+")");
-			// choix aléatoire, on ajoute l'agent de cet hôte comme exception
-			hoteDestination =
-					getSimulation().getAgentAleatoire(this.getAgent())
-							.getHoteAleatoire();
-		} else {
-			LOGGER.trace("Message de l'hôte "+numero+" pour le même agent (génération au temps "+getSimulation().getHorloge()+")");
-			// choix aléatoire, on ajoute cet hôte comme exception
-			hoteDestination = this.getAgent().getHoteAleatoire(this);
-		}
-		
-		// création du message
-		MessageSimple message =
-				new MessageSimple(this, hoteDestination, ++identifiantMessages,
-						getSimulation().getHorloge());
-		
-		// création de l'évènement de réception par l'agent de l'hôte
-		AgentRecoitMessage evenementReceptionAgent =
-				new AgentRecoitMessage(message, this.getAgent(),
-						getSimulation().getHorloge()
-								+ getConfiguration()
-										.getConfigurationSimulationReseau()
-										.getDelaiEntreEntites());
-		
-		// ajout de l'évènement de réception par l'agent à la FEL
-		getSimulation().getFutureEventList().planifierEvenement(evenementReceptionAgent);
-		
-		// création de l'évènement timeout correspondant
-		HoteTimeoutReceptionAccuse evenementTimeout =
-				new HoteTimeoutReceptionAccuse(message, this, getSimulation()
-						.getHorloge()
-						+ getConfiguration().getConfigurationHotes()
-								.getTimeoutReemissionMessages());
-		// ajout de l'évènement timeout à la FEL
-		getSimulation().getFutureEventList().planifierEvenement(
-				evenementTimeout);
-		
-		// incrémentation du nombre de messages envoyés
-		messagesEnvoyes++;
-		
-		// génération du prochain évènement d'envoi pour cet hôte
-		genererEvenementHoteEnvoieMessageOriginal();
-	}
-	
-	/**
-	 * Générer le prochain temps d'envoi.
-	 * 
-	 * @return le prochain temps d'envoi.
-	 */
-	private long genererTempsProchainEnvoi() {
-		// FIXME ok? (+1 donc par exemple 0-5 devient 1-6)
-		int tempsInterEnvois =
-				generateurTempsEnvoi.nextInt(getConfiguration()
-						.getConfigurationHotes().getTempsMaxInterEnvois()) + 1;
-		return getSimulation().getHorloge() + tempsInterEnvois;
-	}
-	
-	/**
-	 * Génère et place sur la FEL un évènement de type HoteEnvoieMessageOriginal pour cet hôte.
-	 */
-	public void genererEvenementHoteEnvoieMessageOriginal(){
-		long tempsEnvoi = genererTempsProchainEnvoi();
-		getSimulation().getFutureEventList().planifierEvenement(
-				new HoteEnvoieMessageOriginal(this, tempsEnvoi));
 	}
 }
