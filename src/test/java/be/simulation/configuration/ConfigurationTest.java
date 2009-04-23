@@ -540,7 +540,7 @@ public class ConfigurationTest {
 							+ SEPARATEUR + valeur
 				};
 		configuration.parse(args);
-		assertTrue(Integer.valueOf(valeur).intValue() == configuration
+		assertTrue(Long.MAX_VALUE == configuration
 				.getConfigurationAgents().getTailleBuffer());
 		valeur = "500";
 		args =
@@ -550,7 +550,7 @@ public class ConfigurationTest {
 							+ SEPARATEUR + valeur
 				};
 		configuration.parse(args);
-		assertTrue(Integer.valueOf(valeur).intValue() == configuration
+		assertTrue(Long.valueOf(valeur).intValue() == configuration
 				.getConfigurationAgents().getTailleBuffer());
 		valeur = "1";
 		args =
@@ -560,7 +560,7 @@ public class ConfigurationTest {
 							+ SEPARATEUR + valeur
 				};
 		configuration.parse(args);
-		assertTrue(Integer.valueOf(valeur).intValue() == configuration
+		assertTrue(Long.valueOf(valeur).intValue() == configuration
 				.getConfigurationAgents().getTailleBuffer());
 	}
 
