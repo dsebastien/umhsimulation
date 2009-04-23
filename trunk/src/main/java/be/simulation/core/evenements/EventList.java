@@ -22,18 +22,13 @@ import org.apache.log4j.Logger;
  * @author Mernier Jean-François
  */
 public class EventList {
-	private static final Logger			LOGGER		=
-															Logger
-																	.getLogger(EventList.class
-																			.getName());
+	private static final Logger LOGGER = Logger.getLogger(EventList.class
+			.getName());
 	/**
 	 * L'event list (FEL) est maintenue grâce à une liste chaînée. L'insertion
 	 * se fait de manière triée de manière à garder la chronologie.
 	 */
-	private final LinkedList<Evenement>	eventList	=
-															new LinkedList<Evenement>();
-
-
+	private final LinkedList<Evenement> eventList = new LinkedList<Evenement>();
 
 	/**
 	 * Récupére l'évènement imminent s'il existe et le supprime de la FEL. Si
@@ -53,15 +48,13 @@ public class EventList {
 		return evenementImminent;
 	}
 
-
-
 	/**
 	 * Méthode qui retourne un évènement imminent d'un certain type (ce qui
 	 * permet de traiter en priorité certains évènements comme les accusés de
 	 * réception ou les messages de routage).
 	 * 
 	 * @param typeEvenement
-	 *        le type d'évènement recherché
+	 *            le type d'évènement recherché
 	 * @return l'évènement trouvé ou null si aucun
 	 */
 	public Evenement getEvenementImminent(
@@ -92,8 +85,6 @@ public class EventList {
 		return retVal;
 	}
 
-
-
 	/**
 	 * Retourne la liste des évènements imminents (prévus au même temps de
 	 * simulation).
@@ -118,15 +109,13 @@ public class EventList {
 		return retVal;
 	}
 
-
-
 	/**
 	 * Planifier un évènement (le placer à une position appropriée dans la FEL
 	 * -> insertion triée). Les doublons sont ignorés (si on essaie de placer
 	 * deux fois la même instance d'un objet sur la FEL).
 	 * 
 	 * @param evt
-	 *        l'évènement
+	 *            l'évènement
 	 */
 	public void planifierEvenement(final Evenement evt) {
 		if (evt == null) {
@@ -144,8 +133,6 @@ public class EventList {
 			Collections.sort(eventList);
 		}
 	}
-
-
 
 	/**
 	 * Remettre la liste d'évènements à zéro.
