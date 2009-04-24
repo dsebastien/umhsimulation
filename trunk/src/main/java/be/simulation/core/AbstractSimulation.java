@@ -37,7 +37,7 @@ public abstract class AbstractSimulation extends AbstractEntiteSimulation {
 	/**
 	 * Afficher les résultats de la simulation.
 	 */
-	public abstract void afficherResultats();
+	public abstract void calculerEtAfficherResultats();
 
 
 

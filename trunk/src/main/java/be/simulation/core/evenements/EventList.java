@@ -41,11 +41,15 @@ public class EventList {
 		if (!eventList.isEmpty()) {
 			evenementImminent = eventList.pop();
 		}
-		// if (evenementImminent == null) {
-		// LOGGER
-		// .warn("Il n'y a aucun évènement imminent, ceci ne devrait pas se produire car la FEL devrait au moins contenir l'évènement de fin de simulation!");
-		// }
 		return evenementImminent;
+	}
+	
+	/**
+	 * Est-ce que la liste d'évènements est vide?
+	 * @return vrai si la liste d'évènements est vide
+	 */
+	public boolean estVide(){
+		return eventList.isEmpty();
 	}
 
 	/**

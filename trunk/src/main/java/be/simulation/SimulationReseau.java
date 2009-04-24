@@ -51,7 +51,7 @@ public class SimulationReseau extends AbstractSimulation {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void afficherResultats() {
+	public void calculerEtAfficherResultats() {
 		// TODO ici on doit calculer les résultats finaux et les afficher)
 	}
 
@@ -74,7 +74,7 @@ public class SimulationReseau extends AbstractSimulation {
 						.getNom() + ")");
 		// à chaque tour de boucle on récupère
 		// l'évènement imminent dans la FEL et on le traite
-		while (true) {
+		while (!getFutureEventList().estVide()) {
 			// TODO récupérer d'abord les évènements qu'on veut traiter en
 			// priorité (infos routage, accusés de réception, ...)
 			Evenement evenementImminent =
@@ -112,10 +112,12 @@ public class SimulationReseau extends AbstractSimulation {
 				HoteFinTraitementMessage evt = (HoteFinTraitementMessage) evenementImminent;
 				evt.getHote().finitTraiterMessage(evt.getMessage());
 			} else if (evenementImminent instanceof FinDeSimulation) {
-				// on quitte la boucle principale (simulation terminée)
-				break;
+				// on vide la FEL, ce qui provoque la sortie de cette boucle
+				getFutureEventList().reset();
 			}
 		}
+		// on calcule et on affiche les résultats de la simulation
+		calculerEtAfficherResultats();
 	}
 
 
