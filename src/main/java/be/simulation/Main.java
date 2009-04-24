@@ -61,7 +61,7 @@ public class Main {
 		// TODO v2.0 ajouter option "tempsInterEnvoiInfosRoutage" à la configuration
 		// des agents
 		
-		//TODO virer les caractères spéciaux des outputs (LOGGER. ...) 
+		//TODO virer les caractères spéciaux des outputs (LOGGER. ...)
 		//pour éviter les problèmes d'affichage sous windows
 		//console DOS -> ne connaît pas l'UTF-8 :(
 	}

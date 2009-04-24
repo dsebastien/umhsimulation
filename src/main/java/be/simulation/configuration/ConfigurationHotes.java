@@ -131,7 +131,6 @@ public class ConfigurationHotes extends AbstractConfiguration {
 					"Le temps de traitement d'un message pour un agent doit être tel que <= temps traitement <= 1");
 		}
 		this.tempsTraitementMessage = tempsTraitementMessage;
-		// FIXME vérifier si ok
 		if (tempsTraitementMessage == 0.0f) {
 			this.nombreMaxTraitementsSimultanes = Integer.MAX_VALUE;
 		} else {

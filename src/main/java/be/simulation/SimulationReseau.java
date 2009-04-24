@@ -61,6 +61,9 @@ public class SimulationReseau extends AbstractSimulation {
 	 */
 	@Override
 	public void calculerEtAfficherResultats() {
+		// TODO sortir aussi les résultats dans une forme plus clean 
+		// pour pouvoir s'en servir pour créer les graphiques
+		
 		LOGGER.info("------------------------------------------------------------------");
 		LOGGER.info("Résultats de la simulation:                                       ");
 		LOGGER.info("------------------------------------------------------------------");
@@ -69,8 +72,14 @@ public class SimulationReseau extends AbstractSimulation {
 		calculerEtAfficherMessagesPerdusBrutalement();
 		// messages perdus pour cause de buffers pleins (agents)
 		calculerEtAfficherMessagesPerdusBufferPlein();
+		// taux d'utilisation des buffers
+		calculerEtAfficherTauxUtilisationBufferAgents();
 		
-		//FIXME implémenter
+
+		
+		
+		
+		// TODO continuer d'implémenter le calcul des stats
 //		for(Agent agent: agents){
 //		for(Hote h: agent.getHotes()){
 //			//h.getAccusesReceptionRecus()
@@ -79,10 +88,37 @@ public class SimulationReseau extends AbstractSimulation {
 //			//h.getTempsTotalVoyageMessages()
 //			//h.getTimeoutsTropCourts()
 //		}
-//		}
-		
-		// TODO continuer d'implémenter le calcul des stats
+//		}	
 	}
+	
+	
+	/**
+	 * Calcule et affiche les stats concernant le taux d'utilisation du buffer des agents.
+	 */
+	private void calculerEtAfficherTauxUtilisationBufferAgents(){
+		double sommeSommeTauxUtilisationBuffers = 0.0;
+		for(Agent agent: agents){
+			double moyenne = (double) agent.getSommeNiveauxOccupationBuffer() / (double) getConfiguration().getConfigurationSimulationReseau().getDuree() / (double) getConfiguration().getConfigurationAgents().getTailleBuffer();
+			sommeSommeTauxUtilisationBuffers += moyenne;
+			LOGGER.info("Le buffer de l'agent "+agent.getNumero()+" a été utilisé en moyenne à "+Utilitaires.pourcentage(moyenne));
+		}
+		// globalement
+		// on doit diviser par le nombre d'agents puisque là on a le total pour tous les agents
+		double moyenneGlobale = sommeSommeTauxUtilisationBuffers / (double) agents.size();
+		LOGGER.info("Les buffers des agents ont été utilisés en moyenne à "+Utilitaires.pourcentage(moyenneGlobale));
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	/**
@@ -137,15 +173,6 @@ public class SimulationReseau extends AbstractSimulation {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		super.afterPropertiesSet();
-		// on ajoute les agents à la liste 
-		// (pour simplifier le calcul de certaines stats
-		agents.add(agent1);
-		agents.add(agent2);
-		agents.add(agent3);
-		agents.add(agent4);
-		agents.add(agent5);
-		agents.add(agent6);
-		agents.add(agent7);
 	}
 
 
@@ -161,8 +188,8 @@ public class SimulationReseau extends AbstractSimulation {
 		// à chaque tour de boucle on récupère
 		// l'évènement imminent dans la FEL et on le traite
 		while (!getFutureEventList().estVide()) {
-			// TODO récupérer d'abord les évènements qu'on veut traiter en
-			// priorité (infos routage)
+			// TODO V2.0: récupérer d'abord les évènements de type 
+			// AgentEnvoieInfosRoutage et AgentRecoitInfosRoutage
 			
 			// on essaie en priorité de traiter la réception des messages par les hôtes
 			// car ça peut éviter l'envoi le déclenchement inutile de timeouts
@@ -230,15 +257,15 @@ public class SimulationReseau extends AbstractSimulation {
 
 	/**
 	 * Méthode utilisée pour générer et placer sur la FEL les premiers
-	 * évènements d'envoi des hôtes d'un agent donné.
+	 * évènements d'envoi des hôtes des agents
 	 * 
-	 * @param agent
-	 *        l'agent
 	 */
-	private void genererPremiersEvenementsEnvoiDesHotes(Agent agent) {
-		for (Hote h : agent.getHotes()) {
-			HoteEnvoieMessageOriginal evt = h.genererEvenementHoteEnvoieMessageOriginal();
-			getFutureEventList().planifierEvenement(evt);
+	private void genererPremiersEvenementsEnvoiDesHotes() {
+		for(Agent agent: agents){
+			for (Hote h : agent.getHotes()) {
+				HoteEnvoieMessageOriginal evt = h.genererEvenementHoteEnvoieMessageOriginal();
+				getFutureEventList().planifierEvenement(evt);
+			}
 		}
 	}
 
@@ -364,17 +391,13 @@ public class SimulationReseau extends AbstractSimulation {
 	@Override
 	public void reset() {
 		resetBasicSimulation(); // temps, FEL
-		// TODO réfléchir au problème de numéros
-		// si on fixe à X et que le nombre d'hôtes par agent est fixé à plus de
-		// X
-		// alors c'est moche (mais sans aucune incidence!)
-		agent1.setNumero(10000);
-		agent2.setNumero(20000);
-		agent3.setNumero(30000);
-		agent4.setNumero(40000);
-		agent5.setNumero(50000);
-		agent6.setNumero(60000);
-		agent7.setNumero(70000);
+		agent1.setNumero(1000);
+		agent2.setNumero(2000);
+		agent3.setNumero(3000);
+		agent4.setNumero(4000);
+		agent5.setNumero(5000);
+		agent6.setNumero(6000);
+		agent7.setNumero(7000);
 		// remise à zéro des agents
 		agent1.reset();
 		agent2.reset();
@@ -383,19 +406,31 @@ public class SimulationReseau extends AbstractSimulation {
 		agent5.reset();
 		agent6.reset();
 		agent7.reset();
-		// TODO v2.0: à modifier
+		// TODO v2.0: peut être à modifier
 		reinitialiserTablesRoutageAgents();
+		
+		
+		// on ajoute les agents à la liste 
+		// (pour simplifier le calcul de certaines stats
+		agents.clear();
+		agents.add(agent1);
+		agents.add(agent2);
+		agents.add(agent3);
+		agents.add(agent4);
+		agents.add(agent5);
+		agents.add(agent6);
+		agents.add(agent7);
+		
 		// TODO v2.0: ajouter les premiers évènements de type
 		// AgentEnvoieInfosRoutage
 		// et faire en sorte que ça dure x temps de simulation
+		
+		
 		// Génération des premiers évènement d'envoi des hôtes
-		genererPremiersEvenementsEnvoiDesHotes(agent1);
-		genererPremiersEvenementsEnvoiDesHotes(agent2);
-		genererPremiersEvenementsEnvoiDesHotes(agent3);
-		genererPremiersEvenementsEnvoiDesHotes(agent4);
-		genererPremiersEvenementsEnvoiDesHotes(agent5);
-		genererPremiersEvenementsEnvoiDesHotes(agent6);
-		genererPremiersEvenementsEnvoiDesHotes(agent7);
+		// TODO v2.0 ne générer des envois qu'à partir d'un temps donné
+		// pour laisser le temps au distance vector de se stabiliser
+		genererPremiersEvenementsEnvoiDesHotes();
+		
 		// On ajoute directement l'évènement de fin de simulation à la FEL
 		FinDeSimulation finDeSimulation =
 				new FinDeSimulation(getConfiguration()
