@@ -1,4 +1,4 @@
-package be.simulation.messages.util;
+package be.simulation.messages.utilitaires;
 
 import be.simulation.messages.Message;
 

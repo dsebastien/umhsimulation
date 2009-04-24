@@ -5,7 +5,7 @@ import java.util.Queue;
 import org.springframework.beans.factory.annotation.Autowired;
 import be.simulation.SimulationReseau;
 import be.simulation.core.entites.AbstractEntiteSimulation;
-import be.simulation.messages.util.MessageEnAttente;
+import be.simulation.messages.utilitaires.MessageEnAttente;
 
 /**
  * Classe utilisée par toutes les entités de la simulation réseau.
