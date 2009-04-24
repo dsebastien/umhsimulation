@@ -31,7 +31,6 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		// Chargement de la configuration par défaut
-		// (définie dans l'application context de spring)
 		ApplicationContext springApplicationContext =
 				new ClassPathXmlApplicationContext("applicationContext.xml");
 		Configuration configuration =
@@ -55,12 +54,13 @@ public class Main {
 						.getBean("simulationReseau");
 		// Lancement de la simulation
 		simulation.demarrer();
-		// FIXME v2.0 ajouter option "timeoutInfosRoutage" à la configuration
+		// TODO v2.0 ajouter option "tempsInterEnvoiInfosRoutage" à la configuration
 		// des agents
 		
-		//TODO ajouter logging
 		//TODO virer les caractères spéciaux des outputs (LOGGER. ...) 
 		//pour éviter les problèmes d'affichage sous windows
 		//console DOS -> ne connaît pas l'UTF-8 :(
+		
+		//TODO fixer les seeds des PRNG pour tester sérieusement
 	}
 }

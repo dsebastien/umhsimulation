@@ -149,7 +149,7 @@ public class ConfigurationHotes extends AbstractConfiguration {
 	 *        le timeout.
 	 */
 	public void setTimeoutReemissionMessages(final int timeoutReemissionMessages) {
-		int timeoutMinimal = 80; // FIXME ok??
+		int timeoutMinimal = 80;
 		if (timeoutReemissionMessages < timeoutMinimal) {
 			throw new IllegalArgumentException(
 					"Le timeout avant réémission des messages doit être >= "

@@ -208,7 +208,7 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	/**
 	 * Envoi d'un message original par un hôte.
 	 */
-	public void envoyerMessageOriginal() {
+	public void envoiMessageOriginal() {
 		// par exemple nombres 1 à 75 si l'option 
 		// était fixée à 0.75, donc 75% à envoyer à un autre agent
 		int randomDigitsAutreAgent =
@@ -252,7 +252,10 @@ public class Hote extends AbstractEntiteSimulationReseau {
 		// incrémentation du nombre de messages envoyés
 		messagesEnvoyes++;
 		// génération du prochain évènement d'envoi pour cet hôte
-		genererEvenementHoteEnvoieMessageOriginal();
+		HoteEnvoieMessageOriginal evtProchainEnvoi = genererEvenementHoteEnvoieMessageOriginal();
+		
+		// ajout de cet évènement à la FEL
+		getSimulation().getFutureEventList().planifierEvenement(evtProchainEnvoi);
 	}
 
 
