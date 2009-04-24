@@ -51,8 +51,27 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	/**
 	 * Nombre de messages réexpédiés.
 	 */
-	// FIXME à cause de timeouts trop courts?
 	private int				messagesReexpedies			= 0;
+	
+	/**
+	 * Nombre de messages réexpédiés à cause d'un timeout trop court.
+	 */
+	private int timeoutsTropCourts = 0;
+	
+	/**
+	 * Récupérer le nombre de messages réexpédiés à cause d'un timeout trop court.
+	 * @return le nombre de messages réexpédiés à cause d'un timeout trop court
+	 */
+	public int getTimeoutsTropCourts() {
+		return timeoutsTropCourts;
+	}
+
+
+
+
+
+
+
 	/**
 	 * Le temps total de voyage des messages.
 	 */
@@ -354,6 +373,7 @@ public class Hote extends AbstractEntiteSimulationReseau {
 		this.tempsTotalVoyageMessages = 0;
 		this.messagesEnCoursTraitement = 0;
 		this.identifiantMessages = 0;
+		this.timeoutsTropCourts = 0;
 	}
 
 
@@ -421,9 +441,11 @@ public class Hote extends AbstractEntiteSimulationReseau {
 			HoteTimeoutReceptionAccuse timeoutCorrespondant = getSimulation().getFutureEventList().trouverEvenementTimeoutPourMessage(tmp.getMessageOrigine());
 			
 			if(timeoutCorrespondant == null){
-				// si on a pas trouvé de timeout correspondant
+				// si on a pas trouvé de timeout correspondant à ce message, ça veut dire qu'on
+				// l'a déjà réexpédié. Donc puisqu'on reçoit maintenant un accusé, ça signifie
+				// que le timeout a été déclenché trop tôt
 				// on incrémente le compteur de messages réexpédiés à cause d'un timeout trop court
-				messagesReexpedies++;
+				timeoutsTropCourts++;
 			}else{
 				// si on a trouvé un évènement correspondant (accusé reçu à temps!)
 				// on le supprime de la FEL (plus de timeout nécessaire puisqu'on a l'accusé)

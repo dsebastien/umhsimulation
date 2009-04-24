@@ -13,7 +13,7 @@ public class Utilitaires {
 	/**
 	 * Le format utilisé pour les pourcentages.
 	 */
-	private static final DecimalFormat formatPourcentages = new DecimalFormat("###.00%");
+	private static final DecimalFormat formatPourcentages = new DecimalFormat("##0.00%");
 	
 	/**
 	 * Calculer un pourcentage
@@ -33,20 +33,28 @@ public class Utilitaires {
 	}
 	
 	/**
-	 * Récupérer le pourcentage correspondant
+	 * Calculer et récupérer le pourcentage correspondant.
 	 * @param nombre le nombre
 	 * @param total le total
 	 * @return la réprésentation du pourcentage
 	 */
 	public static String pourcentage(final double nombre, final double total){
-		double resultat = nombre/total;
-		return formatPourcentages.format(resultat);
+		return pourcentage(nombre/total);
+	}
+	
+	/**
+	 * Récupérer le pourcentage correspondant.
+	 * @param valeur la valeur à transformer en pourcentage
+	 * @return la réprésentation en pourcentage
+	 */
+	public static String pourcentage(double valeur){
+		return formatPourcentages.format(valeur);
 	}
 
 
 
 	/**
-	 * Arrondi un double à un certain nombre de chiffres après la virgule.
+	 * Arrondir un double à un certain nombre de chiffres après la virgule.
 	 * 
 	 * @param val
 	 *        la valeur à arrondir
