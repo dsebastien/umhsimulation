@@ -1,10 +1,12 @@
 package be.simulation.entites;
 
 import java.util.Random;
+import be.simulation.evenements.AgentFinTraitementMessage;
 import be.simulation.evenements.AgentRecoitMessage;
 import be.simulation.evenements.HoteEnvoieMessageOriginal;
 import be.simulation.evenements.HoteFinTraitementMessage;
 import be.simulation.evenements.HoteTimeoutReceptionAccuse;
+import be.simulation.messages.AccuseReception;
 import be.simulation.messages.Message;
 import be.simulation.messages.MessageSimple;
 import be.simulation.messages.util.MessageEnAttente;
@@ -208,14 +210,13 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	 * Envoi d'un message original par un hôte.
 	 */
 	public void envoyerMessageOriginal() {
-		// FIXME vérifier si correct
-		// par exemple 0.75 = 75 (75% vers hote d'un autre agent)
+		// par exemple nombres 1 à 75 si l'option 
+		// était fixée à 0.75, donc 75% à envoyer à un autre agent
 		int randomDigitsAutreAgent =
 				(int) (getConfiguration().getConfigurationHotes()
 						.getTauxMessagesVersAutreAgent() * 100);
 		int random = generateurTypeDestination.nextInt(100) + 1;
 		boolean messagePourHoteAutreAgent = false;
-		// par exemple digits 1 à 75 = message à envoyer à un autre agent
 		if (random <= randomDigitsAutreAgent) {
 			messagePourHoteAutreAgent = true;
 		}
@@ -392,7 +393,64 @@ public class Hote extends AbstractEntiteSimulationReseau {
 			throw new IllegalArgumentException(
 					"Le message que l'hôte termine de traiter ne peut pas être null!");
 		}
-		LOGGER.trace("Hote "+getNumero()+" termine de traiter un message");
-		//FIXME implémenter!
+		
+		if(message instanceof MessageSimple){
+			LOGGER.trace("Hote "+getNumero()+" termine de traiter un message simple au temps "+getSimulation().getHorloge());
+			MessageSimple tmp = (MessageSimple) message;
+			
+			// on crée l'accusé de réception
+			AccuseReception accuseReception = new AccuseReception(this, tmp.getSource(), tmp);
+			
+			// création de l'évènement de réception par l'agent (on envoie notre accusé de réception à notre agent)
+			AgentRecoitMessage evtAgentRecoitMessage = genererEvenementAgentRecoitMessage(accuseReception);
+			
+			// ajout de l'évènement à la FEL
+			getSimulation().getFutureEventList().planifierEvenement(evtAgentRecoitMessage);
+		}else if(message instanceof AccuseReception){
+			LOGGER.trace("Hote "+getNumero()+" termine de traiter un accuse de reception au temps "+getSimulation().getHorloge());
+			AccuseReception tmp = (AccuseReception) message;
+			
+			// on incrémente le compteur d'accusés de réception reçus
+			accusesReceptionRecus++;
+			
+			//TODO compléter (voir UML!)
+			
+			// on vérifie sur la FEL s'il y a un évènement timeout correspondant à ce message
+			HoteTimeoutReceptionAccuse timeoutCorrespondant = getSimulation().getFutureEventList().trouverEvenementTimeoutPourMessage(tmp.getMessageOrigine());
+			
+			if(timeoutCorrespondant == null){
+				// si on a pas trouvé de timeout correspondant
+				// on incrémente le compteur de messages réexpédiés à cause d'un timeout trop court
+				messagesReexpedies++;
+			}else{
+				// si on a trouvé un évènement correspondant (accusé reçu à temps!)
+				// on le supprime de la FEL (plus de timeout nécessaire puisqu'on a l'accusé)
+				getSimulation().getFutureEventList().supprimer(timeoutCorrespondant);
+			}
+		}
+		
+		// maintenant qu'on a traite le message, on vérifie si le buffer est vide ou non
+		// pour commencer si possible à en traiter un autre
+		if (getBuffer().isEmpty()) {
+			// plus rien à traiter, on décrémente le nombre de messages en cours
+			// de traitement
+			messagesEnCoursTraitement--;
+		} else {
+			// puisqu'il y a encore des messages en attente, on en prend un et
+			// on commence à le traiter tout de suite
+			MessageEnAttente messageEnAttente = getBuffer().poll();
+			Message messageATraiter = messageEnAttente.getMessage();
+			// on met à jour le temps que ce message à passé dans des buffers
+			messageATraiter.augmenterTempsPasseDansBuffers(getSimulation()
+					.getHorloge()
+					- messageEnAttente.getTempsArrivee());
+			// on génère l'évènement de fin de traitement pour ce message à
+			// traiter
+			HoteFinTraitementMessage evtHoteFinTraitementMessage =
+					genererEvenementHoteFinTraitementMessage(messageATraiter);
+			// on l'ajoute sur la FEL
+			getSimulation().getFutureEventList().planifierEvenement(
+					evtHoteFinTraitementMessage);
+		}
 	}
 }

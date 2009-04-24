@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.log4j.Logger;
+import be.simulation.evenements.HoteTimeoutReceptionAccuse;
+import be.simulation.messages.MessageSimple;
 
 /**
  * Une EventList gère une liste d'évènements. Elle peut:<br />
@@ -94,6 +96,7 @@ public class EventList {
 	 * simulation).
 	 * 
 	 * @return les évènements imminents
+	 * @deprecated
 	 */
 	public List<Evenement> getEvenementsImminents() {
 		List<Evenement> retVal = new ArrayList<Evenement>();
@@ -134,6 +137,8 @@ public class EventList {
 			// cas où une autre instance du même type d'évènement est déjà sur
 			// la FEL: on fait l'ajout en fin de liste et on trie
 			eventList.add(evt);
+			
+			// on trie puisque l'évènement qu'on vient d'ajouter n'est (à priori) pas à sa place
 			Collections.sort(eventList);
 		}
 	}
@@ -143,5 +148,47 @@ public class EventList {
 	 */
 	public void reset() {
 		eventList.clear();
+	}
+	
+	
+	
+	
+	/**
+	 * Essaie de trouver un évènement timeout correspondant à un message donné.
+	 * 
+	 * REMARQUE: par simplicité nous avons placé cette méthode ici mais si le but avait été de réutiliser le code, nous aurions pu la placer dans une sous classe
+	 * @param messageOrigine le message d'origine
+	 * @return l'évènement correspondant s'il existe, NULL sinon
+	 */
+	public HoteTimeoutReceptionAccuse trouverEvenementTimeoutPourMessage(final MessageSimple messageOrigine) {
+		if(messageOrigine == null){
+			throw new IllegalArgumentException("Le message d'origine ne peut pas être null!");
+		}
+		
+		HoteTimeoutReceptionAccuse retVal = null;
+		
+		for(Evenement evt: eventList){
+			if(evt instanceof HoteTimeoutReceptionAccuse){
+				HoteTimeoutReceptionAccuse tmp = (HoteTimeoutReceptionAccuse) evt;
+				
+				if(tmp.getMessage().equals(messageOrigine)){
+					// on l'a trouvé!
+					retVal = tmp;
+				}
+			}
+		}
+		return retVal;
+	}
+	
+	/**
+	 * Supprime un évènement de la FEL
+	 * @param evenement l'évènement à supprimer de la FEL
+	 * @return vrai si l'évènement a bien été supprimé
+	 */
+	public void supprimer(final Evenement evenement){
+		boolean resultat = eventList.remove(evenement);
+		if(resultat == false){
+			LOGGER.warn("L'évènement n'a pas été supprimé, il n'était apparemment pas dans l'event list");
+		}
 	}
 }

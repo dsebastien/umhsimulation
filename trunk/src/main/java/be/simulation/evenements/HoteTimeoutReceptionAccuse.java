@@ -17,7 +17,7 @@ public class HoteTimeoutReceptionAccuse extends Evenement {
 	 */
 	private final Hote		hote;
 	/**
-	 * Le message pour lequel aucun accusé de réception n'a été reçu.
+	 * Le message correspondant à ce timeout.
 	 */
 	private final Message	message;
 
@@ -27,7 +27,7 @@ public class HoteTimeoutReceptionAccuse extends Evenement {
 	 * Evènement de timeout.
 	 * 
 	 * @param message
-	 *        le message pour lequel aucun accusé de réception n'a été reçu.
+	 *        le message correspondant à ce timeout.
 	 * @param hote l'hôte qui n'a pas reçu d'accusé de réception pour ce message
 	 * @param tempsPrevu le temps de simulation auquel cet évènement doit se produire
 	 **/
@@ -66,9 +66,9 @@ public class HoteTimeoutReceptionAccuse extends Evenement {
 
 
 	/**
-	 * Récupérer le message pour lequel aucun accusé de réception n'a été reçu.
+	 * Récupérer le message correspondant à ce timeout.
 	 * 
-	 * @return le message pour lequel aucun accusé de réception n'a été reçu
+	 * @return le message correspondant à ce timeout
 	 */
 	public Message getMessage() {
 		return message;

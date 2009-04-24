@@ -13,6 +13,7 @@ import be.simulation.evenements.HoteEnvoieMessageOriginal;
 import be.simulation.evenements.HoteFinTraitementMessage;
 import be.simulation.evenements.HoteRecoitMessage;
 import be.simulation.evenements.HoteTimeoutReceptionAccuse;
+import be.simulation.messages.MessageSimple;
 import be.simulation.routage.Route;
 
 /**
