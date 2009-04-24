@@ -18,6 +18,8 @@ import be.simulation.messages.utilitaires.MessageEnAttente;
  * @author Mernier Jean-François
  */
 public class Hote extends AbstractEntiteSimulationReseau {
+	private static long TOTAL_HOTES = 0;
+	
 	/**
 	 * Nombre d'accusés de réception reçus.
 	 */
@@ -83,6 +85,7 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	 * Créer un nouvel hote.
 	 */
 	public Hote() {
+		this.setNumero(++TOTAL_HOTES);
 	}
 
 

@@ -156,13 +156,19 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	 *        le temps de traitement d'un message (>=0)
 	 */
 	public void setTempsTraitementMessage(final float tempsTraitementMessage) {
+		//TODO permettre que le temps de traitement soit > 1 ?
+		// si oui il faut modifier Configuration
+		// ici il faut gérer le cas en mettant le nombre max de traitements simultanés à 1
+		// et là où on crée les évènements fin de service au temps +1 d'office, il faut
+		// tester si le temps de traitement est > 0 et si oui on met la fin de service
+		// non pas au temps +1 mais au temps +tempsTraitementMessage
+		// ET idem pour le temps de traitement des hôtes
 		if (tempsTraitementMessage < 0 || tempsTraitementMessage > 1) {
 			throw new IllegalArgumentException(
 					"Le temps de traitement d'un message pour un agent doit être tel que <= temps traitement <= 1");
 		}
 		this.tempsTraitementMessage = tempsTraitementMessage;
 		
-		// FIXME vérifier si ok
 		if (tempsTraitementMessage == 0.0f) {
 			this.nombreMaxTraitementsSimultanes = Integer.MAX_VALUE;
 		} else {

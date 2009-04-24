@@ -24,7 +24,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * Dernier temps de simulation ou le taux d'utilisation du buffer a été mis
 	 * à jour.
 	 */
-	private long				dernierTempsMiseAJourTauxUtilisationBuffer	= 0;
+	private long				dernierTempsMiseAJourSommeNiveauxOccupationBuffer	= 0;
 	/**
 	 * PRNG utilisé pour choisir un hôte au hasard parmi les hôtes connectés à
 	 * cet agent.
@@ -65,9 +65,9 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	private final Routeur		routeur										=
 																					new Routeur();
 	/**
-	 * La somme des taux d'utilisation du buffer.
+	 * La somme des niveaux d'occupation du buffer.
 	 */
-	private double				sommeTauxUtilisationBuffer					=
+	private double				sommeNiveauOccupationBuffer					=
 																					0.0;
 
 
@@ -111,16 +111,15 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 */
 	public void mettreAJourStatTauxUtilisationBuffer(){
 		long tailleMaxBuffer = getConfiguration().getConfigurationAgents().getTailleBuffer();
-		long differenceTempsActuelEtTempsDerniereMaj = getSimulation().getHorloge() - dernierTempsMiseAJourTauxUtilisationBuffer;
+		long differenceTempsActuelEtTempsDerniereMaj = getSimulation().getHorloge() - dernierTempsMiseAJourSommeNiveauxOccupationBuffer;
 		// on ne le fait que si le buffer n'est pas illimité
-		// et si la différence de temps entre la dernière mise à jour et le temps actuel n'est pas nulle
+		// et si la différence de temps entre la dernière mise à jour et le temps actuel n'est pas =0
 		if(differenceTempsActuelEtTempsDerniereMaj > 0 && tailleMaxBuffer < Long.MAX_VALUE){
-			double taux = Utilitaires.calculerPourcentage(getBuffer().size(), tailleMaxBuffer);
-			// on l'incrémente de n * le taux actuel (pour représenter le fait que le buffer
+			// on l'incrémente de n * le nombre d'éléments actuellement dans le buffer (pour représenter le fait que le buffer
 			// a été à ce niveau d'occupation pendant n unités de temps
-			sommeTauxUtilisationBuffer += taux * differenceTempsActuelEtTempsDerniereMaj;
+			sommeNiveauOccupationBuffer += getBuffer().size() * differenceTempsActuelEtTempsDerniereMaj;
 		}
-		dernierTempsMiseAJourTauxUtilisationBuffer = getSimulation().getHorloge();
+		dernierTempsMiseAJourSommeNiveauxOccupationBuffer = getSimulation().getHorloge();
 	}
 
 
@@ -298,12 +297,12 @@ public class Agent extends AbstractEntiteSimulationReseau {
 
 
 	/**
-	 * Récupérer la somme des taux d'utilisation du buffer.
+	 * Récupérer la somme des niveaux d'occupation du buffer.
 	 * 
-	 * @return la somme des taux d'utilisation du buffer.
+	 * @return la somme des niveaux d'occupation d'utilisation du buffer.
 	 */
-	public double getSommeTauxUtilisationBuffer() {
-		return sommeTauxUtilisationBuffer;
+	public double getSommeNiveauxOccupationBuffer() {
+		return sommeNiveauOccupationBuffer;
 	}
 
 
@@ -315,10 +314,9 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		LOGGER.trace("Initialisation des hôtes de l'agent");
 		this.hotes.clear();
 		for (int i = 1; i <= getConfiguration().getConfigurationAgents()
-				.getNombreHotes() + 1; i++) {
+				.getNombreHotes(); i++) {
 			Hote hote = (Hote) getApplicationContext().getBean("hote");
 			hote.setAgent(this);
-			hote.setNumero(getNumero() + i); // ex: 1001, ...
 			hotes.add(hote);
 		}
 	}
@@ -401,9 +399,9 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	public void reset() {
 		LOGGER.trace("Réinitialisation de l'agent " + getNumero());
 		super.reset();
-		sommeTauxUtilisationBuffer = 0.0;
+		sommeNiveauOccupationBuffer = 0.0;
 		messagesPerdusBrutalement = 0;
-		dernierTempsMiseAJourTauxUtilisationBuffer = 0;
+		dernierTempsMiseAJourSommeNiveauxOccupationBuffer = 0;
 		messagesRecus = 0;
 		messagesPerdusBufferPlein = 0;
 		// on réinitialise les hôtes (le nombre d'hôtes par agent dans la
