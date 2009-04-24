@@ -24,7 +24,7 @@ public class Utilitaires {
 	 *        le total
 	 * @return le pourcentage
 	 */
-	public static double calculerPourcentage(final int nombre, final int total) {
+	public static double calculerPourcentage(final long nombre, final long total) {
 		long result = 0;
 		if (nombre > 0) {
 			return ((double) nombre / (double) total) * 100;

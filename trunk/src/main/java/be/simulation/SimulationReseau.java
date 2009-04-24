@@ -70,16 +70,16 @@ public class SimulationReseau extends AbstractSimulation {
 		// messages perdus pour cause de buffers pleins (agents)
 		calculerEtAfficherMessagesPerdusBufferPlein();
 		
-		for(Hote h: agent1.getHotes()){
-			//h.getAccusesReceptionRecus()
-			//h.getMessagesEnvoyes()
-			//h.getMessagesReexpedies()
-			//h.getTempsTotalVoyageMessages()
-			//h.getTimeoutsTropCourts()
-			
-			
-			//FIXME implémenter
-		}
+		//FIXME implémenter
+//		for(Agent agent: agents){
+//		for(Hote h: agent.getHotes()){
+//			//h.getAccusesReceptionRecus()
+//			//h.getMessagesEnvoyes()
+//			//h.getMessagesReexpedies()
+//			//h.getTempsTotalVoyageMessages()
+//			//h.getTimeoutsTropCourts()
+//		}
+//		}
 		
 		// TODO continuer d'implémenter le calcul des stats
 	}
@@ -211,6 +211,12 @@ public class SimulationReseau extends AbstractSimulation {
 				HoteFinTraitementMessage evt = (HoteFinTraitementMessage) evenementImminent;
 				evt.getHote().finitTraiterMessage(evt.getMessage());
 			} else if (evenementImminent instanceof FinDeSimulation) {
+				// on met à jour la statistique du taux d'utilisation du buffer de chaque agent
+				// une derniere fois pour que le résultat final soit correct
+				for(Agent a: agents){
+					a.mettreAJourStatTauxUtilisationBuffer();
+				}
+				
 				// on vide la FEL, ce qui provoque la sortie de cette boucle
 				getFutureEventList().reset();
 				LOGGER.info("Fin de la simulation");

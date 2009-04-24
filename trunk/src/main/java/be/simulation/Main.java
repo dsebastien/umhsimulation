@@ -5,7 +5,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import be.simulation.configuration.Configuration;
 import be.simulation.configuration.exceptions.ExceptionOptionsInvalides;
-import be.simulation.utilitaires.Utilitaires;
 
 /**
  * Point d'entrée du programme. Cette classe est uniquement présente pour
