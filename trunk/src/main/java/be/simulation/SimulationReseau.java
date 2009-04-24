@@ -61,19 +61,25 @@ public class SimulationReseau extends AbstractSimulation {
 	 */
 	@Override
 	public void calculerEtAfficherResultats() {
-		LOGGER.info("---------------------------");
-		LOGGER.info("Résultats de la simulation:");
-		LOGGER.info("---------------------------");
+		LOGGER.info("------------------------------------------------------------------");
+		LOGGER.info("Résultats de la simulation:                                       ");
+		LOGGER.info("------------------------------------------------------------------");
 		
 		// messages perdus brutalement par les agents
 		calculerEtAfficherMessagesPerdusBrutalement();
 		// messages perdus pour cause de buffers pleins (agents)
 		calculerEtAfficherMessagesPerdusBufferPlein();
 		
-		
-		
-		
-		
+		for(Hote h: agent1.getHotes()){
+			//h.getAccusesReceptionRecus()
+			//h.getMessagesEnvoyes()
+			//h.getMessagesReexpedies()
+			//h.getTempsTotalVoyageMessages()
+			//h.getTimeoutsTropCourts()
+			
+			
+			//FIXME implémenter
+		}
 		
 		// TODO continuer d'implémenter le calcul des stats
 	}
@@ -99,7 +105,7 @@ public class SimulationReseau extends AbstractSimulation {
 					perdusBufferPlein+" messages sur "+recus+" recus car son buffer était plein ("+Utilitaires.pourcentage(perdusBufferPlein, recus)+")");
 		}
 		// globalement
-		LOGGER.info("Globalement les agents ont perdu "+totalPerdusBuffersPleins+" messages sur "+totalRecus+" recus à cause de buffers pleins ("+Utilitaires.pourcentage(totalPerdusBuffersPleins, totalRecus)+")");
+		LOGGER.info("Au total les agents ont perdu "+totalPerdusBuffersPleins+" messages sur "+totalRecus+" recus à cause de buffers pleins ("+Utilitaires.pourcentage(totalPerdusBuffersPleins, totalRecus)+")");
 	}
 	
 	
@@ -125,7 +131,7 @@ public class SimulationReseau extends AbstractSimulation {
 					perdusBrutalement+" messages sur "+recus+" recus ("+Utilitaires.pourcentage(perdusBrutalement, recus)+")");
 		}
 		// globalement
-		LOGGER.info("Globalement les agents ont perdu brutalement "+totalPerdusBrutalement+" messages sur "+totalRecus+" ("+Utilitaires.pourcentage(totalPerdusBrutalement, totalRecus)+")");
+		LOGGER.info("Au total les agents ont perdu brutalement "+totalPerdusBrutalement+" messages sur "+totalRecus+" ("+Utilitaires.pourcentage(totalPerdusBrutalement, totalRecus)+")");
 	}
 
 	@Override
@@ -156,10 +162,16 @@ public class SimulationReseau extends AbstractSimulation {
 		// l'évènement imminent dans la FEL et on le traite
 		while (!getFutureEventList().estVide()) {
 			// TODO récupérer d'abord les évènements qu'on veut traiter en
-			// priorité (infos routage, accusés de réception, ...)
-			Evenement evenementImminent =
-					getFutureEventList().getEvenementImminent();
+			// priorité (infos routage)
 			
+			// on essaie en priorité de traiter la réception des messages par les hôtes
+			// car ça peut éviter l'envoi le déclenchement inutile de timeouts
+			Evenement evenementImminent =
+				getFutureEventList().getEvenementImminent(HoteRecoitMessage.class);
+			
+			if(evenementImminent == null){
+					evenementImminent = getFutureEventList().getEvenementImminent();
+			}
 			
 			
 			LOGGER.trace(evenementImminent.toString());
@@ -266,6 +278,7 @@ public class SimulationReseau extends AbstractSimulation {
 							.error("Un problème a eu lieu pendant la sélection aléatoire d'un agent.");
 			}
 		} while (retVal == null || exception.equals(retVal));
+		
 		return retVal;
 	}
 

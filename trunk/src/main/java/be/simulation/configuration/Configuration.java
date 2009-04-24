@@ -11,6 +11,7 @@ import joptsimple.OptionSpec;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import be.simulation.configuration.exceptions.ExceptionOptionsInvalides;
+import be.simulation.utilitaires.Utilitaires;
 
 /**
  * Configuration globale. Dispose d'une copie de la configuration de chaque
@@ -435,5 +436,27 @@ public class Configuration {
 			throw new ExceptionOptionsInvalides(MSG_ERREUR_OPTIONS_INCORRECTES);
 		}
 		return false; // on a pas affiché l'aide
+	}
+	
+	/**
+	 * Affiche la configuration.
+	 */
+	public void afficher(){
+		LOGGER.info("------------------------------------------------------------------");
+		LOGGER.info("Configuration utilisée:");
+		LOGGER.info("------------------------------------------------------------------");
+		LOGGER.info("Agents - Nombre d'hotes: "+this.getConfigurationAgents().getNombreHotes());
+		LOGGER.info("Agents - Taille de buffer: "+this.getConfigurationAgents().getTailleBuffer());
+		LOGGER.info("Agents - Taux de pertes brutales: "+Utilitaires.pourcentage(this.getConfigurationAgents().getTauxPerteBrutale()));
+		LOGGER.info("Agents - Temps de traitement: "+this.getConfigurationAgents().getTempsTraitementMessage());
+		LOGGER.info("Agents - Nombre de messages traitables simultanément: "+this.getConfigurationAgents().getNombreMaxTraitementsSimultanes());
+		LOGGER.info("Hotes - Pourcentage de messages à destination d'un hôte connecté à un autre agent: "+Utilitaires.pourcentage(this.getConfigurationHotes().getTauxMessagesVersAutreAgent()));
+		LOGGER.info("Hotes - Temps max entre deux envois: "+this.getConfigurationHotes().getTempsMaxInterEnvois());
+		LOGGER.info("Hotes - Temps de traitement: "+this.getConfigurationHotes().getTempsTraitementMessage());
+		LOGGER.info("Hotes - Nombre de messages traitables simultanément: "+this.getConfigurationHotes().getNombreMaxTraitementsSimultanes());
+		LOGGER.info("Hotes - Durée du timeout pour la réception d'un accusé: "+this.getConfigurationHotes().getTimeoutReemissionMessages());
+		LOGGER.info("Simulation - Durée: "+this.getConfigurationSimulationReseau().getDuree());
+		LOGGER.info("Simulation - Delai entre entités: "+this.getConfigurationSimulationReseau().getDelaiEntreEntites());
+		LOGGER.info("------------------------------------------------------------------");
 	}
 }

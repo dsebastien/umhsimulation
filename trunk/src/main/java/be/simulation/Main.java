@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import be.simulation.configuration.Configuration;
 import be.simulation.configuration.exceptions.ExceptionOptionsInvalides;
+import be.simulation.utilitaires.Utilitaires;
 
 /**
  * Point d'entrée du programme. Cette classe est uniquement présente pour
@@ -52,8 +53,12 @@ public class Main {
 		SimulationReseau simulation =
 				(SimulationReseau) springApplicationContext
 						.getBean("simulationReseau");
+		// Affichage de la configuration
+		configuration.afficher();
+		
 		// Lancement de la simulation
 		simulation.demarrer();
+
 		// TODO v2.0 ajouter option "tempsInterEnvoiInfosRoutage" à la configuration
 		// des agents
 		

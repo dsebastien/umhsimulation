@@ -211,7 +211,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		return hotes.get(position);
 	}
 
-
+	
 
 	/**
 	 * Récupérer un hôte aléatoire de cet agent pouvant être n'importe quel hôte

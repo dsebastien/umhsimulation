@@ -22,10 +22,7 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	/**
 	 * Taille du buffer des agents (>=0). 0 = infinie.
 	 * 
-	 * @deprecated On l'utilise dans un premier temps, mais ensuite ça devra
-	 *             être différent pour chaque agent
 	 */
-	@Deprecated
 	private long		tailleBuffer;
 	/**
 	 * Le taux de perte brutale des agents (0 <= taux < 1).
@@ -65,10 +62,7 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	 * Récupérer la taille du buffer des agents.
 	 * 
 	 * @return la taille du buffer des agents
-	 * @deprecated On l'utilise dans un premier temps, mais ensuite ça devra
-	 *             être différent pour chaque agent
 	 */
-	@Deprecated
 	public long getTailleBuffer() {
 		return tailleBuffer;
 	}
