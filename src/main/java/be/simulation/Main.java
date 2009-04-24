@@ -55,7 +55,6 @@ public class Main {
 						.getBean("simulationReseau");
 		// Lancement de la simulation
 		simulation.demarrer();
-		//simulation.afficherResultats();
 		// FIXME v2.0 ajouter option "timeoutInfosRoutage" à la configuration
 		// des agents
 		
