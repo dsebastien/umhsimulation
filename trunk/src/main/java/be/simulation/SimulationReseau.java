@@ -169,8 +169,10 @@ public class SimulationReseau extends AbstractSimulation {
 			Evenement evenementImminent =
 				getFutureEventList().getEvenementImminent(HoteRecoitMessage.class);
 			
-			if(evenementImminent == null){
-					evenementImminent = getFutureEventList().getEvenementImminent();
+			if(evenementImminent == null){ 
+				// s'il n'y a pas de réception de message à traiter
+				// on récupère simplement l'évènement imminent
+				evenementImminent = getFutureEventList().getEvenementImminent();
 			}
 			
 			
