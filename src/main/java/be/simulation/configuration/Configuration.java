@@ -338,7 +338,7 @@ public class Configuration {
 		if (options.has(optionHotesTimeoutReemissionMessages)) {
 			final int timeoutReemission =
 					options.valueOf(optionHotesTimeoutReemissionMessages);
-			int timeoutMinimal = 80; // FIXME ok??
+			int timeoutMinimal = 80;
 			if (timeoutReemission < timeoutMinimal) {
 				throw new ExceptionOptionsInvalides(
 						"Le timeout avant réémission des messages doit être >="

@@ -20,6 +20,11 @@ import be.simulation.routage.Routeur;
  */
 public class Agent extends AbstractEntiteSimulationReseau {
 	/**
+	 * Dernier temps de simulation ou le taux d'utilisation du buffer a été mis
+	 * à jour.
+	 */
+	private long				dernierTempsMiseAJourTauxUtilisationBuffer	= 0;
+	/**
 	 * PRNG utilisé pour choisir un hôte au hasard parmi les hôtes connectés à
 	 * cet agent.
 	 */
@@ -31,11 +36,6 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 */
 	private final Random		generateurMessagesPerdus					=
 																					new Random();
-	/**
-	 * Dernier temps de simulation ou le taux d'utilisation du buffer a été mis
-	 * à jour.
-	 */
-	private long				dernierTempsMiseAJourTauxUtilisationBuffer	= 0;
 	/**
 	 * Hôtes connectés à cet agent.
 	 */
@@ -49,6 +49,10 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * Le nombre de messages perdus brutalement.
 	 */
 	private int					messagesPerdusBrutalement					= 0;
+	/**
+	 * Le nombre de messages perdus car le buffer était plein.
+	 */
+	private int					messagesPerdusBufferPlein					= 0;
 	/**
 	 * Le nombre de messages reçus.
 	 */
@@ -64,21 +68,6 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 */
 	private double				sommeTauxUtilisationBuffer					=
 																					0.0;
-	/**
-	 * Le nombre de messages perdus car le buffer était plein.
-	 */
-	private int					messagesPerdusBufferPlein					= 0;
-
-
-
-	/**
-	 * Récupérer le nombre de messages perdus car le buffer était plein.
-	 * 
-	 * @return le nombre de messages perdus car le buffer était plein.
-	 */
-	public int getMessagesPerdusBufferPlein() {
-		return messagesPerdusBufferPlein;
-	}
 
 
 
@@ -100,150 +89,19 @@ public class Agent extends AbstractEntiteSimulationReseau {
 
 
 	/**
-	 * Retourne les hôtes associés à cet agent.
+	 * Détermine si on perd le message ou non (sur base de la configuration) en
+	 * utilisant un PRNG.
 	 * 
-	 * @return les hôtes associés à cet agent
+	 * @return vrai si le message est perdu
 	 */
-	public List<Hote> getHotes() {
-		return hotes;
-	}
-
-
-
-	/**
-	 * Récupérer le nombre de messages perdus brutalement.
-	 * 
-	 * @return le nombre de messages perdus brutalement.
-	 */
-	public int getMessagesPerdusBrutalement() {
-		return messagesPerdusBrutalement;
-	}
-
-
-
-	/**
-	 * Récupérer le nombre de messages reçus.
-	 * 
-	 * @return le nombre de messages reçus.
-	 */
-	public int getMessagesRecus() {
-		return messagesRecus;
-	}
-
-
-
-	/**
-	 * Récupérer les infos de routage de cet agent.
-	 * 
-	 * @return les infos de routage de cet agent
-	 */
-	public Routeur getRouteur() {
-		return routeur;
-	}
-
-
-
-	/**
-	 * Récupérer la somme des taux d'utilisation du buffer.
-	 * 
-	 * @return la somme des taux d'utilisation du buffer.
-	 */
-	public double getSommeTauxUtilisationBuffer() {
-		return sommeTauxUtilisationBuffer;
-	}
-
-
-
-	/**
-	 * On crée les hôtes connectés à cet agent en fonction de la configuration.
-	 */
-	private void initialiserHotes() {
-		LOGGER.trace("Initialisation des hôtes de l'agent");
-		this.hotes.clear();
-		for (int i = 1; i <= getConfiguration().getConfigurationAgents()
-				.getNombreHotes() + 1; i++) {
-			Hote hote = (Hote) getApplicationContext().getBean("hote");
-			hote.setAgent(this);
-			hote.setNumero(getNumero() + i); // ex: 1001, ...
-			hotes.add(hote);
+	private boolean estPerdu() {
+		int randomDigits =
+				Math.round(getConfiguration().getConfigurationAgents()
+						.getTauxPerteBrutale() * 100);
+		boolean retVal = false;
+		if (generateurMessagesPerdus.nextInt(100) + 1 <= randomDigits) {
+			retVal = true;
 		}
-	}
-
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void reset() {
-		LOGGER.trace("Réinitialisation de l'agent " + getNumero());
-		super.reset();
-		sommeTauxUtilisationBuffer = 0.0;
-		messagesPerdusBrutalement = 0;
-		dernierTempsMiseAJourTauxUtilisationBuffer = 0;
-		messagesRecus = 0;
-		messagesPerdusBufferPlein = 0;
-		// on réinitialise les hôtes (le nombre d'hôtes par agent dans la
-		// configuration peut avoir changé)
-		initialiserHotes();
-	}
-
-
-
-	/**
-	 * Définir le numéro de cet agent (réinitialise également ses hôtes)
-	 * 
-	 * @param numeroAgent
-	 *        le numéro de cet agent
-	 */
-	public void setNumero(final long numeroAgent) {
-		super.setNumero(numeroAgent);
-		initialiserHotes();
-	}
-
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString() {
-		return "Agent " + getNumero();
-	}
-
-
-
-	/**
-	 * Récupérer un hôte aléatoire de cet agent.
-	 * 
-	 * @return un hôte aléatoire de cet agent
-	 */
-	public Hote getHoteAleatoire() {
-		// choix d'une position entre 0 et nombre d'hôtes - 1 (Random commence à
-		// 0)
-		int position = generateurChoixHote.nextInt(hotes.size());
-		return hotes.get(position);
-	}
-
-
-
-	/**
-	 * Récupérer un hôte aléatoire de cet agent pouvant être n'importe quel hôte
-	 * sauf celui fourni en argument.
-	 * 
-	 * @param exception
-	 *        le seul hôte ne pouvant pas être retourné
-	 * @return un hôte aléatoire autre que celui donné en argument
-	 */
-	public Hote getHoteAleatoire(final Hote exception) {
-		if (exception == null) {
-			throw new IllegalArgumentException(
-					"L'hôte exclus (l'exception) ne peut pas être null!");
-		}
-		Hote retVal = null;
-		do {
-			retVal = getHoteAleatoire();
-		} while (retVal == null || exception.equals(retVal));
 		return retVal;
 	}
 
@@ -342,6 +200,125 @@ public class Agent extends AbstractEntiteSimulationReseau {
 
 
 	/**
+	 * Récupérer un hôte aléatoire de cet agent.
+	 * 
+	 * @return un hôte aléatoire de cet agent
+	 */
+	public Hote getHoteAleatoire() {
+		// choix d'une position entre 0 et nombre d'hôtes - 1 (Random commence à
+		// 0)
+		int position = generateurChoixHote.nextInt(hotes.size());
+		return hotes.get(position);
+	}
+
+
+
+	/**
+	 * Récupérer un hôte aléatoire de cet agent pouvant être n'importe quel hôte
+	 * sauf celui fourni en argument.
+	 * 
+	 * @param exception
+	 *        le seul hôte ne pouvant pas être retourné
+	 * @return un hôte aléatoire autre que celui donné en argument
+	 */
+	public Hote getHoteAleatoire(final Hote exception) {
+		if (exception == null) {
+			throw new IllegalArgumentException(
+					"L'hôte exclus (l'exception) ne peut pas être null!");
+		}
+		Hote retVal = null;
+		do {
+			retVal = getHoteAleatoire();
+		} while (retVal == null || exception.equals(retVal));
+		return retVal;
+	}
+
+
+
+	/**
+	 * Retourne les hôtes associés à cet agent.
+	 * 
+	 * @return les hôtes associés à cet agent
+	 */
+	public List<Hote> getHotes() {
+		return hotes;
+	}
+
+
+
+	/**
+	 * Récupérer le nombre de messages perdus brutalement.
+	 * 
+	 * @return le nombre de messages perdus brutalement.
+	 */
+	public int getMessagesPerdusBrutalement() {
+		return messagesPerdusBrutalement;
+	}
+
+
+
+	/**
+	 * Récupérer le nombre de messages perdus car le buffer était plein.
+	 * 
+	 * @return le nombre de messages perdus car le buffer était plein.
+	 */
+	public int getMessagesPerdusBufferPlein() {
+		return messagesPerdusBufferPlein;
+	}
+
+
+
+	/**
+	 * Récupérer le nombre de messages reçus.
+	 * 
+	 * @return le nombre de messages reçus.
+	 */
+	public int getMessagesRecus() {
+		return messagesRecus;
+	}
+
+
+
+	/**
+	 * Récupérer les infos de routage de cet agent.
+	 * 
+	 * @return les infos de routage de cet agent
+	 */
+	public Routeur getRouteur() {
+		return routeur;
+	}
+
+
+
+	/**
+	 * Récupérer la somme des taux d'utilisation du buffer.
+	 * 
+	 * @return la somme des taux d'utilisation du buffer.
+	 */
+	public double getSommeTauxUtilisationBuffer() {
+		return sommeTauxUtilisationBuffer;
+	}
+
+
+
+	/**
+	 * On crée les hôtes connectés à cet agent en fonction de la configuration.
+	 */
+	private void initialiserHotes() {
+		LOGGER.trace("Initialisation des hôtes de l'agent");
+		this.hotes.clear();
+		for (int i = 1; i <= getConfiguration().getConfigurationAgents()
+				.getNombreHotes() + 1; i++) {
+			Hote hote = (Hote) getApplicationContext().getBean("hote");
+			hote.setAgent(this);
+			hote.setNumero(getNumero() + i); // ex: 1001, ...
+			hotes.add(hote);
+		}
+	}
+
+
+
+	/**
 	 * Appelé quand cet agent reçoit un message.
 	 * 
 	 * @param message
@@ -379,7 +356,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 			return;
 		}
 		
-		// FIXME v2.0 ajouter les détails de la vérification de l'occupation
+		// TODO v2.0 ajouter les détails de la vérification de l'occupation
 		// du buffer pour générer des évènements AgentEnvoieInfosRoutage
 		
 		// on ne peut plus traiter de message pour l'instant donc on doit le
@@ -407,20 +384,42 @@ public class Agent extends AbstractEntiteSimulationReseau {
 
 
 	/**
-	 * Détermine si on perd le message ou non (sur base de la configuration) en
-	 * utilisant un PRNG.
-	 * 
-	 * @return vrai si le message est perdu
+	 * {@inheritDoc}
 	 */
-	private boolean estPerdu() {
-		// FIXME vérifier si calcul ok
-		int randomDigits =
-				Math.round(getConfiguration().getConfigurationAgents()
-						.getTauxPerteBrutale() * 100);
-		boolean retVal = false;
-		if (generateurMessagesPerdus.nextInt(100) + 1 <= randomDigits) {
-			retVal = true;
-		}
-		return retVal;
+	@Override
+	public void reset() {
+		LOGGER.trace("Réinitialisation de l'agent " + getNumero());
+		super.reset();
+		sommeTauxUtilisationBuffer = 0.0;
+		messagesPerdusBrutalement = 0;
+		dernierTempsMiseAJourTauxUtilisationBuffer = 0;
+		messagesRecus = 0;
+		messagesPerdusBufferPlein = 0;
+		// on réinitialise les hôtes (le nombre d'hôtes par agent dans la
+		// configuration peut avoir changé)
+		initialiserHotes();
+	}
+
+
+
+	/**
+	 * Définir le numéro de cet agent (réinitialise également ses hôtes)
+	 * 
+	 * @param numeroAgent
+	 *        le numéro de cet agent
+	 */
+	public void setNumero(final long numeroAgent) {
+		super.setNumero(numeroAgent);
+		initialiserHotes();
+	}
+
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Agent " + getNumero();
 	}
 }

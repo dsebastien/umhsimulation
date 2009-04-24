@@ -1,5 +1,8 @@
 package be.simulation;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import be.simulation.core.AbstractSimulation;
@@ -13,8 +16,7 @@ import be.simulation.evenements.HoteEnvoieMessageOriginal;
 import be.simulation.evenements.HoteFinTraitementMessage;
 import be.simulation.evenements.HoteRecoitMessage;
 import be.simulation.evenements.HoteTimeoutReceptionAccuse;
-import be.simulation.messages.MessageSimple;
-import be.simulation.routage.Route;
+import be.simulation.utilitaires.Utilitaires;
 
 /**
  * Simulation d'un réseau.
@@ -40,6 +42,12 @@ public class SimulationReseau extends AbstractSimulation {
 	private Agent			agent6;
 	@Autowired
 	private Agent			agent7;
+	
+	/**
+	 * Liste des agents (utile pour les statistiques).
+	 */
+	private List<Agent> agents = new ArrayList<Agent>();
+	
 	/**
 	 * PRNG utilisé pour choisir un agent au hasard (utilisé pour les choix des
 	 * agents de destination pour les nouveaux messages des hôtes).
@@ -53,14 +61,85 @@ public class SimulationReseau extends AbstractSimulation {
 	 */
 	@Override
 	public void calculerEtAfficherResultats() {
-		// TODO ici on doit calculer les résultats finaux et les afficher)
+		LOGGER.info("---------------------------");
+		LOGGER.info("Résultats de la simulation:");
+		LOGGER.info("---------------------------");
+		
+		// messages perdus brutalement par les agents
+		calculerEtAfficherMessagesPerdusBrutalement();
+		// messages perdus pour cause de buffers pleins (agents)
+		calculerEtAfficherMessagesPerdusBufferPlein();
+		
+		
+		
+		
+		
+		
+		// TODO continuer d'implémenter le calcul des stats
 	}
-
-
+	
+	
+	/**
+	 * Calcule et affiche les stats concernant les messages perdus à cause de buffers pleins (agents).
+	 */
+	private void calculerEtAfficherMessagesPerdusBufferPlein(){
+		int totalPerdusBuffersPleins = 0;
+		int totalRecus = 0;
+		
+		for(Agent agent: agents){
+			// par agent
+			int perdusBufferPlein = agent.getMessagesPerdusBufferPlein();
+			int recus = agent.getMessagesRecus();
+			
+			// pour calculer l'info globale
+			totalPerdusBuffersPleins +=perdusBufferPlein;
+			totalRecus += recus;
+				
+			LOGGER.info("L'agent "+agent.getNumero()+" a perdu "+
+					perdusBufferPlein+" messages sur "+recus+" recus car son buffer était plein ("+Utilitaires.pourcentage(perdusBufferPlein, recus)+")");
+		}
+		// globalement
+		LOGGER.info("Globalement les agents ont perdu "+totalPerdusBuffersPleins+" messages sur "+totalRecus+" recus à cause de buffers pleins ("+Utilitaires.pourcentage(totalPerdusBuffersPleins, totalRecus)+")");
+	}
+	
+	
+	
+	
+	/**
+	 * Calcule et affiche les stats concernant les messages perdus brutalement par les agents.
+	 */
+	private void calculerEtAfficherMessagesPerdusBrutalement(){
+		int totalPerdusBrutalement = 0;
+		int totalRecus = 0;
+		
+		for(Agent agent: agents){
+			// par agent
+			int perdusBrutalement = agent.getMessagesPerdusBrutalement();
+			int recus = agent.getMessagesRecus();
+			
+			// pour calculer l'info globale
+			totalPerdusBrutalement +=perdusBrutalement;
+			totalRecus += recus;
+				
+			LOGGER.info("L'agent "+agent.getNumero()+" a perdu brutalement "+
+					perdusBrutalement+" messages sur "+recus+" recus ("+Utilitaires.pourcentage(perdusBrutalement, recus)+")");
+		}
+		// globalement
+		LOGGER.info("Globalement les agents ont perdu brutalement "+totalPerdusBrutalement+" messages sur "+totalRecus+" ("+Utilitaires.pourcentage(totalPerdusBrutalement, totalRecus)+")");
+	}
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		super.afterPropertiesSet();
+		// on ajoute les agents à la liste 
+		// (pour simplifier le calcul de certaines stats
+		agents.add(agent1);
+		agents.add(agent2);
+		agents.add(agent3);
+		agents.add(agent4);
+		agents.add(agent5);
+		agents.add(agent6);
+		agents.add(agent7);
 	}
 
 
@@ -80,16 +159,21 @@ public class SimulationReseau extends AbstractSimulation {
 			// priorité (infos routage, accusés de réception, ...)
 			Evenement evenementImminent =
 					getFutureEventList().getEvenementImminent();
+			
+			
+			
 			LOGGER.trace(evenementImminent.toString());
 			// On avance le temps de simulation au temps de l'évènement imminent
 			this.setHorloge(evenementImminent.getTempsPrevu());
-			// Traitement de l'évènement imminent récupéré
 			
+			
+			// Traitement de l'évènement imminent récupéré
+			// chaque évènement contient toutes les informations nécessaires pour le traiter
 			if (evenementImminent instanceof HoteEnvoieMessageOriginal) {
 				// envoi d'un message original par un hôte
 				HoteEnvoieMessageOriginal evt =
 						(HoteEnvoieMessageOriginal) evenementImminent;
-				evt.getHote().envoyerMessageOriginal();
+				evt.getHote().envoiMessageOriginal();
 			} else if (evenementImminent instanceof AgentRecoitMessage) {
 				// réception d'un message par un agent
 				AgentRecoitMessage evt = (AgentRecoitMessage) evenementImminent;
@@ -115,6 +199,7 @@ public class SimulationReseau extends AbstractSimulation {
 			} else if (evenementImminent instanceof FinDeSimulation) {
 				// on vide la FEL, ce qui provoque la sortie de cette boucle
 				getFutureEventList().reset();
+				LOGGER.info("Fin de la simulation");
 			}
 		}
 		// on calcule et on affiche les résultats de la simulation

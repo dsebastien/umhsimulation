@@ -19,5 +19,5 @@ public class InfosRoutage extends AbstractMessage<Agent> {
 	public InfosRoutage(final Agent source, final Agent destination) {
 		super(source, destination);
 	}
-	// FIXME v2.0: à définir
+	// TODO v2.0: à définir
 }
