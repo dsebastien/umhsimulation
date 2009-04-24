@@ -7,7 +7,7 @@ import be.simulation.evenements.AgentFinTraitementMessage;
 import be.simulation.evenements.AgentRecoitMessage;
 import be.simulation.evenements.HoteRecoitMessage;
 import be.simulation.messages.Message;
-import be.simulation.messages.util.MessageEnAttente;
+import be.simulation.messages.utilitaires.MessageEnAttente;
 import be.simulation.routage.Route;
 import be.simulation.routage.Routeur;
 

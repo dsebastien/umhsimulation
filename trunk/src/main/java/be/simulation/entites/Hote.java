@@ -1,7 +1,6 @@
 package be.simulation.entites;
 
 import java.util.Random;
-import be.simulation.evenements.AgentFinTraitementMessage;
 import be.simulation.evenements.AgentRecoitMessage;
 import be.simulation.evenements.HoteEnvoieMessageOriginal;
 import be.simulation.evenements.HoteFinTraitementMessage;
@@ -9,7 +8,7 @@ import be.simulation.evenements.HoteTimeoutReceptionAccuse;
 import be.simulation.messages.AccuseReception;
 import be.simulation.messages.Message;
 import be.simulation.messages.MessageSimple;
-import be.simulation.messages.util.MessageEnAttente;
+import be.simulation.messages.utilitaires.MessageEnAttente;
 
 /**
  * Hote du système, relié à un et un seul agent (lien statique).
