@@ -10,6 +10,7 @@ import be.simulation.messages.Message;
 import be.simulation.messages.utilitaires.MessageEnAttente;
 import be.simulation.routage.Route;
 import be.simulation.routage.Routeur;
+import be.simulation.utilitaires.Utilitaires;
 
 /**
  * Agent du système (= serveur).
@@ -64,7 +65,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	private final Routeur		routeur										=
 																					new Routeur();
 	/**
-	 * La somme des taux d'utilisationdestination du buffer.
+	 * La somme des taux d'utilisation du buffer.
 	 */
 	private double				sommeTauxUtilisationBuffer					=
 																					0.0;
@@ -104,6 +105,23 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		}
 		return retVal;
 	}
+	
+	/**
+	 * Met à jour la statistique concernant le taux d'utilisation du buffer.
+	 */
+	public void mettreAJourStatTauxUtilisationBuffer(){
+		long tailleMaxBuffer = getConfiguration().getConfigurationAgents().getTailleBuffer();
+		long differenceTempsActuelEtTempsDerniereMaj = getSimulation().getHorloge() - dernierTempsMiseAJourTauxUtilisationBuffer;
+		// on ne le fait que si le buffer n'est pas illimité
+		// et si la différence de temps entre la dernière mise à jour et le temps actuel n'est pas nulle
+		if(differenceTempsActuelEtTempsDerniereMaj > 0 && tailleMaxBuffer < Long.MAX_VALUE){
+			double taux = Utilitaires.calculerPourcentage(getBuffer().size(), tailleMaxBuffer);
+			// on l'incrémente de n * le taux actuel (pour représenter le fait que le buffer
+			// a été à ce niveau d'occupation pendant n unités de temps
+			sommeTauxUtilisationBuffer += taux * differenceTempsActuelEtTempsDerniereMaj;
+		}
+		dernierTempsMiseAJourTauxUtilisationBuffer = getSimulation().getHorloge();
+	}
 
 
 
@@ -118,20 +136,9 @@ public class Agent extends AbstractEntiteSimulationReseau {
 			throw new IllegalArgumentException(
 					"Le message que l'agent termine de traiter ne peut pas être null!");
 		}
-		// FIXME ne prend pas en compte le dernier temps de mise à jour du
-		// buffer! (sans doute incorrect donc!!)
-		// on ajoute taux actuel d'occupation du buffer au total
-		double tauxOccupationActuel = 0;
-		if (getBuffer().size() > 0) {
-			tauxOccupationActuel =
-					((double) getBuffer().size() / (double) getConfiguration()
-							.getConfigurationAgents().getTailleBuffer()) / 100;
-		}
+		// on met à jour la statistique du taux d'utilisation du buffer
+		mettreAJourStatTauxUtilisationBuffer();
 		
-		// on actualise la variable retenant le dernier temps de simulation où
-		// l'occupation du buffer a été enregistrée pour les statistiques
-		dernierTempsMiseAJourTauxUtilisationBuffer =
-				getSimulation().getHorloge();
 		// vérification du destinataire final de ce message
 		if (this == message.getDestination().getAgent()) {
 			// message à destination d'un hôte de cet agent
@@ -339,45 +346,49 @@ public class Agent extends AbstractEntiteSimulationReseau {
 					+ getSimulation().getHorloge());
 			// on incrémente le compteur de messages perdus brutalement
 			messagesPerdusBrutalement++;
-			return; // on ne peut rien faire de plus dans ce cas
-		}
-		// est-ce qu'on peut encore traiter un message?
-		if (messagesEnCoursTraitement < getConfiguration()
-				.getConfigurationAgents().getNombreMaxTraitementsSimultanes()) {
-			// on peut traiter le message directement donc on génère
-			// l'évènement de fin de traitement
-			AgentFinTraitementMessage evtAgentFinTraitementMessage =
-					genererEvenementAgentFinTraitementMessage(message);
-			// on l'ajoute sur la FEL
-			getSimulation().getFutureEventList().planifierEvenement(
-					evtAgentFinTraitementMessage);
-			// on incrémente le compteur de messages en cours de traitement
-			messagesEnCoursTraitement++;
-			return;
-		}
-		
-		// TODO v2.0 ajouter les détails de la vérification de l'occupation
-		// du buffer pour générer des évènements AgentEnvoieInfosRoutage
-		
-		// on ne peut plus traiter de message pour l'instant donc on doit le
-		// mettre en attente on essaie donc de le placer dans le buffer si
-		// possible
-		boolean bufferInfini =
-				getConfiguration().getConfigurationAgents().getTailleBuffer() == Long.MAX_VALUE;
-		boolean bufferRempli =
-				getBuffer().size() < getConfiguration()
-						.getConfigurationAgents().getTailleBuffer();
-		// si le buffer n'est pas rempli ou est infini, pas de problème
-		if (!bufferRempli || bufferInfini) {
-			// le buffer n'est pas plein alors on peut y placer le message.
-			// on enregistre le temps de simulation auquel on l'y a placé
-			getBuffer()
-					.add(
-							new MessageEnAttente(message, getSimulation()
-									.getHorloge()));
-		} else {
-			// le buffer est plein donc le message est perdu
-			messagesPerdusBufferPlein++;
+		}else{
+			// est-ce qu'on peut encore traiter un message?
+			if (messagesEnCoursTraitement < getConfiguration()
+					.getConfigurationAgents().getNombreMaxTraitementsSimultanes()) {
+				// on peut traiter le message directement donc on génère
+				// l'évènement de fin de traitement
+				AgentFinTraitementMessage evtAgentFinTraitementMessage =
+						genererEvenementAgentFinTraitementMessage(message);
+				// on l'ajoute sur la FEL
+				getSimulation().getFutureEventList().planifierEvenement(
+						evtAgentFinTraitementMessage);
+				// on incrémente le compteur de messages en cours de traitement
+				messagesEnCoursTraitement++;
+			}else{
+				// TODO v2.0 ajouter les détails de la vérification de l'occupation
+				// du buffer pour générer des évènements AgentEnvoieInfosRoutage
+				
+				
+				
+				// on met à jour la statistique du taux d'utilisation du buffer
+				mettreAJourStatTauxUtilisationBuffer();
+				
+				// on ne peut plus traiter de message pour l'instant donc on doit le
+				// mettre en attente on essaie donc de le placer dans le buffer si
+				// possible
+				boolean bufferInfini =
+						getConfiguration().getConfigurationAgents().getTailleBuffer() == Long.MAX_VALUE;
+				boolean bufferRempli =
+						getBuffer().size() == getConfiguration()
+								.getConfigurationAgents().getTailleBuffer();
+				// si le buffer n'est pas rempli ou est infini, pas de problème
+				if (!bufferRempli || bufferInfini) {
+					// le buffer n'est pas plein alors on peut y placer le message.
+					// on enregistre le temps de simulation auquel on l'y a placé
+					getBuffer()
+							.add(
+									new MessageEnAttente(message, getSimulation()
+											.getHorloge()));
+				} else {
+					// le buffer est plein donc le message est perdu
+					messagesPerdusBufferPlein++;
+				}
+			}
 		}
 	}
 
