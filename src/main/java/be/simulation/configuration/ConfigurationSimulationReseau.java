@@ -19,6 +19,11 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	 * Durée de simulation (> 0).
 	 */
 	private long	duree;
+	
+	/**
+	 * Durée de la période d'initialisation du système (>= 0).
+	 */
+	private long dureeInitialisation;
 	/**
 	 * Nom de la simulation.
 	 */
@@ -49,6 +54,20 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 		return duree;
 	}
 
+	
+	/**
+	 * Récupérer la durée de la période d'initialisation de la simulation (>=0)
+	 * 
+	 * @return la durée de la période d'initialisation de la simulation
+	 */
+	public long getDureeInitialisation() {
+		return dureeInitialisation;
+	}
+	
+	
+	
+	
+	
 
 
 	/**
@@ -94,6 +113,20 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 					"La durée de la simulation doit etre > 0");
 		}
 		this.duree = duree;
+	}
+	
+	/**
+	 * Déterminer la durée de la période d'initialisation de la simulation (>= 0).
+	 * 
+	 * @param dureeInit
+	 *        durée de la période d'initialisation de la simulation
+	 */
+	public void setDureeInitialisation(final long dureeInit) {
+		if (dureeInit < 0) {
+			throw new IllegalArgumentException(
+					"La durée de la période d'initialisation de la simulation doit etre >= 0");
+		}
+		this.dureeInitialisation = dureeInit;
 	}
 
 

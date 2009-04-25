@@ -1,6 +1,5 @@
 package be.simulation;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -261,6 +260,13 @@ public class SimulationReseau extends AbstractSimulation {
 	 * 
 	 */
 	private void genererPremiersEvenementsEnvoiDesHotes() {
+		// avant d'ajouter quoi que ce soit sur la FEL on ajoute
+		// à l'horloge la durée d'initialisation de la simulation
+		// pour la première version ce temps est de 0
+		// pour la seconde version utilisant le distance vector
+		// on le fixera par exemple à 1000
+		// pour dire que les 1000 premiers temps serviront à l'initialisation
+		ajouterTempsHorloge(getConfiguration().getConfigurationSimulationReseau().getDureeInitialisation());
 		for(Agent agent: agents){
 			for (Hote h : agent.getHotes()) {
 				HoteEnvoieMessageOriginal evt = h.genererEvenementHoteEnvoieMessageOriginal();
@@ -423,7 +429,7 @@ public class SimulationReseau extends AbstractSimulation {
 		
 		// TODO v2.0: ajouter les premiers évènements de type
 		// AgentEnvoieInfosRoutage
-		// et faire en sorte que ça dure x temps de simulation
+		// ces envois commencent au temps 0 jusqu'au temps dureeInitialisation au max
 		
 		
 		// Génération des premiers évènement d'envoi des hôtes
@@ -432,9 +438,14 @@ public class SimulationReseau extends AbstractSimulation {
 		genererPremiersEvenementsEnvoiDesHotes();
 		
 		// On ajoute directement l'évènement de fin de simulation à la FEL
+		// la fin doit avoir lieu après la durée d'initialisation + la durée de la simulation
+		long dureeSimulation = getConfiguration()
+		.getConfigurationSimulationReseau().getDuree();
+		long dureeInitialisation = getConfiguration()
+		.getConfigurationSimulationReseau().getDureeInitialisation();
+		
 		FinDeSimulation finDeSimulation =
-				new FinDeSimulation(getConfiguration()
-						.getConfigurationSimulationReseau().getDuree());
+				new FinDeSimulation(dureeInitialisation + dureeSimulation);
 		getFutureEventList().planifierEvenement(finDeSimulation);
 	}
 

@@ -27,74 +27,79 @@ public class Configuration {
 	/**
 	 * Logger.
 	 */
-	private static final Logger					LOGGER											=
-																										Logger
-																												.getLogger(Configuration.class);
+	private static final Logger					LOGGER										=
+																									Logger
+																											.getLogger(Configuration.class);
 	/**
 	 * Message utilisé quand les options sont mal spécifiées.
 	 */
-	private static final String					MSG_ERREUR_OPTIONS_INCORRECTES					=
-																										"Une erreur s'est produite pendant la vérification des options fournies. Vérifiez la syntaxe (-opt=valeur). Utilisez -aide pour plus d'informations sur les commandes disponibles.";
+	private static final String					MSG_ERREUR_OPTIONS_INCORRECTES				=
+																									"Une erreur s'est produite pendant la vérification des options fournies. Vérifiez la syntaxe (-opt=valeur). Utilisez -aide pour plus d'informations sur les commandes disponibles.";
 	/**
 	 * OPTION - Nombre d'hotes par agent.
 	 */
-	public static final String					OPTION_AGENTS_NOMBRE_HOTES						=
-																										"agentsNombreHotes";
+	public static final String					OPTION_AGENTS_NOMBRE_HOTES					=
+																									"agentsNombreHotes";
 	/**
 	 * OPTION - Taux de perte brutale des agents.
 	 */
-	public static final String					OPTION_AGENTS_TAUX_PERTE_BRUTALE				=
-																										"agentsTauxPerteBrutale";
+	public static final String					OPTION_AGENTS_TAUX_PERTE_BRUTALE			=
+																									"agentsTauxPerteBrutale";
 	/**
 	 * OPTION - Temps de traitement d'un message par un agent.
 	 */
-	public static final String					OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE			=
-																										"agentsTempsTraitementMessage";
+	public static final String					OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE		=
+																									"agentsTempsTraitementMessage";
 	/**
 	 * OPTION - Delai entre un agent et un hôte (et inversément).
 	 */
-	public static final String					OPTION_SIMULATION_DELAI_ENTRE_ENTITES			=
-																										"delaiEntreEntites";
+	public static final String					OPTION_SIMULATION_DELAI_ENTRE_ENTITES		=
+																									"delaiEntreEntites";
 	/**
 	 * OPTION - Taux de messages à destination d'un autre agent.
 	 */
-	public static final String					OPTION_HOTES_TAUX_MESSAGES_VERS_AUTRE_AGENT		=
-																										"hotesTauxMessagesVersAutreAgent";
+	public static final String					OPTION_HOTES_TAUX_MESSAGES_VERS_AUTRE_AGENT	=
+																									"hotesTauxMessagesVersAutreAgent";
 	/**
 	 * OPTION - Temps de traitement d'un message par un hote.
 	 */
-	public static final String					OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE			=
-																										"hotesTempsTraitementMessage";
+	public static final String					OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE		=
+																									"hotesTempsTraitementMessage";
 	/**
 	 * OPTION - Temps maximum entre deux envois d'un hôte.
 	 */
-	public static final String					OPTION_HOTES_TEMPS_MAX_INTER_ENVOIS				=
-																										"hotesTempsMaxInterEnvois";
+	public static final String					OPTION_HOTES_TEMPS_MAX_INTER_ENVOIS			=
+																									"hotesTempsMaxInterEnvois";
 	/**
 	 * OPTION - Durée de simulation.
 	 */
-	public static final String					OPTION_SIMULATION_DUREE							=
-																										"duree";
+	public static final String					OPTION_SIMULATION_DUREE						=
+																									"duree";
+	/**
+	 * OPTION - Durée de la période d'initialisation de la simulation.
+	 */
+	public static final String					OPTION_SIMULATION_DUREE_INITIALISATION		=
+																									"dureeInitialisation";
 	/**
 	 * OPTION - Taille des buffers des agents.
 	 */
-	public static final String					OPTION_AGENTS_TAILLE_BUFFER						=
-																										"agentsTailleBuffer";
+	public static final String					OPTION_AGENTS_TAILLE_BUFFER					=
+																									"agentsTailleBuffer";
 	/**
 	 * OPTION - Timeout pour la réémission des messages.
 	 */
 	public static final String					OPTION_HOTES_TIMEOUT_REEMISSION_MESSAGES	=
-																										"hotesTimeoutReemissionMessages";
+																									"hotesTimeoutReemissionMessages";
 	/**
 	 * OPTION - Aide.
 	 */
-	public static final List<String>			OPTIONS_AIDE									=
-																										Arrays
-																												.asList(
-																														"aide",
-																														"a",
-																														"help",
-																														"h");
+	public static final List<String>			OPTIONS_AIDE								=
+																									Arrays
+																											.asList(
+																													"aide",
+																													"a",
+																													"help",
+																													"h");
 	/**
 	 * Configuration des agents.
 	 */
@@ -120,7 +125,8 @@ public class Configuration {
 	 */
 	private final OptionParser					optionParser;
 	private final OptionSpec<Long>				optionSimulationDuree;
-	private final OptionSpec<Long>			optionAgentsTailleBuffer;
+	private final OptionSpec<Long>				optionSimulationDureeInitialisation;
+	private final OptionSpec<Long>				optionAgentsTailleBuffer;
 	private final OptionSpec<Integer>			optionHotesTimeoutReemissionMessages;
 	private final OptionSpec<Integer>			optionSimulationDelaiEntreEntites;
 
@@ -163,6 +169,11 @@ public class Configuration {
 				optionParser.accepts(OPTION_SIMULATION_DUREE,
 						"Durée de la simulation (> 0)").withRequiredArg()
 						.ofType(Long.class);
+		optionSimulationDureeInitialisation =
+				optionParser
+						.accepts(OPTION_SIMULATION_DUREE_INITIALISATION,
+								"Durée de la période d'initialisation de la simulation (>= 0)")
+						.withRequiredArg().ofType(Long.class);
 		optionHotesTauxMessagesVersAutreAgent =
 				optionParser
 						.accepts(
@@ -363,13 +374,22 @@ public class Configuration {
 			throws ExceptionOptionsInvalides {
 		// durée de la simulation
 		if (options.has(optionSimulationDuree)) {
-			long duree = options.valueOf(optionSimulationDuree);
+			final long duree = options.valueOf(optionSimulationDuree);
 			if (duree <= 0) {
 				throw new ExceptionOptionsInvalides(
 						"La durée de simulation ne peut pas être négative ou nulle!");
 			}
-			configurationSimulationReseau.setDuree(options
-					.valueOf(optionSimulationDuree));
+			configurationSimulationReseau.setDuree(duree);
+		}
+		// durée de la période d'initialisation de la simulation
+		if (options.has(optionSimulationDureeInitialisation)) {
+			final long dureeInit =
+					options.valueOf(optionSimulationDureeInitialisation);
+			if (dureeInit < 0) {
+				throw new ExceptionOptionsInvalides(
+						"La durée de la période d'initialisation de la simulation doit etre >= 0!");
+			}
+			configurationSimulationReseau.setDureeInitialisation(dureeInit);
 		}
 		// délai entre entités (hote <-> agent)
 		if (options.has(optionSimulationDelaiEntreEntites)) {
@@ -437,26 +457,52 @@ public class Configuration {
 		}
 		return false; // on a pas affiché l'aide
 	}
-	
+
+
+
 	/**
 	 * Affiche la configuration.
 	 */
-	public void afficher(){
-		LOGGER.info("------------------------------------------------------------------");
+	public void afficher() {
+		LOGGER
+				.info("------------------------------------------------------------------");
 		LOGGER.info("Configuration utilisée:");
-		LOGGER.info("------------------------------------------------------------------");
-		LOGGER.info("Agents - Nombre d'hotes: "+this.getConfigurationAgents().getNombreHotes());
-		LOGGER.info("Agents - Taille de buffer: "+this.getConfigurationAgents().getTailleBuffer());
-		LOGGER.info("Agents - Taux de pertes brutales: "+Utilitaires.pourcentage(this.getConfigurationAgents().getTauxPerteBrutale()));
-		LOGGER.info("Agents - Temps de traitement: "+this.getConfigurationAgents().getTempsTraitementMessage());
-		LOGGER.info("Agents - Nombre de messages traitables simultanément: "+this.getConfigurationAgents().getNombreMaxTraitementsSimultanes());
-		LOGGER.info("Hotes - Pourcentage de messages à destination d'un hôte connecté à un autre agent: "+Utilitaires.pourcentage(this.getConfigurationHotes().getTauxMessagesVersAutreAgent()));
-		LOGGER.info("Hotes - Temps max entre deux envois: "+this.getConfigurationHotes().getTempsMaxInterEnvois());
-		LOGGER.info("Hotes - Temps de traitement: "+this.getConfigurationHotes().getTempsTraitementMessage());
-		LOGGER.info("Hotes - Nombre de messages traitables simultanément: "+this.getConfigurationHotes().getNombreMaxTraitementsSimultanes());
-		LOGGER.info("Hotes - Durée du timeout pour la réception d'un accusé: "+this.getConfigurationHotes().getTimeoutReemissionMessages());
-		LOGGER.info("Simulation - Durée: "+this.getConfigurationSimulationReseau().getDuree());
-		LOGGER.info("Simulation - Delai entre entités: "+this.getConfigurationSimulationReseau().getDelaiEntreEntites());
-		LOGGER.info("------------------------------------------------------------------");
+		LOGGER
+				.info("------------------------------------------------------------------");
+		LOGGER.info("Agents - Nombre d'hotes: "
+				+ this.getConfigurationAgents().getNombreHotes());
+		LOGGER.info("Agents - Taille de buffer: "
+				+ this.getConfigurationAgents().getTailleBuffer());
+		LOGGER.info("Agents - Taux de pertes brutales: "
+				+ Utilitaires.pourcentage(this.getConfigurationAgents()
+						.getTauxPerteBrutale()));
+		LOGGER.info("Agents - Temps de traitement: "
+				+ this.getConfigurationAgents().getTempsTraitementMessage());
+		LOGGER.info("Agents - Nombre de messages traitables simultanément: "
+				+ this.getConfigurationAgents()
+						.getNombreMaxTraitementsSimultanes());
+		LOGGER
+				.info("Hotes - Pourcentage de messages à destination d'un hôte connecté à un autre agent: "
+						+ Utilitaires.pourcentage(this.getConfigurationHotes()
+								.getTauxMessagesVersAutreAgent()));
+		LOGGER.info("Hotes - Temps max entre deux envois: "
+				+ this.getConfigurationHotes().getTempsMaxInterEnvois());
+		LOGGER.info("Hotes - Temps de traitement: "
+				+ this.getConfigurationHotes().getTempsTraitementMessage());
+		LOGGER.info("Hotes - Nombre de messages traitables simultanément: "
+				+ this.getConfigurationHotes()
+						.getNombreMaxTraitementsSimultanes());
+		LOGGER.info("Hotes - Durée du timeout pour la réception d'un accusé: "
+				+ this.getConfigurationHotes().getTimeoutReemissionMessages());
+		LOGGER.info("Simulation - Durée: "
+				+ this.getConfigurationSimulationReseau().getDuree());
+		LOGGER.info("Simulation - Période d'initialisation: "
+				+ this.getConfigurationSimulationReseau()
+						.getDureeInitialisation());
+		LOGGER.info("Simulation - Delai entre entités: "
+				+ this.getConfigurationSimulationReseau()
+						.getDelaiEntreEntites());
+		LOGGER
+				.info("------------------------------------------------------------------");
 	}
 }
