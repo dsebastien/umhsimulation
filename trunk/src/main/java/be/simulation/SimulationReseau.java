@@ -145,7 +145,7 @@ public class SimulationReseau extends AbstractSimulation {
 
 		// TODO à calculer aussi par agent:
 		LOGGER
-				.info("Nombre de réémission maximum d'un message pendant la simulation: "
+				.info("Nombre de réémissions maximum d'un message pendant la simulation: "
 						+ (messageLePlusReemis.getNumeroEmission() - 1));
 
 		// TODO ajouter détails (+ par agent?)
