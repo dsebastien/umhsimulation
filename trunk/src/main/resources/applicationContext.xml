@@ -20,6 +20,7 @@
 		scope="singleton">
 		<property name="nom" value="${general.nom}" />
 		<property name="duree" value="${general.duree}" />
+		<property name="dureeInitialisation" value="${general.duree_initialisation}" />
 		<property name="delaiEntreEntites" value="${general.delai_entre_entites}" />
 	</bean>
 

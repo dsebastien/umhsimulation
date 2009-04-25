@@ -114,10 +114,7 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	 * 
 	 * @param tailleBuffer
 	 *        la taille du buffer des agents
-	 * @deprecated On l'utilise dans un premier temps, mais ensuite ça devra
-	 *             être différent pour chaque agent
 	 */
-	@Deprecated
 	public void setTailleBuffer(final long tailleBuffer) {
 		if (tailleBuffer < 0L) {
 			throw new IllegalArgumentException(

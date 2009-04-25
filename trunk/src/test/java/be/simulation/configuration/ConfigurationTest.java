@@ -361,6 +361,82 @@ public class ConfigurationTest {
 		} catch (ExceptionOptionsInvalides e) {
 		}
 	}
+	
+	
+	/**
+	 * Spécifier la durée de la période d'initialisation de la simulation et vérifier que c'est bien pris en
+	 * compte.
+	 * 
+	 * @throws ExceptionOptionsInvalides
+	 *         ne doit pas avoir lieu
+	 */
+	@Test
+	public void testSimulationDureeInitialisation() throws ExceptionOptionsInvalides {
+		String valeur = "50";
+		String[] args =
+				{
+					PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Long.valueOf(valeur).longValue() == configuration
+				.getConfigurationSimulationReseau().getDureeInitialisation());
+		valeur = "1";
+		args =
+				new String[] {
+					PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Long.valueOf(valeur).longValue() == configuration
+				.getConfigurationSimulationReseau().getDureeInitialisation());
+		valeur = "0";
+		args =
+				new String[] {
+					PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Long.valueOf(valeur).longValue() == configuration
+				.getConfigurationSimulationReseau().getDureeInitialisation());
+	}
+
+
+	/**
+	 * Spécifier des valeurs incorrectes pour la durée de la période d'initialisation de la simulation.
+	 */
+	@Test
+	public void testSimulationDureeInitialisationValeursIncorrectes() {
+		// valeur négative
+		String[] args =
+				{
+					PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
+							+ SEPARATEUR + "-100"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur non spécifiée
+		args = new String[] {
+			PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION + SEPARATEUR
+		};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// argument non spécifié
+		args = new String[] {
+			PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
+		};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+	}
 
 
 
