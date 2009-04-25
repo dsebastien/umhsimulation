@@ -10,7 +10,6 @@ import be.simulation.messages.Message;
 import be.simulation.messages.utilitaires.MessageEnAttente;
 import be.simulation.routage.Route;
 import be.simulation.routage.Routeur;
-import be.simulation.utilitaires.Utilitaires;
 
 /**
  * Agent du système (= serveur).
@@ -110,7 +109,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * Met à jour la statistique concernant le taux d'utilisation du buffer.
 	 */
 	public void mettreAJourStatTauxUtilisationBuffer(){
-		long tailleMaxBuffer = getConfiguration().getConfigurationAgents().getTailleBuffer();
+		long tailleMaxBuffer = getConfiguration().getConfigurationAgents().getTailleMaxBuffer();
 		long differenceTempsActuelEtTempsDerniereMaj = getSimulation().getHorloge() - dernierTempsMiseAJourSommeNiveauxOccupationBuffer;
 		// on ne le fait que si le buffer n'est pas illimité
 		// et si la différence de temps entre la dernière mise à jour et le temps actuel n'est pas =0
@@ -370,10 +369,10 @@ public class Agent extends AbstractEntiteSimulationReseau {
 				// mettre en attente on essaie donc de le placer dans le buffer si
 				// possible
 				boolean bufferInfini =
-						getConfiguration().getConfigurationAgents().getTailleBuffer() == Long.MAX_VALUE;
+						getConfiguration().getConfigurationAgents().getTailleMaxBuffer() == Long.MAX_VALUE;
 				boolean bufferRempli =
 						getBuffer().size() == getConfiguration()
-								.getConfigurationAgents().getTailleBuffer();
+								.getConfigurationAgents().getTailleMaxBuffer();
 				// si le buffer n'est pas rempli ou est infini, pas de problème
 				if (!bufferRempli || bufferInfini) {
 					// le buffer n'est pas plein alors on peut y placer le message.
@@ -417,6 +416,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * @param numeroAgent
 	 *        le numéro de cet agent
 	 */
+	@Override
 	public void setNumero(final long numeroAgent) {
 		super.setNumero(numeroAgent);
 		initialiserHotes();

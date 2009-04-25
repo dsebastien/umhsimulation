@@ -15,11 +15,13 @@ import be.simulation.evenements.HoteEnvoieMessageOriginal;
 import be.simulation.evenements.HoteFinTraitementMessage;
 import be.simulation.evenements.HoteRecoitMessage;
 import be.simulation.evenements.HoteTimeoutReceptionAccuse;
+import be.simulation.messages.MessageSimple;
+import be.simulation.messages.utilitaires.MessageTempsMax;
 import be.simulation.utilitaires.Utilitaires;
 
 /**
  * Simulation d'un réseau.
- * 
+ *
  * @author Dubois Sebastien
  * @author Regnier Fréderic
  * @author Mernier Jean-François
@@ -28,30 +30,29 @@ public class SimulationReseau extends AbstractSimulation {
 	// Les agents de la simulation
 	// (fixes, basés sur la figure 2 de l'énoncé)
 	@Autowired
-	private Agent			agent1;
+	private Agent				agent1;
 	@Autowired
-	private Agent			agent2;
+	private Agent				agent2;
 	@Autowired
-	private Agent			agent3;
+	private Agent				agent3;
 	@Autowired
-	private Agent			agent4;
+	private Agent				agent4;
 	@Autowired
-	private Agent			agent5;
+	private Agent				agent5;
 	@Autowired
-	private Agent			agent6;
+	private Agent				agent6;
 	@Autowired
-	private Agent			agent7;
-	
+	private Agent				agent7;
 	/**
 	 * Liste des agents (utile pour les statistiques).
 	 */
-	private List<Agent> agents = new ArrayList<Agent>();
-	
+	private final List<Agent>	agents					=
+																new ArrayList<Agent>();
 	/**
 	 * PRNG utilisé pour choisir un agent au hasard (utilisé pour les choix des
 	 * agents de destination pour les nouveaux messages des hôtes).
 	 */
-	private final Random	generateurChoixAgent	= new Random();
+	private final Random		generateurChoixAgent	= new Random();
 
 
 
@@ -60,114 +61,190 @@ public class SimulationReseau extends AbstractSimulation {
 	 */
 	@Override
 	public void calculerEtAfficherResultats() {
-		// TODO sortir aussi les résultats dans une forme plus clean 
+		// TODO sortir aussi les résultats dans une forme plus clean
 		// pour pouvoir s'en servir pour créer les graphiques
-		
-		LOGGER.info("------------------------------------------------------------------");
-		LOGGER.info("Résultats de la simulation:                                       ");
-		LOGGER.info("------------------------------------------------------------------");
-		
+		LOGGER
+				.info("------------------------------------------------------------------");
+		LOGGER
+				.info("Résultats de la simulation:                                       ");
+		LOGGER
+				.info("------------------------------------------------------------------");
 		// messages perdus brutalement par les agents
 		calculerEtAfficherMessagesPerdusBrutalement();
 		// messages perdus pour cause de buffers pleins (agents)
 		calculerEtAfficherMessagesPerdusBufferPlein();
 		// taux d'utilisation des buffers
 		calculerEtAfficherTauxUtilisationBufferAgents();
-		
+		// statistiques concernant les messages
+		calculerEtAfficherStatistiquesMessages();
 
-		
-		
-		
 		// TODO continuer d'implémenter le calcul des stats
-//		for(Agent agent: agents){
-//		for(Hote h: agent.getHotes()){
-//			//h.getAccusesReceptionRecus()
-//			//h.getMessagesEnvoyes()
-//			//h.getMessagesReexpedies()
-//			//h.getTempsTotalVoyageMessages()
-//			//h.getTimeoutsTropCourts()
-//		}
-//		}	
 	}
-	
-	
+
+
+
 	/**
-	 * Calcule et affiche les stats concernant le taux d'utilisation du buffer des agents.
+	 * Calcule et affiche les statistiques concernant les messages.
 	 */
-	private void calculerEtAfficherTauxUtilisationBufferAgents(){
+	private void calculerEtAfficherStatistiquesMessages() {
+		int totalMessagesReexpedies = 0;
+		int totalMessagesEnvoyes = 0;
+		long tempsTotalBuffer = 0;
+		int nombreAck = 0;
+		int nombreHotes = 0;
+		long tempsTotalVoyage = 0;
+
+		// on va chercher le message ayant été réémis le plus de fois
+		MessageSimple messageLePlusReemis = MessageSimple.creerMessageBidon();
+
+		MessageTempsMax messageTempsMax = new MessageTempsMax();
+
+		for (Agent agent : agents) {
+			for (Hote hote : agent.getHotes()) {
+				totalMessagesReexpedies += hote.getMessagesReexpedies();
+				totalMessagesEnvoyes += hote.getMessagesEnvoyes();
+				if (hote.getAccusesReceptionRecus() > 0) {
+					nombreHotes++;
+					tempsTotalBuffer += hote.getTempsTotalDansBuffers();
+					nombreAck += hote.getAccusesReceptionRecus();
+					tempsTotalVoyage += hote.getTempsTotalVoyageMessages();
+					if (hote.getMessageLePlusReemis().getNumeroEmission() > messageLePlusReemis
+							.getNumeroEmission()) {
+						messageLePlusReemis = hote.getMessageLePlusReemis();
+					}
+
+					if (hote.getMessageTempsMax().getTempsTrajet() > messageTempsMax
+							.getTempsTrajet()) {
+						messageTempsMax = hote.getMessageTempsMax();
+					}
+				}
+			}
+		}
+		double pourcentagePaquetsReemis =
+				totalMessagesReexpedies
+						/ ((double) totalMessagesReexpedies + (double) totalMessagesEnvoyes);
+		LOGGER.info("Les hôtes ont réémis en moyenne "
+				+ Utilitaires.pourcentage(pourcentagePaquetsReemis)
+				+ " des paquets");
+
+		// FIXME attention si nombre hotes == 0
+		double tempsMoyenEntreEmissionEtReceptionAccuse =
+				(double) tempsTotalVoyage / (double) nombreAck;
+		double tempsMoyenVoyageAbsolu =
+				((double) tempsTotalBuffer / (double) nombreAck);
+		double tempsMoyenVoyageComplet =
+				((double) tempsTotalBuffer / (double) tempsTotalVoyage);
+		LOGGER
+				.info("Le temps moyen entre l'émission d'un message et la réception de l'accusé correspondant est de "
+						+ tempsMoyenEntreEmissionEtReceptionAccuse);
+		LOGGER.info("Les " + nombreAck + " messages ont passé en absolu "
+				+ tempsMoyenVoyageAbsolu + " unités de temps dans des buffers");
+		LOGGER.info("Les messages ont passé en moyenne "
+				+ Utilitaires.pourcentage(tempsMoyenVoyageComplet)
+				+ " de leur temps de voyage complet dans des buffers");
+
+		// TODO à calculer aussi par agent:
+		LOGGER
+				.info("Nombre de réémission maximum d'un message pendant la simulation: "
+						+ (messageLePlusReemis.getNumeroEmission() - 1));
+
+		// TODO ajouter détails (+ par agent?)
+		LOGGER
+				.info("Le message ayant mis le plus de temps à effectuer son trajet complet a mis: "
+						+ messageTempsMax.getTempsTrajet());
+	}
+
+
+
+
+
+
+	/**
+	 * Calcule et affiche les stats concernant le taux d'utilisation du buffer
+	 * des agents.
+	 */
+	private void calculerEtAfficherTauxUtilisationBufferAgents() {
 		double sommeSommeTauxUtilisationBuffers = 0.0;
-		for(Agent agent: agents){
-			double moyenne = (double) agent.getSommeNiveauxOccupationBuffer() / (double) getConfiguration().getConfigurationSimulationReseau().getDuree() / (double) getConfiguration().getConfigurationAgents().getTailleBuffer();
+		for (Agent agent : agents) {
+			double moyenne =
+					agent.getSommeNiveauxOccupationBuffer()
+							/ getConfiguration()
+									.getConfigurationSimulationReseau()
+									.getDuree()
+							/ getConfiguration().getConfigurationAgents()
+									.getTailleMaxBuffer();
 			sommeSommeTauxUtilisationBuffers += moyenne;
-			LOGGER.info("Le buffer de l'agent "+agent.getNumero()+" a été utilisé en moyenne à "+Utilitaires.pourcentage(moyenne));
+			LOGGER.info("Le buffer de l'agent " + agent.getNumero()
+					+ " a été utilisé en moyenne à "
+					+ Utilitaires.pourcentage(moyenne));
 		}
 		// globalement
-		// on doit diviser par le nombre d'agents puisque là on a le total pour tous les agents
-		double moyenneGlobale = sommeSommeTauxUtilisationBuffers / (double) agents.size();
-		LOGGER.info("Les buffers des agents ont été utilisés en moyenne à "+Utilitaires.pourcentage(moyenneGlobale));
+		// on doit diviser par le nombre d'agents puisque là on a le total pour
+		// tous les agents
+		double moyenneGlobale =
+				sommeSommeTauxUtilisationBuffers / agents.size();
+		LOGGER.info("Les buffers des agents ont été utilisés en moyenne à "
+				+ Utilitaires.pourcentage(moyenneGlobale));
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
 	/**
-	 * Calcule et affiche les stats concernant les messages perdus à cause de buffers pleins (agents).
+	 * Calcule et affiche les stats concernant les messages perdus à cause de
+	 * buffers pleins (agents).
 	 */
-	private void calculerEtAfficherMessagesPerdusBufferPlein(){
+	private void calculerEtAfficherMessagesPerdusBufferPlein() {
 		int totalPerdusBuffersPleins = 0;
 		int totalRecus = 0;
-		
-		for(Agent agent: agents){
+		for (Agent agent : agents) {
 			// par agent
 			int perdusBufferPlein = agent.getMessagesPerdusBufferPlein();
 			int recus = agent.getMessagesRecus();
-			
 			// pour calculer l'info globale
-			totalPerdusBuffersPleins +=perdusBufferPlein;
+			totalPerdusBuffersPleins += perdusBufferPlein;
 			totalRecus += recus;
-				
-			LOGGER.info("L'agent "+agent.getNumero()+" a perdu "+
-					perdusBufferPlein+" messages sur "+recus+" recus car son buffer était plein ("+Utilitaires.pourcentage(perdusBufferPlein, recus)+")");
+			LOGGER.info("L'agent " + agent.getNumero() + " a perdu "
+					+ perdusBufferPlein + " messages sur " + recus
+					+ " recus car son buffer était plein ("
+					+ Utilitaires.pourcentage(perdusBufferPlein, recus) + ")");
 		}
 		// globalement
-		LOGGER.info("Au total les agents ont perdu "+totalPerdusBuffersPleins+" messages sur "+totalRecus+" recus à cause de buffers pleins ("+Utilitaires.pourcentage(totalPerdusBuffersPleins, totalRecus)+")");
+		LOGGER.info("Au total les agents ont perdu " + totalPerdusBuffersPleins
+				+ " messages sur " + totalRecus
+				+ " recus à cause de buffers pleins ("
+				+ Utilitaires.pourcentage(totalPerdusBuffersPleins, totalRecus)
+				+ ")");
 	}
-	
-	
-	
-	
+
+
+
 	/**
-	 * Calcule et affiche les stats concernant les messages perdus brutalement par les agents.
+	 * Calcule et affiche les stats concernant les messages perdus brutalement
+	 * par les agents.
 	 */
-	private void calculerEtAfficherMessagesPerdusBrutalement(){
+	private void calculerEtAfficherMessagesPerdusBrutalement() {
 		int totalPerdusBrutalement = 0;
 		int totalRecus = 0;
-		
-		for(Agent agent: agents){
+		for (Agent agent : agents) {
 			// par agent
 			int perdusBrutalement = agent.getMessagesPerdusBrutalement();
 			int recus = agent.getMessagesRecus();
-			
 			// pour calculer l'info globale
-			totalPerdusBrutalement +=perdusBrutalement;
+			totalPerdusBrutalement += perdusBrutalement;
 			totalRecus += recus;
-				
-			LOGGER.info("L'agent "+agent.getNumero()+" a perdu brutalement "+
-					perdusBrutalement+" messages sur "+recus+" recus ("+Utilitaires.pourcentage(perdusBrutalement, recus)+")");
+			LOGGER.info("L'agent " + agent.getNumero()
+					+ " a perdu brutalement " + perdusBrutalement
+					+ " messages sur " + recus + " recus ("
+					+ Utilitaires.pourcentage(perdusBrutalement, recus) + ")");
 		}
 		// globalement
-		LOGGER.info("Au total les agents ont perdu brutalement "+totalPerdusBrutalement+" messages sur "+totalRecus+" ("+Utilitaires.pourcentage(totalPerdusBrutalement, totalRecus)+")");
+		LOGGER.info("Au total les agents ont perdu brutalement "
+				+ totalPerdusBrutalement + " messages sur " + totalRecus + " ("
+				+ Utilitaires.pourcentage(totalPerdusBrutalement, totalRecus)
+				+ ")");
 	}
+
+
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -187,28 +264,25 @@ public class SimulationReseau extends AbstractSimulation {
 		// à chaque tour de boucle on récupère
 		// l'évènement imminent dans la FEL et on le traite
 		while (!getFutureEventList().estVide()) {
-			// TODO V2.0: récupérer d'abord les évènements de type 
+			// TODO V2.0: récupérer d'abord les évènements de type
 			// AgentEnvoieInfosRoutage et AgentRecoitInfosRoutage
-			
-			// on essaie en priorité de traiter la réception des messages par les hôtes
+			// on essaie en priorité de traiter la réception des messages par
+			// les hôtes
 			// car ça peut éviter l'envoi le déclenchement inutile de timeouts
 			Evenement evenementImminent =
-				getFutureEventList().getEvenementImminent(HoteRecoitMessage.class);
-			
-			if(evenementImminent == null){ 
+					getFutureEventList().getEvenementImminent(
+							HoteRecoitMessage.class);
+			if (evenementImminent == null) {
 				// s'il n'y a pas de réception de message à traiter
 				// on récupère simplement l'évènement imminent
 				evenementImminent = getFutureEventList().getEvenementImminent();
 			}
-			
-			
 			LOGGER.trace(evenementImminent.toString());
 			// On avance le temps de simulation au temps de l'évènement imminent
 			this.setHorloge(evenementImminent.getTempsPrevu());
-			
-			
 			// Traitement de l'évènement imminent récupéré
-			// chaque évènement contient toutes les informations nécessaires pour le traiter
+			// chaque évènement contient toutes les informations nécessaires
+			// pour le traiter
 			if (evenementImminent instanceof HoteEnvoieMessageOriginal) {
 				// envoi d'un message original par un hôte
 				HoteEnvoieMessageOriginal evt =
@@ -234,15 +308,16 @@ public class SimulationReseau extends AbstractSimulation {
 				evt.getHote().recoitMessage(evt.getMessage());
 			} else if (evenementImminent instanceof HoteFinTraitementMessage) {
 				// fin de traitement d'un message par un hote
-				HoteFinTraitementMessage evt = (HoteFinTraitementMessage) evenementImminent;
+				HoteFinTraitementMessage evt =
+						(HoteFinTraitementMessage) evenementImminent;
 				evt.getHote().finitTraiterMessage(evt.getMessage());
 			} else if (evenementImminent instanceof FinDeSimulation) {
-				// on met à jour la statistique du taux d'utilisation du buffer de chaque agent
+				// on met à jour la statistique du taux d'utilisation du buffer
+				// de chaque agent
 				// une derniere fois pour que le résultat final soit correct
-				for(Agent a: agents){
+				for (Agent a : agents) {
 					a.mettreAJourStatTauxUtilisationBuffer();
 				}
-				
 				// on vide la FEL, ce qui provoque la sortie de cette boucle
 				getFutureEventList().reset();
 				LOGGER.info("Fin de la simulation");
@@ -257,7 +332,6 @@ public class SimulationReseau extends AbstractSimulation {
 	/**
 	 * Méthode utilisée pour générer et placer sur la FEL les premiers
 	 * évènements d'envoi des hôtes des agents
-	 * 
 	 */
 	private void genererPremiersEvenementsEnvoiDesHotes() {
 		// avant d'ajouter quoi que ce soit sur la FEL on ajoute
@@ -266,10 +340,12 @@ public class SimulationReseau extends AbstractSimulation {
 		// pour la seconde version utilisant le distance vector
 		// on le fixera par exemple à 1000
 		// pour dire que les 1000 premiers temps serviront à l'initialisation
-		ajouterTempsHorloge(getConfiguration().getConfigurationSimulationReseau().getDureeInitialisation());
-		for(Agent agent: agents){
+		ajouterTempsHorloge(getConfiguration()
+				.getConfigurationSimulationReseau().getDureeInitialisation());
+		for (Agent agent : agents) {
 			for (Hote h : agent.getHotes()) {
-				HoteEnvoieMessageOriginal evt = h.genererEvenementHoteEnvoieMessageOriginal();
+				HoteEnvoieMessageOriginal evt =
+						h.genererEvenementHoteEnvoieMessageOriginal();
 				getFutureEventList().planifierEvenement(evt);
 			}
 		}
@@ -280,7 +356,7 @@ public class SimulationReseau extends AbstractSimulation {
 	/**
 	 * Récupérer un agent aléatoire pouvant être n'importe lequel sauf celui
 	 * fourni en argument.
-	 * 
+	 *
 	 * @param exception
 	 *        le seul agent ne pouvant pas être retourné
 	 * @return un agent aléatoire autre que celui donné en argument
@@ -319,7 +395,6 @@ public class SimulationReseau extends AbstractSimulation {
 							.error("Un problème a eu lieu pendant la sélection aléatoire d'un agent.");
 			}
 		} while (retVal == null || exception.equals(retVal));
-		
 		return retVal;
 	}
 
@@ -414,9 +489,7 @@ public class SimulationReseau extends AbstractSimulation {
 		agent7.reset();
 		// TODO v2.0: peut être à modifier
 		reinitialiserTablesRoutageAgents();
-		
-		
-		// on ajoute les agents à la liste 
+		// on ajoute les agents à la liste
 		// (pour simplifier le calcul de certaines stats
 		agents.clear();
 		agents.add(agent1);
@@ -426,24 +499,23 @@ public class SimulationReseau extends AbstractSimulation {
 		agents.add(agent5);
 		agents.add(agent6);
 		agents.add(agent7);
-		
 		// TODO v2.0: ajouter les premiers évènements de type
 		// AgentEnvoieInfosRoutage
-		// ces envois commencent au temps 0 jusqu'au temps dureeInitialisation au max
-		
-		
+		// ces envois commencent au temps 0 jusqu'au temps dureeInitialisation
+		// au max
 		// Génération des premiers évènement d'envoi des hôtes
 		// TODO v2.0 ne générer des envois qu'à partir d'un temps donné
 		// pour laisser le temps au distance vector de se stabiliser
 		genererPremiersEvenementsEnvoiDesHotes();
-		
 		// On ajoute directement l'évènement de fin de simulation à la FEL
-		// la fin doit avoir lieu après la durée d'initialisation + la durée de la simulation
-		long dureeSimulation = getConfiguration()
-		.getConfigurationSimulationReseau().getDuree();
-		long dureeInitialisation = getConfiguration()
-		.getConfigurationSimulationReseau().getDureeInitialisation();
-		
+		// la fin doit avoir lieu après la durée d'initialisation + la durée de
+		// la simulation
+		long dureeSimulation =
+				getConfiguration().getConfigurationSimulationReseau()
+						.getDuree();
+		long dureeInitialisation =
+				getConfiguration().getConfigurationSimulationReseau()
+						.getDureeInitialisation();
 		FinDeSimulation finDeSimulation =
 				new FinDeSimulation(dureeInitialisation + dureeSimulation);
 		getFutureEventList().planifierEvenement(finDeSimulation);

@@ -63,7 +63,7 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	 * 
 	 * @return la taille du buffer des agents
 	 */
-	public long getTailleBuffer() {
+	public long getTailleMaxBuffer() {
 		return tailleBuffer;
 	}
 

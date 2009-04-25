@@ -1,5 +1,7 @@
 package be.simulation.entites;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import be.simulation.evenements.AgentRecoitMessage;
 import be.simulation.evenements.HoteEnvoieMessageOriginal;
@@ -9,75 +11,83 @@ import be.simulation.messages.AccuseReception;
 import be.simulation.messages.Message;
 import be.simulation.messages.MessageSimple;
 import be.simulation.messages.utilitaires.MessageEnAttente;
+import be.simulation.messages.utilitaires.MessageTempsMax;
 
 /**
  * Hote du système, relié à un et un seul agent (lien statique).
- * 
+ *
  * @author Dubois Sebastien
  * @author Regnier Frederic
  * @author Mernier Jean-François
  */
 public class Hote extends AbstractEntiteSimulationReseau {
-	private static long TOTAL_HOTES = 0;
-	
+	/**
+	 * Utilisé pour attribuer un numéro unique à chaque hôte.
+	 */
+	private static long				TOTAL_HOTES					= 0;
+	/**
+	 * Liste qui nous permet de voir si on a déjà reçu un timeout pour un
+	 * message original donné.
+	 */
+	private final List<Integer>		accusesNonRecus				=
+																		new ArrayList<Integer>();
 	/**
 	 * Nombre d'accusés de réception reçus.
 	 */
-	private int				accusesReceptionRecus		= 0;
+	private int						accusesReceptionRecus		= 0;
 	/**
 	 * Agent auquel cet hote est relié (pour pouvoir communiquer avec lui).
 	 */
-	private Agent			agent;
+	private Agent					agent;
 	/**
 	 * PRNG utilisé pour générer les temps d'envoi.
 	 */
-	private final Random	generateurTempsEnvoi		= new Random();
+	private final Random			generateurTempsEnvoi		= new Random();
 	/**
 	 * PRNG utilisé pour déterminer si un nouveau message doit être ou non à
 	 * destination d'un hôte d'un autre agent.
 	 */
-	private final Random	generateurTypeDestination	= new Random();
+	private final Random			generateurTypeDestination	= new Random();
 	/**
 	 * Permet de placer un identifiant unique sur chaque message que cet hôte
 	 * envoie.
 	 */
-	private int				identifiantMessages			= 0;
+	private int						identifiantMessages			= 0;
+	/**
+	 * Message qu'on a réémis le plus de fois (par défaut on y met un message
+	 * bidon)
+	 */
+	private MessageSimple			messageLePlusReemis			= null;
 	/**
 	 * Le nombre de messages en cours de traitement.
 	 */
-	private int				messagesEnCoursTraitement	= 0;
+	private int						messagesEnCoursTraitement	= 0;
 	/**
 	 * Nombre de messages envoyés.
 	 */
-	private int				messagesEnvoyes				= 0;
+	private int						messagesEnvoyes				= 0;
 	/**
 	 * Nombre de messages réexpédiés.
 	 */
-	private int				messagesReexpedies			= 0;
-	
+	private int						messagesReexpedies			= 0;
 	/**
-	 * Nombre de messages réexpédiés à cause d'un timeout trop court.
+	 * Contient le message ayant mis le plus de temps à effectuer son trajet
+	 * complet.
 	 */
-	private int timeoutsTropCourts = 0;
-	
+	private final MessageTempsMax	messageTempsMax				=
+																		new MessageTempsMax();
 	/**
-	 * Récupérer le nombre de messages réexpédiés à cause d'un timeout trop court.
-	 * @return le nombre de messages réexpédiés à cause d'un timeout trop court
+	 * Le temps total passé par les messages dans des buffers.
 	 */
-	public int getTimeoutsTropCourts() {
-		return timeoutsTropCourts;
-	}
-
-
-
-
-
-
-
+	private long					tempsTotalDansBuffers		= 0;
 	/**
 	 * Le temps total de voyage des messages.
 	 */
-	private long			tempsTotalVoyageMessages	= 0;
+	private long					tempsTotalVoyageMessages	= 0;
+	/**
+	 * Nombre de messages réexpédiés à cause d'un timeout trop court.
+	 */
+	private int						timeoutsTropCourts			= 0;
 
 
 
@@ -97,132 +107,7 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	public void afterPropertiesSet() throws Exception {
 		// Faire ici toute initialisation qui requiert l'utilisation de la
 		// configuration
-	}
-
-
-
-	/**
-	 * Timeout pour la réception d'un accusé.
-	 * 
-	 * @param message
-	 *        le message pour lequel on a pas encore reçu d'accusé
-	 */
-	public void timeoutReceptionAccuse(final Message message) {
-		// on incrémente le compteur de messages réexpédiés
-		messagesReexpedies++;
-		// on recrée le message pour le renvoyer (ça doit être une instance
-		// différence!)
-		Message nouveauMessage = creerMessage(message.getDestination());
-		// création de l'évènement de réception par l'agent de l'hôte
-		AgentRecoitMessage evenementReceptionAgent =
-				genererEvenementAgentRecoitMessage(nouveauMessage);
-		// ajout de l'évènement de réception par l'agent à la FEL
-		getSimulation().getFutureEventList().planifierEvenement(
-				evenementReceptionAgent);
-		// création de l'évènement timeout correspondant
-		HoteTimeoutReceptionAccuse evenementTimeout =
-				genererEvenementHoteTimeoutReceptionAccuse(nouveauMessage);
-		// ajout de l'évènement timeout à la FEL (nouveau timeout)
-		getSimulation().getFutureEventList().planifierEvenement(
-				evenementTimeout);
-	}
-
-
-
-	/**
-	 * Appelé quand cet hôte reçoit un message.
-	 * 
-	 * @param message
-	 *        le message qu'il reçoit
-	 */
-	public void recoitMessage(final Message message) {
-		if (message == null) {
-			throw new IllegalArgumentException(
-					"Le message ne peut pas être null!");
-		}
-		
-		if (messagesEnCoursTraitement < getConfiguration()
-				.getConfigurationHotes().getNombreMaxTraitementsSimultanes()) {
-			LOGGER.trace("Hote "+getNumero()+" commence le traitement d'un message");
-			// on peut traiter le message directement donc on génère
-			// l'évènement de fin de traitement
-			HoteFinTraitementMessage evtHoteFinTraitementMessage =
-					genererEvenementHoteFinTraitementMessage(message);
-			// on l'ajoute sur la FEL
-			getSimulation().getFutureEventList().planifierEvenement(
-					evtHoteFinTraitementMessage);
-			// on incrémente le compteur de messages en cours de traitement
-			messagesEnCoursTraitement++;
-			return; // le traitement a commencé, on quitte la méthode
-		}
-		
-		// on ne peut pas le traiter directement donc on le place dans le buffer
-		// (le buffer des hôtes est supposé infini)
-		LOGGER.trace("Hote "+getNumero()+" place un message dans son buffer");
-		getBuffer()
-		.add(
-				new MessageEnAttente(message, getSimulation()
-						.getHorloge()));
-	}
-	
-	/**
-	 * Génère et ajoute à la FEL un évènement de type HoteFinTraitementMessage
-	 * 
-	 * @param message
-	 *        le message qu'on finira de traiter
-	 */
-	private HoteFinTraitementMessage genererEvenementHoteFinTraitementMessage(
-			final Message message) {
-		return new HoteFinTraitementMessage(message, this, getSimulation()
-				.getHorloge() + 1);
-	}
-
-
-
-	/**
-	 * Génère un évènement de type AgentRecoitMessage.
-	 * 
-	 * @param message
-	 *        le message que l'agent doit recevoir
-	 * @return l'évènement créé
-	 */
-	private AgentRecoitMessage genererEvenementAgentRecoitMessage(
-			final Message message) {
-		return new AgentRecoitMessage(message, this.getAgent(), getSimulation()
-				.getHorloge()
-				+ getConfiguration().getConfigurationSimulationReseau()
-						.getDelaiEntreEntites());
-	}
-
-
-
-	/**
-	 * Génère un évènement de type HoteTimeoutReceptionAccuse.
-	 * 
-	 * @param message
-	 *        le message pour lequel aucun accusé de réception n'a été reçu
-	 * @return l'évènement créé
-	 */
-	private HoteTimeoutReceptionAccuse genererEvenementHoteTimeoutReceptionAccuse(
-			final Message message) {
-		return new HoteTimeoutReceptionAccuse(message, this, getSimulation()
-				.getHorloge()
-				+ getConfiguration().getConfigurationHotes()
-						.getTimeoutReemissionMessages());
-	}
-
-
-
-	/**
-	 * Créer un message.
-	 * 
-	 * @param destinataire
-	 *        le destinataire
-	 * @return le message généré
-	 */
-	private MessageSimple creerMessage(final Hote destinataire) {
-		return new MessageSimple(this, destinataire, ++identifiantMessages,
-				getSimulation().getHorloge());
+		messageLePlusReemis = MessageSimple.creerMessageBidon();
 	}
 
 
@@ -231,7 +116,7 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	 * Envoi d'un message original par un hôte.
 	 */
 	public void envoiMessageOriginal() {
-		// par exemple nombres 1 à 75 si l'option 
+		// par exemple nombres 1 à 75 si l'option
 		// était fixée à 0.75, donc 75% à envoyer à un autre agent
 		int randomDigitsAutreAgent =
 				(int) (getConfiguration().getConfigurationHotes()
@@ -258,7 +143,13 @@ public class Hote extends AbstractEntiteSimulationReseau {
 			hoteDestination = this.getAgent().getHoteAleatoire(this);
 		}
 		// création du message
-		MessageSimple message = creerMessage(hoteDestination);
+		MessageSimple message =
+				new MessageSimple(this, hoteDestination, ++identifiantMessages,
+						1, getSimulation().getHorloge());
+		// on ajoute l'identifiant de ce message à la liste
+		// des identifiants pour lesquels on a pas encore reçu
+		// d'ack
+		accusesNonRecus.add(message.getNumeroMessage());
 		// création de l'évènement de réception par l'agent de l'hôte
 		AgentRecoitMessage evenementReceptionAgent =
 				genererEvenementAgentRecoitMessage(message);
@@ -274,142 +165,18 @@ public class Hote extends AbstractEntiteSimulationReseau {
 		// incrémentation du nombre de messages envoyés
 		messagesEnvoyes++;
 		// génération du prochain évènement d'envoi pour cet hôte
-		HoteEnvoieMessageOriginal evtProchainEnvoi = genererEvenementHoteEnvoieMessageOriginal();
-		
+		HoteEnvoieMessageOriginal evtProchainEnvoi =
+				genererEvenementHoteEnvoieMessageOriginal();
 		// ajout de cet évènement à la FEL
-		getSimulation().getFutureEventList().planifierEvenement(evtProchainEnvoi);
+		getSimulation().getFutureEventList().planifierEvenement(
+				evtProchainEnvoi);
 	}
 
 
 
-	/**
-	 * Génère et place sur la FEL un évènement de type HoteEnvoieMessageOriginal
-	 * pour cet hôte.
-	 */
-	public HoteEnvoieMessageOriginal genererEvenementHoteEnvoieMessageOriginal() {
-		long tempsEnvoi = genererTempsProchainEnvoi();
-		return new HoteEnvoieMessageOriginal(this, tempsEnvoi);
-	}
-
-
-
-	/**
-	 * Générer le prochain temps d'envoi.
-	 * 
-	 * @return le prochain temps d'envoi.
-	 */
-	private long genererTempsProchainEnvoi() {
-		int tempsInterEnvois =
-				generateurTempsEnvoi.nextInt(getConfiguration()
-						.getConfigurationHotes().getTempsMaxInterEnvois()) + 1;
-		// on fait +1 et donc par exemple 0-5 devient 1-6
-		return getSimulation().getHorloge() + tempsInterEnvois;
-	}
-
-
-
-	/**
-	 * Récupérer le nombre d'accusés de réception reçus.
-	 * 
-	 * @return le nombre d'accusés de réception reçus.
-	 */
-	public int getAccusesReceptionRecus() {
-		return accusesReceptionRecus;
-	}
-
-
-
-	/**
-	 * Récupérer l'agent auquel cet hôte est connecté.
-	 * 
-	 * @return l'agent auquel cet hôte est connecté
-	 */
-	public Agent getAgent() {
-		return agent;
-	}
-
-
-
-	/**
-	 * Récupérer le nombre de messages envoyés.
-	 * 
-	 * @return le nombre de messages envoyés.
-	 */
-	public int getMessagesEnvoyes() {
-		return messagesEnvoyes;
-	}
-
-
-
-	/**
-	 * Récupérer le nombre de messages réexpédiés.
-	 * 
-	 * @return le nombre de messages réexpédiés
-	 */
-	public int getMessagesReexpedies() {
-		return messagesReexpedies;
-	}
-
-
-
-	/**
-	 * Récupérer le temps total de voyage des messages.
-	 * 
-	 * @return le temps total de voyage des messages
-	 */
-	public long getTempsTotalVoyageMessages() {
-		return tempsTotalVoyageMessages;
-	}
-
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void reset() {
-		LOGGER.trace("Réinitialisation de l'hôte " + getNumero());
-		super.reset();
-		this.messagesEnvoyes = 0;
-		this.messagesReexpedies = 0;
-		this.accusesReceptionRecus = 0;
-		this.tempsTotalVoyageMessages = 0;
-		this.messagesEnCoursTraitement = 0;
-		this.identifiantMessages = 0;
-		this.timeoutsTropCourts = 0;
-	}
-
-
-
-	/**
-	 * Définir l'agent auquel cet hôte est connecté.
-	 * 
-	 * @param agent
-	 *        l'agent auquel cet hôte est connecté
-	 */
-	public void setAgent(final Agent agent) {
-		this.agent = agent;
-	}
-
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString() {
-		return "Hote " + getNumero();
-	}
-	
-	
-	
-	
-	
-	
-	
 	/**
 	 * Appelé quand cet hôte termine de traiter un message.
-	 * 
+	 *
 	 * @param message
 	 *        le message que cet hôte finit de traiter
 	 */
@@ -418,45 +185,80 @@ public class Hote extends AbstractEntiteSimulationReseau {
 			throw new IllegalArgumentException(
 					"Le message que l'hôte termine de traiter ne peut pas être null!");
 		}
-		
-		if(message instanceof MessageSimple){
-			LOGGER.trace("Hote "+getNumero()+" termine de traiter un message simple au temps "+getSimulation().getHorloge());
+		if (message instanceof MessageSimple) {
+			LOGGER.trace("Hote " + getNumero()
+					+ " termine de traiter un message simple au temps "
+					+ getSimulation().getHorloge());
 			MessageSimple tmp = (MessageSimple) message;
-			
 			// on crée l'accusé de réception
-			AccuseReception accuseReception = new AccuseReception(this, tmp.getSource(), tmp);
-			
-			// création de l'évènement de réception par l'agent (on envoie notre accusé de réception à notre agent)
-			AgentRecoitMessage evtAgentRecoitMessage = genererEvenementAgentRecoitMessage(accuseReception);
-			
+			AccuseReception accuseReception =
+					new AccuseReception(this, tmp.getSource(), tmp);
+			// création de l'évènement de réception par l'agent (on envoie notre
+			// accusé de réception à notre agent)
+			AgentRecoitMessage evtAgentRecoitMessage =
+					genererEvenementAgentRecoitMessage(accuseReception);
 			// ajout de l'évènement à la FEL
-			getSimulation().getFutureEventList().planifierEvenement(evtAgentRecoitMessage);
-		}else if(message instanceof AccuseReception){
-			LOGGER.trace("Hote "+getNumero()+" termine de traiter un accuse de reception au temps "+getSimulation().getHorloge());
+			getSimulation().getFutureEventList().planifierEvenement(
+					evtAgentRecoitMessage);
+		} else if (message instanceof AccuseReception) {
+			LOGGER.trace("Hote " + getNumero()
+					+ " termine de traiter un accuse de reception au temps "
+					+ getSimulation().getHorloge());
 			AccuseReception tmp = (AccuseReception) message;
-			
 			// on incrémente le compteur d'accusés de réception reçus
 			accusesReceptionRecus++;
-			
-			//TODO compléter (voir UML!)
-			
-			// on vérifie sur la FEL s'il y a un évènement timeout correspondant à ce message
-			HoteTimeoutReceptionAccuse timeoutCorrespondant = getSimulation().getFutureEventList().trouverEvenementTimeoutPourMessage(tmp.getMessageOrigine());
-			
-			if(timeoutCorrespondant == null){
-				// si on a pas trouvé de timeout correspondant à ce message, ça veut dire qu'on
-				// l'a déjà réexpédié. Donc puisqu'on reçoit maintenant un accusé, ça signifie
-				// que le timeout a été déclenché trop tôt
-				// on incrémente le compteur de messages réexpédiés à cause d'un timeout trop court
+			if (accusesNonRecus.contains(Integer.valueOf(tmp
+					.getMessageOrigine().getNumeroMessage()))) {
+				accusesNonRecus.remove(Integer.valueOf(tmp.getMessageOrigine()
+						.getNumeroMessage()));
+			}
+			// on incrémente le temps total passé par les messages dans des
+			// buffers
+			tempsTotalDansBuffers +=
+					tmp.getTempsPasseDansBuffers()
+							+ tmp.getMessageOrigine()
+									.getTempsPasseDansBuffers();
+			// on incrémente le temps total de voyage des messages
+			tempsTotalVoyageMessages +=
+					getSimulation().getHorloge()
+							- tmp.getMessageOrigine().getTempsEmission();
+
+			// on vérifie si ce message est celui ayant mis le plus de temps à
+			// effectuer
+			// son trajet complet. Si oui il devient le max.
+			long tempsTrajetTotalDuMessage =
+					getSimulation().getHorloge()
+							- tmp.getMessageOrigine().getTempsEmission();
+			if (tempsTrajetTotalDuMessage > messageTempsMax.getTempsTrajet()) {
+				messageTempsMax.setMessage(tmp.getMessageOrigine());
+				messageTempsMax.setTempsTrajet(tempsTrajetTotalDuMessage);
+			}
+
+
+			// on vérifie sur la FEL s'il y a un évènement timeout correspondant
+			// à ce message
+			HoteTimeoutReceptionAccuse timeoutCorrespondant =
+					getSimulation().getFutureEventList()
+							.trouverEvenementTimeoutPourMessage(
+									tmp.getMessageOrigine());
+			if (timeoutCorrespondant == null) {
+				// si on a pas trouvé de timeout correspondant à ce message, ça
+				// veut dire qu'on
+				// l'a déjà réexpédié (donc il y a eu un timeout trop court
+				// on incrémente le compteur de messages réexpédiés à cause d'un
+				// timeout trop court
 				timeoutsTropCourts++;
-			}else{
-				// si on a trouvé un évènement correspondant (accusé reçu à temps!)
-				// on le supprime de la FEL (plus de timeout nécessaire puisqu'on a l'accusé)
-				getSimulation().getFutureEventList().supprimer(timeoutCorrespondant);
+			} else {
+				// si on a trouvé un évènement correspondant (accusé reçu à
+				// temps!)
+				// on le supprime de la FEL (plus de timeout nécessaire
+				// puisqu'on a l'accusé)
+				getSimulation().getFutureEventList().supprimer(
+						timeoutCorrespondant);
 			}
 		}
-		
-		// maintenant qu'on a traite le message, on vérifie si le buffer est vide ou non
+		// maintenant qu'on a traite le message, on vérifie si le buffer est
+		// vide ou non
 		// pour commencer si possible à en traiter un autre
 		if (getBuffer().isEmpty()) {
 			// plus rien à traiter, on décrémente le nombre de messages en cours
@@ -479,5 +281,305 @@ public class Hote extends AbstractEntiteSimulationReseau {
 			getSimulation().getFutureEventList().planifierEvenement(
 					evtHoteFinTraitementMessage);
 		}
+	}
+
+
+
+	/**
+	 * Génère un évènement de type AgentRecoitMessage.
+	 *
+	 * @param message
+	 *        le message que l'agent doit recevoir
+	 * @return l'évènement créé
+	 */
+	private AgentRecoitMessage genererEvenementAgentRecoitMessage(
+			final Message message) {
+		return new AgentRecoitMessage(message, this.getAgent(), getSimulation()
+				.getHorloge()
+				+ getConfiguration().getConfigurationSimulationReseau()
+						.getDelaiEntreEntites());
+	}
+
+
+
+	/**
+	 * Génère et place sur la FEL un évènement de type HoteEnvoieMessageOriginal
+	 * pour cet hôte.
+	 */
+	public HoteEnvoieMessageOriginal genererEvenementHoteEnvoieMessageOriginal() {
+		long tempsEnvoi = genererTempsProchainEnvoi();
+		return new HoteEnvoieMessageOriginal(this, tempsEnvoi);
+	}
+
+
+
+	/**
+	 * Génère et ajoute à la FEL un évènement de type HoteFinTraitementMessage
+	 *
+	 * @param message
+	 *        le message qu'on finira de traiter
+	 */
+	private HoteFinTraitementMessage genererEvenementHoteFinTraitementMessage(
+			final Message message) {
+		return new HoteFinTraitementMessage(message, this, getSimulation()
+				.getHorloge() + 1);
+	}
+
+
+
+	/**
+	 * Génère un évènement de type HoteTimeoutReceptionAccuse.
+	 *
+	 * @param message
+	 *        le message pour lequel aucun accusé de réception n'a été reçu
+	 * @return l'évènement créé
+	 */
+	private HoteTimeoutReceptionAccuse genererEvenementHoteTimeoutReceptionAccuse(
+			final MessageSimple message) {
+		return new HoteTimeoutReceptionAccuse(message, this, getSimulation()
+				.getHorloge()
+				+ getConfiguration().getConfigurationHotes()
+						.getTimeoutReemissionMessages());
+	}
+
+
+
+	/**
+	 * Générer le prochain temps d'envoi.
+	 *
+	 * @return le prochain temps d'envoi.
+	 */
+	private long genererTempsProchainEnvoi() {
+		int tempsInterEnvois =
+				generateurTempsEnvoi.nextInt(getConfiguration()
+						.getConfigurationHotes().getTempsMaxInterEnvois()) + 1;
+		// on fait +1 et donc par exemple 0-5 devient 1-6
+		return getSimulation().getHorloge() + tempsInterEnvois;
+	}
+
+
+
+	/**
+	 * Récupérer le nombre d'accusés de réception reçus.
+	 *
+	 * @return le nombre d'accusés de réception reçus.
+	 */
+	public int getAccusesReceptionRecus() {
+		return accusesReceptionRecus;
+	}
+
+
+
+	/**
+	 * Récupérer l'agent auquel cet hôte est connecté.
+	 *
+	 * @return l'agent auquel cet hôte est connecté
+	 */
+	public Agent getAgent() {
+		return agent;
+	}
+
+
+
+	/**
+	 * Récupérer le message le plus réémis pour cet hôte.
+	 *
+	 * @return le message le plus réémis pour cet hôte
+	 */
+	public MessageSimple getMessageLePlusReemis() {
+		return messageLePlusReemis;
+	}
+
+
+
+	/**
+	 * Récupérer le nombre de messages envoyés.
+	 *
+	 * @return le nombre de messages envoyés.
+	 */
+	public int getMessagesEnvoyes() {
+		return messagesEnvoyes;
+	}
+
+
+
+	/**
+	 * Récupérer le nombre de messages réexpédiés.
+	 *
+	 * @return le nombre de messages réexpédiés
+	 */
+	public int getMessagesReexpedies() {
+		return messagesReexpedies;
+	}
+
+
+
+	/**
+	 * Récupérer le message ayant mis le plus de temps à effectuer son trajet
+	 * complet.
+	 *
+	 * @return le message ayant mis le plus de temps à effectuer son trajet
+	 *         complet
+	 */
+	public MessageTempsMax getMessageTempsMax() {
+		return messageTempsMax;
+	}
+
+
+
+	/**
+	 * Récupérer le temps total passé par les messages dans des buffers.
+	 *
+	 * @return le temps total passé par les messages dans des buffers
+	 */
+	public long getTempsTotalDansBuffers() {
+		return tempsTotalDansBuffers;
+	}
+
+
+
+	/**
+	 * Récupérer le temps total de voyage des messages.
+	 *
+	 * @return le temps total de voyage des messages
+	 */
+	public long getTempsTotalVoyageMessages() {
+		return tempsTotalVoyageMessages;
+	}
+
+
+
+	/**
+	 * Récupérer le nombre de messages réexpédiés à cause d'un timeout trop
+	 * court.
+	 *
+	 * @return le nombre de messages réexpédiés à cause d'un timeout trop court
+	 */
+	public int getTimeoutsTropCourts() {
+		return timeoutsTropCourts;
+	}
+
+
+
+	/**
+	 * Appelé quand cet hôte reçoit un message.
+	 *
+	 * @param message
+	 *        le message qu'il reçoit
+	 */
+	public void recoitMessage(final Message message) {
+		if (message == null) {
+			throw new IllegalArgumentException(
+					"Le message ne peut pas être null!");
+		}
+		if (messagesEnCoursTraitement < getConfiguration()
+				.getConfigurationHotes().getNombreMaxTraitementsSimultanes()) {
+			LOGGER.trace("Hote " + getNumero()
+					+ " commence le traitement d'un message");
+			// on peut traiter le message directement donc on génère
+			// l'évènement de fin de traitement
+			HoteFinTraitementMessage evtHoteFinTraitementMessage =
+					genererEvenementHoteFinTraitementMessage(message);
+			// on l'ajoute sur la FEL
+			getSimulation().getFutureEventList().planifierEvenement(
+					evtHoteFinTraitementMessage);
+			// on incrémente le compteur de messages en cours de traitement
+			messagesEnCoursTraitement++;
+			return; // le traitement a commencé, on quitte la méthode
+		}
+		// on ne peut pas le traiter directement donc on le place dans le buffer
+		// (le buffer des hôtes est supposé infini)
+		LOGGER.trace("Hote " + getNumero()
+				+ " place un message dans son buffer");
+		getBuffer().add(
+				new MessageEnAttente(message, getSimulation().getHorloge()));
+	}
+
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void reset() {
+		LOGGER.trace("Réinitialisation de l'hôte " + getNumero());
+		super.reset();
+		this.messagesEnvoyes = 0;
+		this.messagesReexpedies = 0;
+		this.accusesReceptionRecus = 0;
+		this.tempsTotalVoyageMessages = 0;
+		this.tempsTotalDansBuffers = 0;
+		this.messagesEnCoursTraitement = 0;
+		this.identifiantMessages = 0;
+		this.timeoutsTropCourts = 0;
+		this.accusesNonRecus.clear();
+		this.messageLePlusReemis = MessageSimple.creerMessageBidon();
+		this.messageTempsMax.setMessage(null);
+		this.messageTempsMax.setTempsTrajet(0);
+	}
+
+
+
+	/**
+	 * Définir l'agent auquel cet hôte est connecté.
+	 *
+	 * @param agent
+	 *        l'agent auquel cet hôte est connecté
+	 */
+	public void setAgent(final Agent agent) {
+		this.agent = agent;
+	}
+
+
+
+	/**
+	 * Timeout pour la réception d'un accusé.
+	 *
+	 * @param message
+	 *        le message pour lequel on a pas encore reçu d'accusé
+	 */
+	public void timeoutReceptionAccuse(final MessageSimple message) {
+		// on ne réexpédie que si on a pas encore reçu d'accusé pour cet
+		// identifiant
+		if (accusesNonRecus.contains(Integer
+				.valueOf(message.getNumeroMessage()))) {
+			// on incrémente le compteur de messages réexpédiés
+			messagesReexpedies++;
+			// on recrée le message pour le renvoyer (ça doit être une instance
+			// différence!) mais on garde le même ID
+			MessageSimple nouveauMessage =
+					new MessageSimple(this, message.getDestination(), message
+							.getNumeroMessage(),
+							message.getNumeroEmission() + 1, getSimulation()
+									.getHorloge());
+
+			// on garde une trace du message ayant été réémis le plus de fois
+			if (nouveauMessage.getNumeroEmission() > messageLePlusReemis
+					.getNumeroEmission()) {
+				messageLePlusReemis = nouveauMessage;
+			}
+			// création de l'évènement de réception par l'agent de l'hôte
+			AgentRecoitMessage evenementReceptionAgent =
+					genererEvenementAgentRecoitMessage(nouveauMessage);
+			// ajout de l'évènement de réception par l'agent à la FEL
+			getSimulation().getFutureEventList().planifierEvenement(
+					evenementReceptionAgent);
+			// création de l'évènement timeout correspondant
+			HoteTimeoutReceptionAccuse evenementTimeout =
+					genererEvenementHoteTimeoutReceptionAccuse(nouveauMessage);
+			// ajout de l'évènement timeout à la FEL (nouveau timeout)
+			getSimulation().getFutureEventList().planifierEvenement(
+					evenementTimeout);
+		}
+	}
+
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Hote " + getNumero();
 	}
 }
