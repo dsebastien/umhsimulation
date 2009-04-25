@@ -138,7 +138,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		mettreAJourStatTauxUtilisationBuffer();
 		
 		// vérification du destinataire final de ce message
-		if (this == message.getDestination().getAgent()) {
+		if (this.equals(message.getDestination().getAgent())) {
 			// message à destination d'un hôte de cet agent
 			// donc on peut le lui remettre
 			HoteRecoitMessage evtHoteRecoitMessage =

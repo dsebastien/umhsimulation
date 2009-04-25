@@ -48,4 +48,9 @@ public abstract class Message extends AbstractMessage<Hote> {
 	public long getTempsPasseDansBuffers() {
 		return tempsPasseDansBuffers;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public abstract String toString();
 }
