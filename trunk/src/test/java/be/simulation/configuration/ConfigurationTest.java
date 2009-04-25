@@ -617,7 +617,7 @@ public class ConfigurationTest {
 				};
 		configuration.parse(args);
 		assertTrue(Long.MAX_VALUE == configuration
-				.getConfigurationAgents().getTailleBuffer());
+				.getConfigurationAgents().getTailleMaxBuffer());
 		valeur = "500";
 		args =
 				new String[] {
@@ -627,7 +627,7 @@ public class ConfigurationTest {
 				};
 		configuration.parse(args);
 		assertTrue(Long.valueOf(valeur).intValue() == configuration
-				.getConfigurationAgents().getTailleBuffer());
+				.getConfigurationAgents().getTailleMaxBuffer());
 		valeur = "1";
 		args =
 				new String[] {
@@ -637,7 +637,7 @@ public class ConfigurationTest {
 				};
 		configuration.parse(args);
 		assertTrue(Long.valueOf(valeur).intValue() == configuration
-				.getConfigurationAgents().getTailleBuffer());
+				.getConfigurationAgents().getTailleMaxBuffer());
 	}
 
 

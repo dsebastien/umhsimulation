@@ -472,7 +472,7 @@ public class Configuration {
 		LOGGER.info("Agents - Nombre d'hotes: "
 				+ this.getConfigurationAgents().getNombreHotes());
 		LOGGER.info("Agents - Taille de buffer: "
-				+ this.getConfigurationAgents().getTailleBuffer());
+				+ this.getConfigurationAgents().getTailleMaxBuffer());
 		LOGGER.info("Agents - Taux de pertes brutales: "
 				+ Utilitaires.pourcentage(this.getConfigurationAgents()
 						.getTauxPerteBrutale()));

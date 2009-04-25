@@ -2,7 +2,7 @@ package be.simulation.evenements;
 
 import be.simulation.core.evenements.Evenement;
 import be.simulation.entites.Hote;
-import be.simulation.messages.Message;
+import be.simulation.messages.MessageSimple;
 
 /**
  * Evenement déclenché quand un hôte n'a pas reçu un accusé de réception à temps.
@@ -19,7 +19,7 @@ public class HoteTimeoutReceptionAccuse extends Evenement {
 	/**
 	 * Le message correspondant à ce timeout.
 	 */
-	private final Message	message;
+	private final MessageSimple	message;
 
 
 
@@ -31,7 +31,8 @@ public class HoteTimeoutReceptionAccuse extends Evenement {
 	 * @param hote l'hôte qui n'a pas reçu d'accusé de réception pour ce message
 	 * @param tempsPrevu le temps de simulation auquel cet évènement doit se produire
 	 **/
-	public HoteTimeoutReceptionAccuse(final Message message, final Hote hote,
+	public HoteTimeoutReceptionAccuse(final MessageSimple message,
+			final Hote hote,
 			final long tempsPrevu) {
 		super(tempsPrevu);
 		if (message == null) {
@@ -70,7 +71,7 @@ public class HoteTimeoutReceptionAccuse extends Evenement {
 	 * 
 	 * @return le message correspondant à ce timeout
 	 */
-	public Message getMessage() {
+	public MessageSimple getMessage() {
 		return message;
 	}
 
