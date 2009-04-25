@@ -92,4 +92,9 @@ public class Route {
 	public Agent getDestination() {
 		return destination;
 	}
+	
+	@Override
+	public String toString(){
+		return "La route pour à destination de "+destination.getNumero()+" passe par "+voisin;
+	}
 }

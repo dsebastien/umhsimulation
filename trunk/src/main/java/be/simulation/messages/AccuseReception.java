@@ -39,7 +39,7 @@ public class AccuseReception extends Message {
 	}
 
 
-
+	
 	/**
 	 * Récupérer le message d'origine pour lequel cet accusé de réception est
 	 * envoyé.
@@ -48,5 +48,13 @@ public class AccuseReception extends Message {
 	 */
 	public MessageSimple getMessageOrigine() {
 		return messageOrigine;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Accusé de réception envoyé de "+getSource().getNumero()+" (Agent "+getSource().getAgent().getNumero()+") à "+getDestination().getNumero()+" (Agent "+getDestination().getAgent().getNumero()+")";
 	}
 }

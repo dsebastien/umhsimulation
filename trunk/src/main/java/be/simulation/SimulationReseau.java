@@ -95,7 +95,7 @@ public class SimulationReseau extends AbstractSimulation {
 		long tempsTotalVoyage = 0;
 
 		// on va chercher le message ayant été réémis le plus de fois
-		MessageSimple messageLePlusReemis = MessageSimple.creerMessageBidon();
+		MessageSimple messageLePlusReemis = MessageSimple.creerFauxMessage();
 
 		MessageTempsMax messageTempsMax = new MessageTempsMax();
 
@@ -150,8 +150,8 @@ public class SimulationReseau extends AbstractSimulation {
 
 		// TODO ajouter détails (+ par agent?)
 		LOGGER
-				.info("Le message ayant mis le plus de temps à effectuer son trajet complet a mis: "
-						+ messageTempsMax.getTempsTrajet());
+				.info("Le message ayant mis le plus de temps à être acquitté a pris "+ messageTempsMax.getTempsTrajet()+" unités de temps");
+		LOGGER.info("lol");
 	}
 
 
