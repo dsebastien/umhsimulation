@@ -29,7 +29,7 @@
 		<property name="nombreHotes" value="${agents.nombre_hotes}" />
 		<property name="tauxPerteBrutale" value="${agents.taux_perte_brutale}" />
 		<property name="tempsTraitementMessage" value="${agents.temps_traitement_message}" />
-		<property name="tailleBuffer" value="${agents.taille_buffer}" />
+		<property name="tailleMaxBuffer" value="${agents.taille_buffer}" />
 	</bean>
 
 	<bean id="configurationHotes" class="be.simulation.configuration.ConfigurationHotes"

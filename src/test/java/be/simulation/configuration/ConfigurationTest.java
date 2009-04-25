@@ -612,7 +612,7 @@ public class ConfigurationTest {
 		String[] args =
 				{
 					PREFIXE
-							+ Configuration.OPTION_AGENTS_TAILLE_BUFFER
+							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
 							+ SEPARATEUR + valeur
 				};
 		configuration.parse(args);
@@ -622,7 +622,7 @@ public class ConfigurationTest {
 		args =
 				new String[] {
 					PREFIXE
-							+ Configuration.OPTION_AGENTS_TAILLE_BUFFER
+							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
 							+ SEPARATEUR + valeur
 				};
 		configuration.parse(args);
@@ -632,7 +632,7 @@ public class ConfigurationTest {
 		args =
 				new String[] {
 					PREFIXE
-							+ Configuration.OPTION_AGENTS_TAILLE_BUFFER
+							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
 							+ SEPARATEUR + valeur
 				};
 		configuration.parse(args);
@@ -651,7 +651,7 @@ public class ConfigurationTest {
 		String[] args =
 				{
 					PREFIXE
-							+ Configuration.OPTION_AGENTS_TAILLE_BUFFER
+							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
 							+ SEPARATEUR + "-1"
 				};
 		try {
@@ -663,7 +663,7 @@ public class ConfigurationTest {
 		args =
 				new String[] {
 					PREFIXE
-							+ Configuration.OPTION_AGENTS_TAILLE_BUFFER
+							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
 							+ SEPARATEUR + "-100"
 				};
 		try {

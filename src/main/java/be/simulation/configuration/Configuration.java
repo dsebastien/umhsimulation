@@ -81,10 +81,10 @@ public class Configuration {
 	public static final String					OPTION_SIMULATION_DUREE_INITIALISATION		=
 																									"dureeInitialisation";
 	/**
-	 * OPTION - Taille des buffers des agents.
+	 * OPTION - Taille maximale du buffer des agents.
 	 */
-	public static final String					OPTION_AGENTS_TAILLE_BUFFER					=
-																									"agentsTailleBuffer";
+	public static final String					OPTION_AGENTS_TAILLE_MAX_BUFFER					=
+																									"agentsTailleMaxBuffer";
 	/**
 	 * OPTION - Timeout pour la réémission des messages.
 	 */
@@ -126,7 +126,7 @@ public class Configuration {
 	private final OptionParser					optionParser;
 	private final OptionSpec<Long>				optionSimulationDuree;
 	private final OptionSpec<Long>				optionSimulationDureeInitialisation;
-	private final OptionSpec<Long>				optionAgentsTailleBuffer;
+	private final OptionSpec<Long>				optionAgentsTailleMaxBuffer;
 	private final OptionSpec<Integer>			optionHotesTimeoutReemissionMessages;
 	private final OptionSpec<Integer>			optionSimulationDelaiEntreEntites;
 
@@ -186,8 +186,8 @@ public class Configuration {
 								OPTION_HOTES_TIMEOUT_REEMISSION_MESSAGES,
 								"Timeout après lequel les messages doivent etre réexpédiés si aucun accusé de réception n'est reçu (> 80)")
 						.withRequiredArg().ofType(Integer.class);
-		optionAgentsTailleBuffer =
-				optionParser.accepts(OPTION_AGENTS_TAILLE_BUFFER,
+		optionAgentsTailleMaxBuffer =
+				optionParser.accepts(OPTION_AGENTS_TAILLE_MAX_BUFFER,
 						"Taille des buffers des agents (>= 0)")
 						.withRequiredArg().ofType(Long.class);
 		optionAgentsTempsTraitementMessage =
@@ -290,15 +290,15 @@ public class Configuration {
 			configurationAgents
 					.setTempsTraitementMessage(tempsTraitementMessage);
 		}
-		// taille du buffer
-		if (options.has(optionAgentsTailleBuffer)) {
+		// taille maximale du buffer des agents
+		if (options.has(optionAgentsTailleMaxBuffer)) {
 			final long tailleBufferAgents =
-					options.valueOf(optionAgentsTailleBuffer);
+					options.valueOf(optionAgentsTailleMaxBuffer);
 			if (tailleBufferAgents < 0L) {
 				throw new ExceptionOptionsInvalides(
-						"La taille des buffers des agents ne peut pas être < 0");
+						"La taille maximale du buffer des agents ne peut pas être < 0");
 			}
-			configurationAgents.setTailleBuffer(tailleBufferAgents);
+			configurationAgents.setTailleMaxBuffer(tailleBufferAgents);
 		}
 	}
 

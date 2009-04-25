@@ -23,7 +23,7 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	 * Taille du buffer des agents (>=0). 0 = infinie.
 	 * 
 	 */
-	private long		tailleBuffer;
+	private long		tailleMaxBuffer;
 	/**
 	 * Le taux de perte brutale des agents (0 <= taux < 1).
 	 */
@@ -59,12 +59,12 @@ public class ConfigurationAgents extends AbstractConfiguration {
 
 
 	/**
-	 * Récupérer la taille du buffer des agents.
+	 * Récupérer la taille maximale du buffer des agents.
 	 * 
-	 * @return la taille du buffer des agents
+	 * @return la taille maximal du buffer des agents
 	 */
 	public long getTailleMaxBuffer() {
-		return tailleBuffer;
+		return tailleMaxBuffer;
 	}
 
 
@@ -110,20 +110,20 @@ public class ConfigurationAgents extends AbstractConfiguration {
 
 
 	/**
-	 * Définir la taille du buffer des agents (>=0). 0 = infinie.
+	 * Définir la taille maximale du buffer des agents (>=0). 0 = infinie.
 	 * 
 	 * @param tailleBuffer
-	 *        la taille du buffer des agents
+	 *        la taille maximale du buffer des agents
 	 */
-	public void setTailleBuffer(final long tailleBuffer) {
-		if (tailleBuffer < 0L) {
+	public void setTailleMaxBuffer(final long tailleMaxBuffer) {
+		if (tailleMaxBuffer < 0L) {
 			throw new IllegalArgumentException(
 					"La taille du buffer des agents doit etre >=0");
-		}else if(tailleBuffer == 0L){
-			this.tailleBuffer = Long.MAX_VALUE;
+		}else if(tailleMaxBuffer == 0L){
+			this.tailleMaxBuffer = Long.MAX_VALUE;
 			
 		}else{
-			this.tailleBuffer = tailleBuffer;
+			this.tailleMaxBuffer = tailleMaxBuffer;
 		}
 		
 	}
