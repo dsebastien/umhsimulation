@@ -161,33 +161,6 @@ public class SimulationReseau extends AbstractSimulation {
 
 
 
-	/**
-	 * Calcule et affiche les stats concernant le taux d'utilisation du buffer
-	 * des agents.
-	 */
-	private void calculerEtAfficherTauxUtilisationBufferAgents() {
-		double sommeSommeTauxUtilisationBuffersAgents = 0.0;
-		for (Agent agent : agents) {
-			double moyenne =
-					agent.getSommeNiveauxOccupationBuffer()
-							/ getConfiguration()
-									.getConfigurationSimulationReseau()
-									.getDuree()
-							/ getConfiguration().getConfigurationAgents()
-									.getTailleMaxBuffer();
-			sommeSommeTauxUtilisationBuffersAgents += moyenne;
-			LOGGER.info("Le buffer de l'agent " + agent.getNumero()
-					+ " a été utilisé en moyenne à "
-					+ Utilitaires.pourcentage(moyenne));
-		}
-		// globalement
-		// on doit diviser par le nombre d'agents puisque là on a le total pour
-		// tous les agents
-		double moyenneGlobale =
-				sommeSommeTauxUtilisationBuffersAgents / agents.size();
-		LOGGER.info("Les buffers des agents ont été utilisés en moyenne à "
-				+ Utilitaires.pourcentage(moyenneGlobale));
-	}
 
 
 
@@ -252,6 +225,37 @@ public class SimulationReseau extends AbstractSimulation {
 	public void afterPropertiesSet() throws Exception {
 		super.afterPropertiesSet();
 	}
+	
+	
+	/**
+	 * Calcule et affiche les stats concernant le taux d'utilisation du buffer
+	 * des agents.
+	 */
+	private void calculerEtAfficherTauxUtilisationBufferAgents() {
+		double sommeSommeTauxUtilisationBuffersAgents = 0.0;
+		//TODO regrouper avec la boucle de simulation
+		for (Agent agent : agents) {
+			double moyenne =
+					agent.getSommeNiveauxOccupationBuffer()
+							/ getConfiguration()
+									.getConfigurationSimulationReseau()
+									.getDuree()
+							/ getConfiguration().getConfigurationAgents()
+									.getTailleMaxBuffer();
+			sommeSommeTauxUtilisationBuffersAgents += moyenne;
+			LOGGER.info("Le buffer de l'agent " + agent.getNumero()
+					+ " a été utilisé en moyenne à "
+					+ Utilitaires.pourcentage(moyenne));
+		}
+		// globalement
+		// on doit diviser par le nombre d'agents puisque là on a le total pour
+		// tous les agents
+		double moyenneGlobale =
+				sommeSommeTauxUtilisationBuffersAgents / agents.size();
+		LOGGER.info("Les buffers des agents ont été utilisés en moyenne à "
+				+ Utilitaires.pourcentage(moyenneGlobale));
+	}
+
 
 
 
@@ -279,19 +283,18 @@ public class SimulationReseau extends AbstractSimulation {
 					((double) Hote.TOTAL_TEMPS_BUFFERS / (double) Hote.TOTAL_ACCUSES_RECUS);
 				double tempsMoyenVoyageComplet =
 					((double) Hote.TOTAL_TEMPS_BUFFERS / (double) Hote.TOTAL_TEMPS_VOYAGE_MESSAGES);
-				
-				int totalMessagesPerdus = Agent.TOTAL_MESSAGES_PERDUS_BRUTALEMENT + Agent.TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN; 
+
+				int totalMessagesPerdus = Agent.TOTAL_MESSAGES_PERDUS_BRUTALEMENT + Agent.TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN;
+				double pourcentageMessagesPerdus = (double) totalMessagesPerdus / (double) Agent.TOTAL_MESSAGES_RECUS;
+				 
 				LOGGER.info("Temps actuel de simulation: "+getHorloge()+"/"+getConfiguration().getConfigurationSimulationReseau().getDuree());
 				LOGGER.info("Agents - Messages reçus: "+Agent.TOTAL_MESSAGES_RECUS);
-				LOGGER.info("Agents - Messages perdus: "+totalMessagesPerdus+" ("+Utilitaires.pourcentage((double) totalMessagesPerdus /(double) Agent.TOTAL_MESSAGES_RECUS)+")");
-				LOGGER.info("Agents - Messages perdus brutalement: "+Agent.TOTAL_MESSAGES_PERDUS_BRUTALEMENT);
-				LOGGER.info("Agents - Pourcentage de messages perdus brutalement: "+Utilitaires.pourcentage((double)Agent.TOTAL_MESSAGES_PERDUS_BRUTALEMENT/(double)Agent.TOTAL_MESSAGES_RECUS));
-				LOGGER.info("Agents - Messages perdus buffer plein: "+Agent.TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN);
-				LOGGER.info("Agents - Pourcentage de messages perdus buffer plein: "+Utilitaires.pourcentage((double)Agent.TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN/(double)Agent.TOTAL_MESSAGES_RECUS));
+				LOGGER.info("Agents - Messages perdus: "+totalMessagesPerdus+" ("+Utilitaires.pourcentage(pourcentageMessagesPerdus));
+				LOGGER.info("Agents - Messages perdus brutalement: "+Agent.TOTAL_MESSAGES_PERDUS_BRUTALEMENT+" ("+Utilitaires.pourcentage((double)Agent.TOTAL_MESSAGES_PERDUS_BRUTALEMENT/(double)Agent.TOTAL_MESSAGES_RECUS)+")");
+				LOGGER.info("Agents - Messages perdus buffer plein: "+Agent.TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN+" ("+Utilitaires.pourcentage((double)Agent.TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN/(double)Agent.TOTAL_MESSAGES_RECUS)+")");
 				LOGGER.info("Agents - Messages en cours de traitement: "+Agent.TOTAL_MESSAGES_EN_COURS_TRAITEMENT);
 				LOGGER.info("Hotes - Messages originaux envoyés: "+Hote.TOTAL_MESSAGES_ENVOYES);
-				LOGGER.info("Hotes - Messages réexpédiés: "+Hote.TOTAL_MESSAGES_REEXPEDIES);
-				LOGGER.info("Hotes - Pourcentage de réémissions: "+Utilitaires.pourcentage((double) Hote.TOTAL_MESSAGES_REEXPEDIES / (double) Hote.TOTAL_MESSAGES_ENVOYES));
+				LOGGER.info("Hotes - Messages réexpédiés: "+Hote.TOTAL_MESSAGES_REEXPEDIES+" ("+Utilitaires.pourcentage((double) Hote.TOTAL_MESSAGES_REEXPEDIES / (double) Hote.TOTAL_MESSAGES_ENVOYES)+")");
 				LOGGER.info("Hotes - Accuses de réception reçus: "+Hote.TOTAL_ACCUSES_RECUS);
 				LOGGER.info("Hotes - Timeouts trop courts: "+Hote.TOTAL_TIMEOUTS_TROP_COURTS);
 				LOGGER.info("Hotes - Messages en cours de traitement: "+Hote.TOTAL_MESSAGES_EN_COURS_TRAITEMENT);
@@ -300,7 +303,6 @@ public class SimulationReseau extends AbstractSimulation {
 				LOGGER.info("Les " + Hote.TOTAL_ACCUSES_RECUS + " messages ont passé en absolu " + tempsMoyenVoyageAbsolu + " unités de temps dans des buffers");
 				LOGGER.info("Les messages ont passé en moyenne " + Utilitaires.pourcentage(tempsMoyenVoyageComplet)	+ " de leur temps de voyage complet dans des buffers");
 				LOGGER.info("Le message ayant mis le plus de temps à être acquitté a pris "+ Hote.MESSAGE_TEMPS_MAX.getTempsTrajet()+" unités de temps");
-				LOGGER.info("Nombre de timeouts trop courts: "+ Hote.TOTAL_TIMEOUTS_TROP_COURTS);	
 				LOGGER.info("-----------------------------------------------------");
 			}
 			
