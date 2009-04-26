@@ -151,7 +151,6 @@ public class SimulationReseau extends AbstractSimulation {
 		// TODO ajouter détails (+ par agent?)
 		LOGGER
 				.info("Le message ayant mis le plus de temps à être acquitté a pris "+ messageTempsMax.getTempsTrajet()+" unités de temps");
-		LOGGER.info("lol");
 	}
 
 
@@ -164,7 +163,7 @@ public class SimulationReseau extends AbstractSimulation {
 	 * des agents.
 	 */
 	private void calculerEtAfficherTauxUtilisationBufferAgents() {
-		double sommeSommeTauxUtilisationBuffers = 0.0;
+		double sommeSommeTauxUtilisationBuffersAgents = 0.0;
 		for (Agent agent : agents) {
 			double moyenne =
 					agent.getSommeNiveauxOccupationBuffer()
@@ -173,7 +172,7 @@ public class SimulationReseau extends AbstractSimulation {
 									.getDuree()
 							/ getConfiguration().getConfigurationAgents()
 									.getTailleMaxBuffer();
-			sommeSommeTauxUtilisationBuffers += moyenne;
+			sommeSommeTauxUtilisationBuffersAgents += moyenne;
 			LOGGER.info("Le buffer de l'agent " + agent.getNumero()
 					+ " a été utilisé en moyenne à "
 					+ Utilitaires.pourcentage(moyenne));
@@ -182,7 +181,7 @@ public class SimulationReseau extends AbstractSimulation {
 		// on doit diviser par le nombre d'agents puisque là on a le total pour
 		// tous les agents
 		double moyenneGlobale =
-				sommeSommeTauxUtilisationBuffers / agents.size();
+				sommeSommeTauxUtilisationBuffersAgents / agents.size();
 		LOGGER.info("Les buffers des agents ont été utilisés en moyenne à "
 				+ Utilitaires.pourcentage(moyenneGlobale));
 	}

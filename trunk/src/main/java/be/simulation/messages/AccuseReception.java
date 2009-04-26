@@ -27,10 +27,11 @@ public class AccuseReception extends Message {
 	 *        destinataire de cet accusé de réception
 	 * @param messageOrigine
 	 *        le message pour lequel auquel correspond cet accusé de réception.
+	 * @param tempsEmission le temps d'émission de cet accusé
 	 */
 	public AccuseReception(final Hote source, final Hote destination,
-			final MessageSimple messageOrigine) {
-		super(source, destination);
+			final MessageSimple messageOrigine, final long tempsEmission) {
+		super(source, destination, tempsEmission);
 		if (messageOrigine == null) {
 			throw new IllegalArgumentException(
 					"Le message d'origine ne peut pas être null");

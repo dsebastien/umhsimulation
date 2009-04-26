@@ -192,7 +192,7 @@ public class Hote extends AbstractEntiteSimulationReseau {
 			MessageSimple tmp = (MessageSimple) message;
 			// on crée l'accusé de réception
 			AccuseReception accuseReception =
-					new AccuseReception(this, tmp.getSource(), tmp);
+					new AccuseReception(this, tmp.getSource(), tmp, getSimulation().getHorloge());
 			// création de l'évènement de réception par l'agent (on envoie notre
 			// accusé de réception à notre agent)
 			AgentRecoitMessage evtAgentRecoitMessage =
@@ -472,6 +472,10 @@ public class Hote extends AbstractEntiteSimulationReseau {
 			throw new IllegalArgumentException(
 					"Le message ne peut pas être null!");
 		}
+		
+		// on enregistre le temps de réception réel
+		message.setTempsReception(getSimulation().getHorloge());
+		
 		if (messagesEnCoursTraitement < getConfiguration()
 				.getConfigurationHotes().getNombreMaxTraitementsSimultanes()) {
 			LOGGER.trace("Hote " + getNumero()
