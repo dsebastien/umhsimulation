@@ -21,10 +21,24 @@ import be.simulation.messages.utilitaires.MessageTempsMax;
  * @author Mernier Jean-François
  */
 public class Hote extends AbstractEntiteSimulationReseau {
+	// variables tenant l'information globale (pour tous les hôtes)
+	public static int TOTAL_ACCUSES_RECUS = 0;
+	public static int TOTAL_MESSAGES_ENVOYES = 0;
+	public static int TOTAL_MESSAGES_REEXPEDIES = 0;
+	public static int TOTAL_TIMEOUTS_TROP_COURTS = 0;
+	public static int TOTAL_MESSAGES_EN_COURS_TRAITEMENT = 0;
+	public static MessageSimple MESSAGE_LE_PLUS_REEMIS = MessageSimple.creerFauxMessage();
+	public static long TOTAL_TEMPS_VOYAGE_MESSAGES = 0L;
+	public static long TOTAL_TEMPS_BUFFERS = 0L;
+	public static MessageTempsMax	MESSAGE_TEMPS_MAX =	new MessageTempsMax();
+	
+	
+	
+	
 	/**
 	 * Utilisé pour attribuer un numéro unique à chaque hôte.
 	 */
-	private static long				TOTAL_HOTES					= 0;
+	public static long				TOTAL_HOTES					= 0;
 	/**
 	 * Liste qui nous permet de voir si on a déjà reçu un timeout pour un
 	 * message original donné.
@@ -146,6 +160,7 @@ public class Hote extends AbstractEntiteSimulationReseau {
 		MessageSimple message =
 				new MessageSimple(this, hoteDestination, ++identifiantMessages,
 						1, getSimulation().getHorloge());
+		
 		// on ajoute l'identifiant de ce message à la liste
 		// des identifiants pour lesquels on a pas encore reçu
 		// d'ack
@@ -164,6 +179,10 @@ public class Hote extends AbstractEntiteSimulationReseau {
 				evenementTimeout);
 		// incrémentation du nombre de messages envoyés
 		messagesEnvoyes++;
+		
+		// on incrémente aussi l'information globale (pour tous les hôtes)
+		TOTAL_MESSAGES_ENVOYES++;
+		
 		// génération du prochain évènement d'envoi pour cet hôte
 		HoteEnvoieMessageOriginal evtProchainEnvoi =
 				genererEvenementHoteEnvoieMessageOriginal();
@@ -207,6 +226,10 @@ public class Hote extends AbstractEntiteSimulationReseau {
 			AccuseReception tmp = (AccuseReception) message;
 			// on incrémente le compteur d'accusés de réception reçus
 			accusesReceptionRecus++;
+			
+			// on incrémente aussi le compteur global (pour tous les hôtes
+			TOTAL_ACCUSES_RECUS++;
+			
 			if (accusesNonRecus.contains(Integer.valueOf(tmp
 					.getMessageOrigine().getNumeroMessage()))) {
 				accusesNonRecus.remove(Integer.valueOf(tmp.getMessageOrigine()
@@ -214,15 +237,21 @@ public class Hote extends AbstractEntiteSimulationReseau {
 			}
 			// on incrémente le temps total passé par les messages dans des
 			// buffers
-			tempsTotalDansBuffers +=
-					tmp.getTempsPasseDansBuffers()
-							+ tmp.getMessageOrigine()
-									.getTempsPasseDansBuffers();
+			long tempsDansBuffers = tmp.getTempsPasseDansBuffers() + tmp.getMessageOrigine().getTempsPasseDansBuffers();
+			tempsTotalDansBuffers += tempsDansBuffers;
+			
+			// on incrémente aussi l'information globale (pour tous les hôtes)
+			TOTAL_TEMPS_BUFFERS += tempsDansBuffers;
+			
+			
+			
 			// on incrémente le temps total de voyage des messages
-			tempsTotalVoyageMessages +=
-					getSimulation().getHorloge()
-							- tmp.getMessageOrigine().getTempsEmission();
+			long tempsVoyageSupplementaire = getSimulation().getHorloge() - tmp.getMessageOrigine().getTempsEmission();			
+			tempsTotalVoyageMessages += tempsVoyageSupplementaire;
 
+			// on incrémente aussi l'info globale (pour tous les hôtes)
+			TOTAL_TEMPS_VOYAGE_MESSAGES += tempsVoyageSupplementaire;
+			
 			// on vérifie si ce message est celui ayant mis le plus de temps à
 			// effectuer
 			// son trajet complet. Si oui il devient le max.
@@ -233,6 +262,13 @@ public class Hote extends AbstractEntiteSimulationReseau {
 				messageTempsMax.setAccuse(tmp);
 				messageTempsMax.setTempsTrajet(tempsTrajetTotalDuMessage);
 			}
+			
+			// on fait pareil au niveau global (pour tous les hôtes)
+			if(tempsTrajetTotalDuMessage > MESSAGE_TEMPS_MAX.getTempsTrajet()){
+				MESSAGE_TEMPS_MAX.setAccuse(tmp);
+				MESSAGE_TEMPS_MAX.setTempsTrajet(tempsTrajetTotalDuMessage);
+			}
+			
 
 
 			// on vérifie sur la FEL s'il y a un évènement timeout correspondant
@@ -248,6 +284,9 @@ public class Hote extends AbstractEntiteSimulationReseau {
 				// on incrémente le compteur de messages réexpédiés à cause d'un
 				// timeout trop court
 				timeoutsTropCourts++;
+				
+				// on met aussi à jour l'info globale (pour tous les hôtes)
+				TOTAL_TIMEOUTS_TROP_COURTS++;
 			} else {
 				// si on a trouvé un évènement correspondant (accusé reçu à
 				// temps!)
@@ -264,6 +303,9 @@ public class Hote extends AbstractEntiteSimulationReseau {
 			// plus rien à traiter, on décrémente le nombre de messages en cours
 			// de traitement
 			messagesEnCoursTraitement--;
+			
+			// on décrémente aussi l'info au niveau global (pour tous les hôtes)
+			TOTAL_MESSAGES_EN_COURS_TRAITEMENT--;
 		} else {
 			// puisqu'il y a encore des messages en attente, on en prend un et
 			// on commence à le traiter tout de suite
@@ -489,6 +531,10 @@ public class Hote extends AbstractEntiteSimulationReseau {
 					evtHoteFinTraitementMessage);
 			// on incrémente le compteur de messages en cours de traitement
 			messagesEnCoursTraitement++;
+			
+			// on incrémente aussi l'info au niveau global (pour tous les hôtes)
+			TOTAL_MESSAGES_EN_COURS_TRAITEMENT++;
+			
 			return; // le traitement a commencé, on quitte la méthode
 		}
 		// on ne peut pas le traiter directement donc on le place dans le buffer
@@ -520,6 +566,14 @@ public class Hote extends AbstractEntiteSimulationReseau {
 		this.messageLePlusReemis = MessageSimple.creerFauxMessage();
 		this.messageTempsMax.setAccuse(null);
 		this.messageTempsMax.setTempsTrajet(0);
+		TOTAL_ACCUSES_RECUS = 0;
+		TOTAL_MESSAGES_ENVOYES = 0;
+		TOTAL_MESSAGES_REEXPEDIES = 0;
+		MESSAGE_LE_PLUS_REEMIS = MessageSimple.creerFauxMessage();
+		TOTAL_TIMEOUTS_TROP_COURTS = 0;
+		TOTAL_MESSAGES_EN_COURS_TRAITEMENT = 0;
+		TOTAL_TEMPS_VOYAGE_MESSAGES = 0L;
+		TOTAL_TEMPS_BUFFERS = 0L;
 	}
 
 
@@ -549,6 +603,11 @@ public class Hote extends AbstractEntiteSimulationReseau {
 				.valueOf(message.getNumeroMessage()))) {
 			// on incrémente le compteur de messages réexpédiés
 			messagesReexpedies++;
+			
+			// on incrémente aussi le nombre global 
+			// de messages réexpédiés (par tous les hôtes)
+			TOTAL_MESSAGES_REEXPEDIES++;
+			
 			// on recrée le message pour le renvoyer (ça doit être une instance
 			// différence!) mais on garde le même ID
 			MessageSimple nouveauMessage =
@@ -562,6 +621,12 @@ public class Hote extends AbstractEntiteSimulationReseau {
 					.getNumeroEmission()) {
 				messageLePlusReemis = nouveauMessage;
 			}
+			// on fait la même chose mais au niveau global (pour tous les hôtes)
+			if(nouveauMessage.getNumeroEmission() > MESSAGE_LE_PLUS_REEMIS.getNumeroEmission()){
+				MESSAGE_LE_PLUS_REEMIS = nouveauMessage;
+			}
+			
+			
 			// création de l'évènement de réception par l'agent de l'hôte
 			AgentRecoitMessage evenementReceptionAgent =
 					genererEvenementAgentRecoitMessage(nouveauMessage);
