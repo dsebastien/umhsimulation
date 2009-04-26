@@ -90,9 +90,10 @@ public class SimulationReseau extends AbstractSimulation {
 		int totalMessagesReexpedies = 0;
 		int totalMessagesEnvoyes = 0;
 		long tempsTotalBuffer = 0;
-		int nombreAck = 0;
+		int totalAccusesRecus = 0;
 		int nombreHotes = 0;
 		long tempsTotalVoyage = 0;
+		int totalTimeoutsTropCourts = 0;
 
 		// on va chercher le message ayant été réémis le plus de fois
 		MessageSimple messageLePlusReemis = MessageSimple.creerFauxMessage();
@@ -103,10 +104,11 @@ public class SimulationReseau extends AbstractSimulation {
 			for (Hote hote : agent.getHotes()) {
 				totalMessagesReexpedies += hote.getMessagesReexpedies();
 				totalMessagesEnvoyes += hote.getMessagesEnvoyes();
+				totalTimeoutsTropCourts += hote.getTimeoutsTropCourts();
 				if (hote.getAccusesReceptionRecus() > 0) {
 					nombreHotes++;
 					tempsTotalBuffer += hote.getTempsTotalDansBuffers();
-					nombreAck += hote.getAccusesReceptionRecus();
+					totalAccusesRecus += hote.getAccusesReceptionRecus();
 					tempsTotalVoyage += hote.getTempsTotalVoyageMessages();
 					if (hote.getMessageLePlusReemis().getNumeroEmission() > messageLePlusReemis
 							.getNumeroEmission()) {
@@ -129,15 +131,15 @@ public class SimulationReseau extends AbstractSimulation {
 
 		// FIXME attention si nombre hotes == 0
 		double tempsMoyenEntreEmissionEtReceptionAccuse =
-				(double) tempsTotalVoyage / (double) nombreAck;
+				(double) tempsTotalVoyage / (double) totalAccusesRecus;
 		double tempsMoyenVoyageAbsolu =
-				((double) tempsTotalBuffer / (double) nombreAck);
+				((double) tempsTotalBuffer / (double) totalAccusesRecus);
 		double tempsMoyenVoyageComplet =
 				((double) tempsTotalBuffer / (double) tempsTotalVoyage);
 		LOGGER
 				.info("Le temps moyen entre l'émission d'un message et la réception de l'accusé correspondant est de "
 						+ tempsMoyenEntreEmissionEtReceptionAccuse);
-		LOGGER.info("Les " + nombreAck + " messages ont passé en absolu "
+		LOGGER.info("Les " + totalAccusesRecus + " messages ont passé en absolu "
 				+ tempsMoyenVoyageAbsolu + " unités de temps dans des buffers");
 		LOGGER.info("Les messages ont passé en moyenne "
 				+ Utilitaires.pourcentage(tempsMoyenVoyageComplet)
@@ -151,6 +153,7 @@ public class SimulationReseau extends AbstractSimulation {
 		// TODO ajouter détails (+ par agent?)
 		LOGGER
 				.info("Le message ayant mis le plus de temps à être acquitté a pris "+ messageTempsMax.getTempsTrajet()+" unités de temps");
+		LOGGER.info("Nombre de timeouts trop courts: "+ totalTimeoutsTropCourts);
 	}
 
 
