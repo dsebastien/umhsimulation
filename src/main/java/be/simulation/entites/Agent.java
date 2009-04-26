@@ -19,6 +19,12 @@ import be.simulation.routage.Routeur;
  * @author Mernier Jean-François
  */
 public class Agent extends AbstractEntiteSimulationReseau {
+	// variables tenant l'information globale (pour tous les agents)
+	public static int TOTAL_MESSAGES_RECUS = 0;
+	public static int TOTAL_MESSAGES_PERDUS_BRUTALEMENT = 0;
+	public static int TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN = 0;
+	//TODO occupation globale des buffers en temps réel aussi?
+	
 	/**
 	 * Dernier temps de simulation ou le taux d'utilisation du buffer a été mis
 	 * à jour.
@@ -335,6 +341,9 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		}
 		// on incrémente le nombre de messages reçus
 		messagesRecus++;
+		// on incrémente aussi le nombre de messages reçus par les agents en général
+		TOTAL_MESSAGES_RECUS++; 
+		
 		// on détermine si ce message est perdu ou non
 		// (utilisation d'une variable aléatoire)
 		if (estPerdu()) {
@@ -343,6 +352,10 @@ public class Agent extends AbstractEntiteSimulationReseau {
 					+ getSimulation().getHorloge());
 			// on incrémente le compteur de messages perdus brutalement
 			messagesPerdusBrutalement++;
+			
+			// on incrémente le nombre de messages perdus brutalement par tous les agents
+			TOTAL_MESSAGES_PERDUS_BRUTALEMENT++;
+			
 		}else{
 			// est-ce qu'on peut encore traiter un message?
 			if (messagesEnCoursTraitement < getConfiguration()
@@ -384,6 +397,10 @@ public class Agent extends AbstractEntiteSimulationReseau {
 				} else {
 					// le buffer est plein donc le message est perdu
 					messagesPerdusBufferPlein++;
+					
+					// on incrémente le nombre global de messages perdus à cause
+					// d'un buffer plein (pour tous les agents)
+					TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN++;
 				}
 			}
 		}
@@ -403,6 +420,9 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		dernierTempsMiseAJourSommeNiveauxOccupationBuffer = 0;
 		messagesRecus = 0;
 		messagesPerdusBufferPlein = 0;
+		TOTAL_MESSAGES_RECUS = 0;
+		TOTAL_MESSAGES_PERDUS_BRUTALEMENT = 0;
+		TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN = 0;
 		// on réinitialise les hôtes (le nombre d'hôtes par agent dans la
 		// configuration peut avoir changé)
 		initialiserHotes();
