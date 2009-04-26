@@ -1,7 +1,10 @@
 package be.simulation.entites;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import be.simulation.evenements.AgentRecoitMessage;
 import be.simulation.evenements.HoteEnvoieMessageOriginal;
@@ -40,11 +43,11 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	 */
 	public static long				TOTAL_HOTES					= 0;
 	/**
-	 * Liste qui nous permet de voir si on a déjà reçu un timeout pour un
-	 * message original donné.
+	 * Liste des accusés de réception reçus.
 	 */
-	private final List<Integer>		accusesNonRecus				=
-																		new ArrayList<Integer>();
+	private final Map<Integer, AccuseReception>		accusesRecus				=
+																		new HashMap<Integer,AccuseReception>();
+	
 	/**
 	 * Nombre d'accusés de réception reçus.
 	 */
@@ -102,6 +105,15 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	 * Nombre de messages réexpédiés à cause d'un timeout trop court.
 	 */
 	private int						timeoutsTropCourts			= 0;
+
+	
+	
+
+
+	//TODO remove
+	public Map<Integer, AccuseReception> getAccusesRecus() {
+		return accusesRecus;
+	}
 
 
 
@@ -161,10 +173,6 @@ public class Hote extends AbstractEntiteSimulationReseau {
 				new MessageSimple(this, hoteDestination, ++identifiantMessages,
 						1, getSimulation().getHorloge());
 		
-		// on ajoute l'identifiant de ce message à la liste
-		// des identifiants pour lesquels on a pas encore reçu
-		// d'ack
-		accusesNonRecus.add(message.getNumeroMessage());
 		// création de l'évènement de réception par l'agent de l'hôte
 		AgentRecoitMessage evenementReceptionAgent =
 				genererEvenementAgentRecoitMessage(message);
@@ -230,14 +238,18 @@ public class Hote extends AbstractEntiteSimulationReseau {
 			// on incrémente aussi le compteur global (pour tous les hôtes
 			TOTAL_ACCUSES_RECUS++;
 			
-			if (accusesNonRecus.contains(Integer.valueOf(tmp
-					.getMessageOrigine().getNumeroMessage()))) {
-				accusesNonRecus.remove(Integer.valueOf(tmp.getMessageOrigine()
-						.getNumeroMessage()));
+			
+			// si c'est le premier accusé qu'on reçoit pour cet identifiant de message
+			// on garde l'accusé de réception
+			if(!accusesRecus.containsKey(tmp.getMessageOrigine().getNumeroMessage())){
+				accusesRecus.put(tmp.getMessageOrigine().getNumeroMessage(), tmp);
 			}
+			
 			// on incrémente le temps total passé par les messages dans des
 			// buffers
 			long tempsDansBuffers = tmp.getTempsPasseDansBuffers() + tmp.getMessageOrigine().getTempsPasseDansBuffers();
+			
+			
 			tempsTotalDansBuffers += tempsDansBuffers;
 			
 			// on incrémente aussi l'information globale (pour tous les hôtes)
@@ -285,6 +297,7 @@ public class Hote extends AbstractEntiteSimulationReseau {
 				
 				// on met aussi à jour l'info globale (pour tous les hôtes)
 				TOTAL_TIMEOUTS_TROP_COURTS++;
+				
 			} else {
 				// si on a trouvé un évènement correspondant (accusé reçu à
 				// temps!)
@@ -560,7 +573,7 @@ public class Hote extends AbstractEntiteSimulationReseau {
 		this.messagesEnCoursTraitement = 0;
 		this.identifiantMessages = 0;
 		this.timeoutsTropCourts = 0;
-		this.accusesNonRecus.clear();
+		this.accusesRecus.clear();
 		this.messageLePlusReemis = MessageSimple.creerFauxMessage();
 		this.messageTempsMax.setAccuse(null);
 		this.messageTempsMax.setTempsTrajet(0);
@@ -597,7 +610,7 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	public void timeoutReceptionAccuse(final MessageSimple message) {
 		// on ne réexpédie que si on a pas encore reçu d'accusé pour cet
 		// identifiant
-		if (accusesNonRecus.contains(Integer
+		if (!accusesRecus.containsKey(Integer
 				.valueOf(message.getNumeroMessage()))) {
 			// on incrémente le compteur de messages réexpédiés
 			messagesReexpedies++;

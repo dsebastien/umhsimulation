@@ -2,8 +2,11 @@ package be.simulation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
 import be.simulation.core.AbstractSimulation;
 import be.simulation.core.evenements.Evenement;
 import be.simulation.entites.Agent;
@@ -15,6 +18,7 @@ import be.simulation.evenements.HoteEnvoieMessageOriginal;
 import be.simulation.evenements.HoteFinTraitementMessage;
 import be.simulation.evenements.HoteRecoitMessage;
 import be.simulation.evenements.HoteTimeoutReceptionAccuse;
+import be.simulation.messages.AccuseReception;
 import be.simulation.messages.MessageSimple;
 import be.simulation.messages.utilitaires.MessageTempsMax;
 import be.simulation.utilitaires.Utilitaires;
@@ -75,86 +79,9 @@ public class SimulationReseau extends AbstractSimulation {
 		calculerEtAfficherMessagesPerdusBufferPlein();
 		// taux d'utilisation des buffers
 		calculerEtAfficherTauxUtilisationBufferAgents();
-		// statistiques concernant les messages
-		calculerEtAfficherStatistiquesMessages();
-
-		// TODO continuer d'implémenter le calcul des stats
 	}
 
 
-
-	/**
-	 * Calcule et affiche les statistiques concernant les messages.
-	 */
-	private void calculerEtAfficherStatistiquesMessages() {
-		int totalMessagesReexpedies = 0;
-		int totalMessagesEnvoyes = 0;
-		long tempsTotalBuffer = 0;
-		int totalAccusesRecus = 0;
-		int nombreHotes = 0;
-		long tempsTotalVoyage = 0;
-		int totalTimeoutsTropCourts = 0;
-
-		// on va chercher le message ayant été réémis le plus de fois
-		MessageSimple messageLePlusReemis = MessageSimple.creerFauxMessage();
-
-		MessageTempsMax messageTempsMax = new MessageTempsMax();
-
-		for (Agent agent : agents) {
-			for (Hote hote : agent.getHotes()) {
-				totalMessagesReexpedies += hote.getMessagesReexpedies();
-				totalMessagesEnvoyes += hote.getMessagesEnvoyes();
-				totalTimeoutsTropCourts += hote.getTimeoutsTropCourts();
-				if (hote.getAccusesReceptionRecus() > 0) {
-					nombreHotes++;
-					tempsTotalBuffer += hote.getTempsTotalDansBuffers();
-					totalAccusesRecus += hote.getAccusesReceptionRecus();
-					tempsTotalVoyage += hote.getTempsTotalVoyageMessages();
-					if (hote.getMessageLePlusReemis().getNumeroEmission() > messageLePlusReemis
-							.getNumeroEmission()) {
-						messageLePlusReemis = hote.getMessageLePlusReemis();
-					}
-
-					if (hote.getMessageTempsMax().getTempsTrajet() > messageTempsMax
-							.getTempsTrajet()) {
-						messageTempsMax = hote.getMessageTempsMax();
-					}
-				}
-			}
-		}
-		double pourcentagePaquetsReemis =
-				totalMessagesReexpedies
-						/ ((double) totalMessagesReexpedies + (double) totalMessagesEnvoyes);
-		LOGGER.info("Les hôtes ont réémis en moyenne "
-				+ Utilitaires.pourcentage(pourcentagePaquetsReemis)
-				+ " des paquets");
-
-		// FIXME attention si nombre hotes == 0
-		double tempsMoyenEntreEmissionEtReceptionAccuse =
-				(double) tempsTotalVoyage / (double) totalAccusesRecus;
-		double tempsMoyenVoyageAbsolu =
-				((double) tempsTotalBuffer / (double) totalAccusesRecus);
-		double tempsMoyenVoyageComplet =
-				((double) tempsTotalBuffer / (double) tempsTotalVoyage);
-		LOGGER
-				.info("Le temps moyen entre l'émission d'un message et la réception de l'accusé correspondant est de "
-						+ tempsMoyenEntreEmissionEtReceptionAccuse);
-		LOGGER.info("Les " + totalAccusesRecus + " messages ont passé en absolu "
-				+ tempsMoyenVoyageAbsolu + " unités de temps dans des buffers");
-		LOGGER.info("Les messages ont passé en moyenne "
-				+ Utilitaires.pourcentage(tempsMoyenVoyageComplet)
-				+ " de leur temps de voyage complet dans des buffers");
-
-		// TODO à calculer aussi par agent:
-		LOGGER
-				.info("Nombre de réémissions maximum d'un message pendant la simulation: "
-						+ (messageLePlusReemis.getNumeroEmission() - 1));
-
-		// TODO ajouter détails (+ par agent?)
-		LOGGER
-				.info("Le message ayant mis le plus de temps à être acquitté a pris "+ messageTempsMax.getTempsTrajet()+" unités de temps");
-		LOGGER.info("Nombre de timeouts trop courts: "+ totalTimeoutsTropCourts);
-	}
 
 
 
@@ -169,26 +96,18 @@ public class SimulationReseau extends AbstractSimulation {
 	 * buffers pleins (agents).
 	 */
 	private void calculerEtAfficherMessagesPerdusBufferPlein() {
-		int totalPerdusBuffersPleins = 0;
-		int totalRecus = 0;
 		for (Agent agent : agents) {
 			// par agent
 			int perdusBufferPlein = agent.getMessagesPerdusBufferPlein();
 			int recus = agent.getMessagesRecus();
 			// pour calculer l'info globale
-			totalPerdusBuffersPleins += perdusBufferPlein;
-			totalRecus += recus;
 			LOGGER.info("L'agent " + agent.getNumero() + " a perdu "
 					+ perdusBufferPlein + " messages sur " + recus
 					+ " recus car son buffer était plein ("
 					+ Utilitaires.pourcentage(perdusBufferPlein, recus) + ")");
 		}
 		// globalement
-		LOGGER.info("Au total les agents ont perdu " + totalPerdusBuffersPleins
-				+ " messages sur " + totalRecus
-				+ " recus à cause de buffers pleins ("
-				+ Utilitaires.pourcentage(totalPerdusBuffersPleins, totalRecus)
-				+ ")");
+
 	}
 
 
@@ -258,6 +177,17 @@ public class SimulationReseau extends AbstractSimulation {
 
 
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 
 	/**
 	 * {@inheritDoc}
@@ -301,8 +231,12 @@ public class SimulationReseau extends AbstractSimulation {
 				LOGGER.info("Hotes - Message le plus réémis: "+(Hote.MESSAGE_LE_PLUS_REEMIS.getNumeroEmission()-1)+" fois");
 				LOGGER.info("Le temps moyen entre l'émission d'un message et la réception de l'accusé correspondant est de "+ tempsMoyenEntreEmissionEtReceptionAccuse);
 				LOGGER.info("Les " + Hote.TOTAL_ACCUSES_RECUS + " messages ont passé en absolu " + tempsMoyenVoyageAbsolu + " unités de temps dans des buffers");
-				LOGGER.info("Les messages ont passé en moyenne " + Utilitaires.pourcentage(tempsMoyenVoyageComplet)	+ " de leur temps de voyage complet dans des buffers");
+				LOGGER.info("Les messages acquittés ont passé en moyenne " + Utilitaires.pourcentage(tempsMoyenVoyageComplet)	+ " de leur temps de voyage complet dans des buffers");
 				LOGGER.info("Le message ayant mis le plus de temps à être acquitté a pris "+ Hote.MESSAGE_TEMPS_MAX.getTempsTrajet()+" unités de temps");
+				
+				
+				
+				
 				LOGGER.info("-----------------------------------------------------");
 			}
 			
@@ -369,7 +303,7 @@ public class SimulationReseau extends AbstractSimulation {
 				}
 				// on vide la FEL, ce qui provoque la sortie de cette boucle
 				getFutureEventList().reset();
-				LOGGER.info("Fin de la simulation");
+				LOGGER.info("Fin de la simulation");	
 			}
 		}
 		// on calcule et on affiche les résultats de la simulation

@@ -64,7 +64,7 @@ public class MessageSimple extends Message {
 	 * 
 	 * @return le numéro de ce message.
 	 */
-	public int getNumeroMessage() {
+	public Integer getNumeroMessage() {
 		return numeroMessage;
 	}
 

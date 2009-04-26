@@ -19,7 +19,7 @@ public class MessageTempsMax {
 	/**
 	 * temps de trajet du message et de son accusé.
 	 */
-	private long			tempsTrajet	= 0;
+	private long			tempsTrajet	= 0L;
 
 
 
