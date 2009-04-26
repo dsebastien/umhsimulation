@@ -243,8 +243,6 @@ public class Hote extends AbstractEntiteSimulationReseau {
 			// on incrémente aussi l'information globale (pour tous les hôtes)
 			TOTAL_TEMPS_BUFFERS += tempsDansBuffers;
 			
-			
-			
 			// on incrémente le temps total de voyage des messages
 			long tempsVoyageSupplementaire = getSimulation().getHorloge() - tmp.getMessageOrigine().getTempsEmission();			
 			tempsTotalVoyageMessages += tempsVoyageSupplementaire;
@@ -609,7 +607,7 @@ public class Hote extends AbstractEntiteSimulationReseau {
 			TOTAL_MESSAGES_REEXPEDIES++;
 			
 			// on recrée le message pour le renvoyer (ça doit être une instance
-			// différence!) mais on garde le même ID
+			// différente!) mais on garde le même ID (numéro de message)
 			MessageSimple nouveauMessage =
 					new MessageSimple(this, message.getDestination(), message
 							.getNumeroMessage(),

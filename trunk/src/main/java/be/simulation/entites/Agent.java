@@ -24,6 +24,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	public static int TOTAL_MESSAGES_PERDUS_BRUTALEMENT = 0;
 	public static int TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN = 0;
 	public static int TOTAL_MESSAGES_EN_COURS_TRAITEMENT = 0;
+	public static int TOTAL_SOMME_NIVEAUX_OCCUPATION_BUFFERS = 0;
 	//TODO occupation globale des buffers en temps réel aussi?
 	
 	/**
@@ -71,10 +72,10 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	private final Routeur		routeur										=
 																					new Routeur();
 	/**
-	 * La somme des niveaux d'occupation du buffer.
+	 * La somme des utilisations du buffer.
 	 */
-	private double				sommeNiveauOccupationBuffer					=
-																					0.0;
+	private long				sommeNiveauOccupationBuffer					=
+																					0L;
 
 
 
@@ -123,7 +124,11 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		if(differenceTempsActuelEtTempsDerniereMaj > 0 && tailleMaxBuffer < Long.MAX_VALUE){
 			// on l'incrémente de n * le nombre d'éléments actuellement dans le buffer (pour représenter le fait que le buffer
 			// a été à ce niveau d'occupation pendant n unités de temps
-			sommeNiveauOccupationBuffer += getBuffer().size() * differenceTempsActuelEtTempsDerniereMaj;
+			long niveauOccupation = getBuffer().size() * differenceTempsActuelEtTempsDerniereMaj;
+			sommeNiveauOccupationBuffer += niveauOccupation;
+			
+			// on incrémente aussi l'information globale (pour tous les agents)
+			TOTAL_SOMME_NIVEAUX_OCCUPATION_BUFFERS += niveauOccupation;
 		}
 		dernierTempsMiseAJourSommeNiveauxOccupationBuffer = getSimulation().getHorloge();
 	}
@@ -422,7 +427,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	public void reset() {
 		LOGGER.trace("Réinitialisation de l'agent " + getNumero());
 		super.reset();
-		sommeNiveauOccupationBuffer = 0.0;
+		sommeNiveauOccupationBuffer = 0L;
 		messagesPerdusBrutalement = 0;
 		dernierTempsMiseAJourSommeNiveauxOccupationBuffer = 0;
 		messagesRecus = 0;
@@ -432,6 +437,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		TOTAL_MESSAGES_PERDUS_BRUTALEMENT = 0;
 		TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN = 0;
 		TOTAL_MESSAGES_EN_COURS_TRAITEMENT = 0;
+		TOTAL_SOMME_NIVEAUX_OCCUPATION_BUFFERS = 0;
 		// on réinitialise les hôtes (le nombre d'hôtes par agent dans la
 		// configuration peut avoir changé)
 		initialiserHotes();
