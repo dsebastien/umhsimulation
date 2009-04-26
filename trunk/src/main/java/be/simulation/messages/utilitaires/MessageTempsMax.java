@@ -1,11 +1,10 @@
 package be.simulation.messages.utilitaires;
 
 import be.simulation.messages.AccuseReception;
-import be.simulation.messages.MessageSimple;
 
 /**
  * Simple classe utilisée pour stocker le message ayant pris le plus de temps à
- * être acquitté, ainsi que son accusé correspondant.
+ * être acquitté, ainsi que son accusé correspondant (en fait l'accusé contient le message).
  * 
  * @author Dubois Sebastien
  * @author Regnier Frederic
@@ -13,16 +12,12 @@ import be.simulation.messages.MessageSimple;
  */
 public class MessageTempsMax {
 	/**
-	 * l'accusé de réception correspondant au message.
+	 * l'accusé de réception correspondant au message ayant pris le plus de
+	 * temps à être acquitté.
 	 */
 	private AccuseReception	accuse		= null;
 	/**
-	 * le message.
-	 */
-	//FIXME virer le message, l'accuse suffit puisqu'il contient tout
-	private MessageSimple	message		= null;
-	/**
-	 * temps de trajet du message.
+	 * temps de trajet du message et de son accusé.
 	 */
 	private long			tempsTrajet	= 0;
 
@@ -43,17 +38,6 @@ public class MessageTempsMax {
 	 */
 	public AccuseReception getAccuse() {
 		return accuse;
-	}
-
-
-
-	/**
-	 * Récupérer le message.
-	 * 
-	 * @return le message
-	 */
-	public MessageSimple getMessage() {
-		return message;
 	}
 
 
@@ -82,18 +66,6 @@ public class MessageTempsMax {
 
 
 	/**
-	 * Définir le message.
-	 * 
-	 * @param message
-	 *        le message.
-	 */
-	public void setMessage(final MessageSimple message) {
-		this.message = message;
-	}
-
-
-
-	/**
 	 * Définir le temps de trajet.
 	 * 
 	 * @param tempsTrajet
@@ -101,5 +73,14 @@ public class MessageTempsMax {
 	 */
 	public void setTempsTrajet(final long tempsTrajet) {
 		this.tempsTrajet = tempsTrajet;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString(){
+		return "Le trajet du message temps max a duré: "+tempsTrajet;
+		
 	}
 }
