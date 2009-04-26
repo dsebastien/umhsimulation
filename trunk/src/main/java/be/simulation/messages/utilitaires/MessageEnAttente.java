@@ -64,4 +64,12 @@ public final class MessageEnAttente {
 	public long getTempsArrivee() {
 		return tempsArrivee;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString(){
+		return message.toString()+" en attente depuis le temps "+tempsArrivee;
+	}
 }

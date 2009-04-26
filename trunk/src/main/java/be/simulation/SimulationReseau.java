@@ -263,9 +263,33 @@ public class SimulationReseau extends AbstractSimulation {
 		LOGGER.info("Démarrage de la simulation ("
 				+ getConfiguration().getConfigurationSimulationReseau()
 						.getNom() + ")");
+		
+		
+		
+		
+		
+		long dernierAffichageProgres = System.currentTimeMillis();
+
 		// à chaque tour de boucle on récupère
 		// l'évènement imminent dans la FEL et on le traite
 		while (!getFutureEventList().estVide()) {
+			
+			if(System.currentTimeMillis() - dernierAffichageProgres > 1000){
+				dernierAffichageProgres = System.currentTimeMillis();
+				LOGGER.info("Temps actuel de simulation: "+getHorloge()+"/"+getConfiguration().getConfigurationSimulationReseau().getDuree());
+				LOGGER.info("Agents - Messages reçus: "+Agent.TOTAL_MESSAGES_RECUS);
+				LOGGER.info("Agents - Messages perdus brutalement: "+Agent.TOTAL_MESSAGES_PERDUS_BRUTALEMENT);
+				LOGGER.info("Agents - Messages perdus buffer plein: "+Agent.TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN);
+				LOGGER.info("-----------------------------------------------------");
+			}
+			
+			
+			
+			
+			
+			
+			
+			
 			// TODO V2.0: récupérer d'abord les évènements de type
 			// AgentEnvoieInfosRoutage et AgentRecoitInfosRoutage
 			// on essaie en priorité de traiter la réception des messages par
