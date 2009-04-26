@@ -230,9 +230,8 @@ public class Hote extends AbstractEntiteSimulationReseau {
 					getSimulation().getHorloge()
 							- tmp.getMessageOrigine().getTempsEmission();
 			if (tempsTrajetTotalDuMessage > messageTempsMax.getTempsTrajet()) {
-				messageTempsMax.setMessage(tmp.getMessageOrigine());
-				messageTempsMax.setTempsTrajet(tempsTrajetTotalDuMessage);
 				messageTempsMax.setAccuse(tmp);
+				messageTempsMax.setTempsTrajet(tempsTrajetTotalDuMessage);
 			}
 
 
@@ -515,7 +514,6 @@ public class Hote extends AbstractEntiteSimulationReseau {
 		this.timeoutsTropCourts = 0;
 		this.accusesNonRecus.clear();
 		this.messageLePlusReemis = MessageSimple.creerFauxMessage();
-		this.messageTempsMax.setMessage(null);
 		this.messageTempsMax.setAccuse(null);
 		this.messageTempsMax.setTempsTrajet(0);
 	}
