@@ -264,22 +264,43 @@ public class SimulationReseau extends AbstractSimulation {
 				+ getConfiguration().getConfigurationSimulationReseau()
 						.getNom() + ")");
 		
-		
-		
-		
-		
+		// dernier temps (réel) où on a affiché les informations sur la simulation
 		long dernierAffichageProgres = System.currentTimeMillis();
 
 		// à chaque tour de boucle on récupère
 		// l'évènement imminent dans la FEL et on le traite
 		while (!getFutureEventList().estVide()) {
-			
 			if(System.currentTimeMillis() - dernierAffichageProgres > 1000){
 				dernierAffichageProgres = System.currentTimeMillis();
+				
+				double tempsMoyenEntreEmissionEtReceptionAccuse =
+					(double) Hote.TOTAL_TEMPS_VOYAGE_MESSAGES / (double) Hote.TOTAL_ACCUSES_RECUS;
+				double tempsMoyenVoyageAbsolu =
+					((double) Hote.TOTAL_TEMPS_BUFFERS / (double) Hote.TOTAL_ACCUSES_RECUS);
+				double tempsMoyenVoyageComplet =
+					((double) Hote.TOTAL_TEMPS_BUFFERS / (double) Hote.TOTAL_TEMPS_VOYAGE_MESSAGES);
+				
+				int totalMessagesPerdus = Agent.TOTAL_MESSAGES_PERDUS_BRUTALEMENT + Agent.TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN; 
 				LOGGER.info("Temps actuel de simulation: "+getHorloge()+"/"+getConfiguration().getConfigurationSimulationReseau().getDuree());
 				LOGGER.info("Agents - Messages reçus: "+Agent.TOTAL_MESSAGES_RECUS);
+				LOGGER.info("Agents - Messages perdus: "+totalMessagesPerdus+" ("+Utilitaires.pourcentage((double) totalMessagesPerdus /(double) Agent.TOTAL_MESSAGES_RECUS)+")");
 				LOGGER.info("Agents - Messages perdus brutalement: "+Agent.TOTAL_MESSAGES_PERDUS_BRUTALEMENT);
+				LOGGER.info("Agents - Pourcentage de messages perdus brutalement: "+Utilitaires.pourcentage((double)Agent.TOTAL_MESSAGES_PERDUS_BRUTALEMENT/(double)Agent.TOTAL_MESSAGES_RECUS));
 				LOGGER.info("Agents - Messages perdus buffer plein: "+Agent.TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN);
+				LOGGER.info("Agents - Pourcentage de messages perdus buffer plein: "+Utilitaires.pourcentage((double)Agent.TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN/(double)Agent.TOTAL_MESSAGES_RECUS));
+				LOGGER.info("Agents - Messages en cours de traitement: "+Agent.TOTAL_MESSAGES_EN_COURS_TRAITEMENT);
+				LOGGER.info("Hotes - Messages originaux envoyés: "+Hote.TOTAL_MESSAGES_ENVOYES);
+				LOGGER.info("Hotes - Messages réexpédiés: "+Hote.TOTAL_MESSAGES_REEXPEDIES);
+				LOGGER.info("Hotes - Pourcentage de réémissions: "+Utilitaires.pourcentage((double) Hote.TOTAL_MESSAGES_REEXPEDIES / (double) Hote.TOTAL_MESSAGES_ENVOYES));
+				LOGGER.info("Hotes - Accuses de réception reçus: "+Hote.TOTAL_ACCUSES_RECUS);
+				LOGGER.info("Hotes - Timeouts trop courts: "+Hote.TOTAL_TIMEOUTS_TROP_COURTS);
+				LOGGER.info("Hotes - Messages en cours de traitement: "+Hote.TOTAL_MESSAGES_EN_COURS_TRAITEMENT);
+				LOGGER.info("Hotes - Message le plus réémis: "+(Hote.MESSAGE_LE_PLUS_REEMIS.getNumeroEmission()-1)+" fois");
+				LOGGER.info("Le temps moyen entre l'émission d'un message et la réception de l'accusé correspondant est de "+ tempsMoyenEntreEmissionEtReceptionAccuse);
+				LOGGER.info("Les " + Hote.TOTAL_ACCUSES_RECUS + " messages ont passé en absolu " + tempsMoyenVoyageAbsolu + " unités de temps dans des buffers");
+				LOGGER.info("Les messages ont passé en moyenne " + Utilitaires.pourcentage(tempsMoyenVoyageComplet)	+ " de leur temps de voyage complet dans des buffers");
+				LOGGER.info("Le message ayant mis le plus de temps à être acquitté a pris "+ Hote.MESSAGE_TEMPS_MAX.getTempsTrajet()+" unités de temps");
+				LOGGER.info("Nombre de timeouts trop courts: "+ Hote.TOTAL_TIMEOUTS_TROP_COURTS);	
 				LOGGER.info("-----------------------------------------------------");
 			}
 			

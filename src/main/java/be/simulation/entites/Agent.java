@@ -23,6 +23,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	public static int TOTAL_MESSAGES_RECUS = 0;
 	public static int TOTAL_MESSAGES_PERDUS_BRUTALEMENT = 0;
 	public static int TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN = 0;
+	public static int TOTAL_MESSAGES_EN_COURS_TRAITEMENT = 0;
 	//TODO occupation globale des buffers en temps réel aussi?
 	
 	/**
@@ -175,6 +176,9 @@ public class Agent extends AbstractEntiteSimulationReseau {
 			// plus rien à traiter, on décrémente le nombre de messages en cours
 			// de traitement
 			messagesEnCoursTraitement--;
+			
+			// on incrémente aussi l'info globale (pour tous les agents)
+			TOTAL_MESSAGES_EN_COURS_TRAITEMENT--;
 		} else {
 			// puisqu'il y a encore des messages en attente, on en prend un et
 			// on commence à le traiter tout de suite
@@ -369,6 +373,9 @@ public class Agent extends AbstractEntiteSimulationReseau {
 						evtAgentFinTraitementMessage);
 				// on incrémente le compteur de messages en cours de traitement
 				messagesEnCoursTraitement++;
+				
+				// on incrémente aussi l'info globale (pour tous les agents)
+				TOTAL_MESSAGES_EN_COURS_TRAITEMENT++;
 			}else{
 				// TODO v2.0 ajouter les détails de la vérification de l'occupation
 				// du buffer pour générer des évènements AgentEnvoieInfosRoutage
@@ -420,9 +427,11 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		dernierTempsMiseAJourSommeNiveauxOccupationBuffer = 0;
 		messagesRecus = 0;
 		messagesPerdusBufferPlein = 0;
+		messagesEnCoursTraitement = 0;
 		TOTAL_MESSAGES_RECUS = 0;
 		TOTAL_MESSAGES_PERDUS_BRUTALEMENT = 0;
 		TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN = 0;
+		TOTAL_MESSAGES_EN_COURS_TRAITEMENT = 0;
 		// on réinitialise les hôtes (le nombre d'hôtes par agent dans la
 		// configuration peut avoir changé)
 		initialiserHotes();
