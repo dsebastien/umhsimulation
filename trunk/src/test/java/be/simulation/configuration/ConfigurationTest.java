@@ -23,16 +23,16 @@ public class ConfigurationTest {
 	 * Séparateur entre l'option et la valeur.
 	 */
 	private static final String					SEPARATEUR		= "=";
-	/**
-	 * Classe testée.
-	 */
-	private Configuration						configuration;
-	private final ConfigurationSimulationReseau	cfgSimReseau	=
-																		new ConfigurationSimulationReseau();
 	private final ConfigurationAgents			cfgAgents		=
 																		new ConfigurationAgents();
 	private final ConfigurationHotes			cfgHotes		=
 																		new ConfigurationHotes();
+	private final ConfigurationSimulationReseau	cfgSimReseau	=
+																		new ConfigurationSimulationReseau();
+	/**
+	 * Classe testée.
+	 */
+	private Configuration						configuration;
 
 
 
@@ -42,83 +42,6 @@ public class ConfigurationTest {
 	@Before
 	public void setup() {
 		configuration = new Configuration(cfgSimReseau, cfgAgents, cfgHotes);
-	}
-
-
-
-	/**
-	 * Test getter.
-	 */
-	@Test
-	public void testGetConfigurationSimulationReseau() {
-		assertEquals(cfgSimReseau, configuration
-				.getConfigurationSimulationReseau());
-	}
-
-
-
-	/**
-	 * Test getter.
-	 */
-	@Test
-	public void testGetConfigurationAgents() {
-		assertEquals(cfgAgents, configuration.getConfigurationAgents());
-	}
-
-
-
-	/**
-	 * Test getter.
-	 */
-	@Test
-	public void testGetConfigurationHotes() {
-		assertEquals(cfgHotes, configuration.getConfigurationHotes());
-	}
-
-
-
-	/**
-	 * Si les arguments ne sont pas fournis, ça doit échouer.
-	 * 
-	 * @throws ExceptionOptionsInvalides
-	 *         doit se produire
-	 */
-	@Test(expected = ExceptionOptionsInvalides.class)
-	public void testOptionsNonFournies() throws ExceptionOptionsInvalides {
-		configuration.parse((String[]) null);
-	}
-
-
-
-	/**
-	 * Afficher l'aide.
-	 * 
-	 * @throws ExceptionOptionsInvalides
-	 *         ne doit pas avoir lieu
-	 */
-	@Test
-	public void testAide() throws ExceptionOptionsInvalides {
-		for (String option : Configuration.OPTIONS_AIDE) {
-			configuration.parse(new String[] {
-				PREFIXE + option
-			});
-		}
-	}
-
-
-
-	/**
-	 * Parser une option incorrecte.
-	 * 
-	 * @throws ExceptionOptionsInvalides
-	 *         doit avoir lieu
-	 */
-	@Test(expected = ExceptionOptionsInvalides.class)
-	public void testOptionInvalide() throws ExceptionOptionsInvalides {
-		final String[] args = {
-			PREFIXE + "oopsjenexistepas"
-		};
-		configuration.parse(args);
 	}
 
 
@@ -213,6 +136,49 @@ public class ConfigurationTest {
 
 
 	/**
+	 * Spécifier des valeurs correctes pour la taille des buffers des agents.
+	 * 
+	 * @throws ExceptionOptionsInvalides
+	 *         ne doit pas se produire
+	 */
+	@Test
+	public void testAgentsTailleBuffer()
+			throws ExceptionOptionsInvalides {
+		String valeur = "0";
+		String[] args =
+				{
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Long.MAX_VALUE == configuration
+				.getConfigurationAgents().getTailleMaxBuffer());
+		valeur = "500";
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Long.valueOf(valeur).intValue() == configuration
+				.getConfigurationAgents().getTailleMaxBuffer());
+		valeur = "1";
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Long.valueOf(valeur).intValue() == configuration
+				.getConfigurationAgents().getTailleMaxBuffer());
+	}
+
+
+
+	/**
 	 * Spécifier un taux valide de pertes de brutales.
 	 * 
 	 * @throws ExceptionOptionsInvalides
@@ -287,155 +253,49 @@ public class ConfigurationTest {
 
 
 	/**
-	 * Spécifier la durée de la simulation et vérifier que c'est bien pris en
-	 * compte.
+	 * Afficher l'aide.
 	 * 
 	 * @throws ExceptionOptionsInvalides
 	 *         ne doit pas avoir lieu
 	 */
 	@Test
-	public void testSimulationDuree() throws ExceptionOptionsInvalides {
-		String valeur = "50";
-		String[] args =
-				{
-					PREFIXE + Configuration.OPTION_SIMULATION_DUREE
-							+ SEPARATEUR + valeur
-				};
-		configuration.parse(args);
-		assertTrue(Long.valueOf(valeur).longValue() == configuration
-				.getConfigurationSimulationReseau().getDuree());
-		valeur = "1";
-		args =
-				new String[] {
-					PREFIXE + Configuration.OPTION_SIMULATION_DUREE
-							+ SEPARATEUR + valeur
-				};
-		configuration.parse(args);
-		assertTrue(Long.valueOf(valeur).longValue() == configuration
-				.getConfigurationSimulationReseau().getDuree());
+	public void testAide() throws ExceptionOptionsInvalides {
+		for (String option : Configuration.OPTIONS_AIDE) {
+			configuration.parse(new String[] {
+				PREFIXE + option
+			});
+		}
 	}
 
 
 
 	/**
-	 * Spécifier des valeurs incorrectes pour la durée de la simulation.
+	 * Test getter.
 	 */
 	@Test
-	public void testSimulationDureeValeursIncorrectes() {
-		// valeur négative
-		String[] args =
-				{
-					PREFIXE + Configuration.OPTION_SIMULATION_DUREE
-							+ SEPARATEUR + "-100"
-				};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
-		// valeur nulle
-		args = new String[] {
-			PREFIXE + Configuration.OPTION_SIMULATION_DUREE + SEPARATEUR + "0"
-		};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
-		// valeur non spécifiée
-		args = new String[] {
-			PREFIXE + Configuration.OPTION_SIMULATION_DUREE + SEPARATEUR
-		};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
-		// argument non spécifié
-		args = new String[] {
-			PREFIXE + Configuration.OPTION_SIMULATION_DUREE
-		};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
-	}
-	
-	
-	/**
-	 * Spécifier la durée de la période d'initialisation de la simulation et vérifier que c'est bien pris en
-	 * compte.
-	 * 
-	 * @throws ExceptionOptionsInvalides
-	 *         ne doit pas avoir lieu
-	 */
-	@Test
-	public void testSimulationDureeInitialisation() throws ExceptionOptionsInvalides {
-		String valeur = "50";
-		String[] args =
-				{
-					PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
-							+ SEPARATEUR + valeur
-				};
-		configuration.parse(args);
-		assertTrue(Long.valueOf(valeur).longValue() == configuration
-				.getConfigurationSimulationReseau().getDureeInitialisation());
-		valeur = "1";
-		args =
-				new String[] {
-					PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
-							+ SEPARATEUR + valeur
-				};
-		configuration.parse(args);
-		assertTrue(Long.valueOf(valeur).longValue() == configuration
-				.getConfigurationSimulationReseau().getDureeInitialisation());
-		valeur = "0";
-		args =
-				new String[] {
-					PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
-							+ SEPARATEUR + valeur
-				};
-		configuration.parse(args);
-		assertTrue(Long.valueOf(valeur).longValue() == configuration
-				.getConfigurationSimulationReseau().getDureeInitialisation());
+	public void testGetConfigurationAgents() {
+		assertEquals(cfgAgents, configuration.getConfigurationAgents());
 	}
 
 
+
 	/**
-	 * Spécifier des valeurs incorrectes pour la durée de la période d'initialisation de la simulation.
+	 * Test getter.
 	 */
 	@Test
-	public void testSimulationDureeInitialisationValeursIncorrectes() {
-		// valeur négative
-		String[] args =
-				{
-					PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
-							+ SEPARATEUR + "-100"
-				};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
-		// valeur non spécifiée
-		args = new String[] {
-			PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION + SEPARATEUR
-		};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
-		// argument non spécifié
-		args = new String[] {
-			PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
-		};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
+	public void testGetConfigurationHotes() {
+		assertEquals(cfgHotes, configuration.getConfigurationHotes());
+	}
+
+
+
+	/**
+	 * Test getter.
+	 */
+	@Test
+	public void testGetConfigurationSimulationReseau() {
+		assertEquals(cfgSimReseau, configuration
+				.getConfigurationSimulationReseau());
 	}
 
 
@@ -563,9 +423,8 @@ public class ConfigurationTest {
 				.getConfigurationHotes()
 				.getTimeoutReemissionMessages());
 	}
-
-
-
+	
+	
 	/**
 	 * Spécifier des valeurs incorrectes pour le timeout de réémission.
 	 */
@@ -598,79 +457,31 @@ public class ConfigurationTest {
 	}
 
 
-
 	/**
-	 * Spécifier des valeurs correctes pour la taille des buffers des agents.
+	 * Parser une option incorrecte.
 	 * 
 	 * @throws ExceptionOptionsInvalides
-	 *         ne doit pas se produire
+	 *         doit avoir lieu
 	 */
-	@Test
-	public void testAgentsTailleBuffer()
-			throws ExceptionOptionsInvalides {
-		String valeur = "0";
-		String[] args =
-				{
-					PREFIXE
-							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
-							+ SEPARATEUR + valeur
-				};
+	@Test(expected = ExceptionOptionsInvalides.class)
+	public void testOptionInvalide() throws ExceptionOptionsInvalides {
+		final String[] args = {
+			PREFIXE + "oopsjenexistepas"
+		};
 		configuration.parse(args);
-		assertTrue(Long.MAX_VALUE == configuration
-				.getConfigurationAgents().getTailleMaxBuffer());
-		valeur = "500";
-		args =
-				new String[] {
-					PREFIXE
-							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
-							+ SEPARATEUR + valeur
-				};
-		configuration.parse(args);
-		assertTrue(Long.valueOf(valeur).intValue() == configuration
-				.getConfigurationAgents().getTailleMaxBuffer());
-		valeur = "1";
-		args =
-				new String[] {
-					PREFIXE
-							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
-							+ SEPARATEUR + valeur
-				};
-		configuration.parse(args);
-		assertTrue(Long.valueOf(valeur).intValue() == configuration
-				.getConfigurationAgents().getTailleMaxBuffer());
 	}
 
 
 
 	/**
-	 * Spécifier des valeurs incorrectes pour la taille des buffers des agents.
+	 * Si les arguments ne sont pas fournis, ça doit échouer.
+	 * 
+	 * @throws ExceptionOptionsInvalides
+	 *         doit se produire
 	 */
-	@Test
-	public void testSimulationTailleBuffersAgentsValeursIncorrectes() {
-		// valeur presque ok (frontière)
-		String[] args =
-				{
-					PREFIXE
-							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
-							+ SEPARATEUR + "-1"
-				};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
-		// valeur trop basse
-		args =
-				new String[] {
-					PREFIXE
-							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
-							+ SEPARATEUR + "-100"
-				};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
+	@Test(expected = ExceptionOptionsInvalides.class)
+	public void testOptionsNonFournies() throws ExceptionOptionsInvalides {
+		configuration.parse((String[]) null);
 	}
 
 
@@ -766,96 +577,6 @@ public class ConfigurationTest {
 
 
 	/**
-	 * Spécifier des valeurs correctes pour le temps de traitement d'un message
-	 * par un hote.
-	 * 
-	 * @throws ExceptionOptionsInvalides
-	 *         ne doit pas se produire
-	 */
-	@Test
-	public void testSimulationHoteTempsTraitementMessage()
-			throws ExceptionOptionsInvalides {
-		String valeur = "0"; // instantané
-		String[] args =
-				{
-					PREFIXE
-							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
-							+ SEPARATEUR + valeur
-				};
-		configuration.parse(args);
-		assertTrue(Float.valueOf(valeur).floatValue() == configuration
-				.getConfigurationHotes().getTempsTraitementMessage());
-		valeur = "0.5";
-		args =
-				new String[] {
-					PREFIXE
-							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
-							+ SEPARATEUR + valeur
-				};
-		configuration.parse(args);
-		assertTrue(Float.valueOf(valeur).floatValue() == configuration
-				.getConfigurationHotes().getTempsTraitementMessage());
-		valeur = "1.0";
-		args =
-				new String[] {
-					PREFIXE
-							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
-							+ SEPARATEUR + valeur
-				};
-		configuration.parse(args);
-		assertTrue(Float.valueOf(valeur).floatValue() == configuration
-				.getConfigurationHotes().getTempsTraitementMessage());
-	}
-
-
-
-	/**
-	 * Spécifier des valeurs incorrectes pour le temps de traitement d'un
-	 * message par un hote.
-	 */
-	@Test
-	public void testSimulationHoteTempsTraitementMessageValeursIncorrectes() {
-		// valeur presque ok (frontière)
-		String[] args =
-				{
-					PREFIXE
-							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
-							+ SEPARATEUR + "-0.1"
-				};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
-		// valeur trop basse
-		args =
-				new String[] {
-					PREFIXE
-							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
-							+ SEPARATEUR + "-1"
-				};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
-		// valeur trop haute
-		args =
-				new String[] {
-					PREFIXE
-							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
-							+ SEPARATEUR + "1.1"
-				};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
-	}
-
-
-
-	/**
 	 * Spécifier des valeurs correctes pour le delai entre entités (hote ->
 	 * agent / agent -> hôte).
 	 * 
@@ -930,23 +651,165 @@ public class ConfigurationTest {
 		} catch (ExceptionOptionsInvalides e) {
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+	/**
+	 * Spécifier la durée de la simulation et vérifier que c'est bien pris en
+	 * compte.
+	 * 
+	 * @throws ExceptionOptionsInvalides
+	 *         ne doit pas avoir lieu
+	 */
+	@Test
+	public void testSimulationDuree() throws ExceptionOptionsInvalides {
+		String valeur = "50";
+		String[] args =
+				{
+					PREFIXE + Configuration.OPTION_SIMULATION_DUREE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Long.valueOf(valeur).longValue() == configuration
+				.getConfigurationSimulationReseau().getDuree());
+		valeur = "1";
+		args =
+				new String[] {
+					PREFIXE + Configuration.OPTION_SIMULATION_DUREE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Long.valueOf(valeur).longValue() == configuration
+				.getConfigurationSimulationReseau().getDuree());
+	}
+
+
+
+	/**
+	 * Spécifier la durée de la période d'initialisation de la simulation et vérifier que c'est bien pris en
+	 * compte.
+	 * 
+	 * @throws ExceptionOptionsInvalides
+	 *         ne doit pas avoir lieu
+	 */
+	@Test
+	public void testSimulationDureeInitialisation() throws ExceptionOptionsInvalides {
+		String valeur = "50";
+		String[] args =
+				{
+					PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Long.valueOf(valeur).longValue() == configuration
+				.getConfigurationSimulationReseau().getDureeInitialisation());
+		valeur = "1";
+		args =
+				new String[] {
+					PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Long.valueOf(valeur).longValue() == configuration
+				.getConfigurationSimulationReseau().getDureeInitialisation());
+		valeur = "0";
+		args =
+				new String[] {
+					PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Long.valueOf(valeur).longValue() == configuration
+				.getConfigurationSimulationReseau().getDureeInitialisation());
+	}
+
+
+
+	/**
+	 * Spécifier des valeurs incorrectes pour la durée de la période d'initialisation de la simulation.
+	 */
+	@Test
+	public void testSimulationDureeInitialisationValeursIncorrectes() {
+		// valeur négative
+		String[] args =
+				{
+					PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
+							+ SEPARATEUR + "-100"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur non spécifiée
+		args = new String[] {
+			PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION + SEPARATEUR
+		};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// argument non spécifié
+		args = new String[] {
+			PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
+		};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+	}
+
+
+
+	/**
+	 * Spécifier des valeurs incorrectes pour la durée de la simulation.
+	 */
+	@Test
+	public void testSimulationDureeValeursIncorrectes() {
+		// valeur négative
+		String[] args =
+				{
+					PREFIXE + Configuration.OPTION_SIMULATION_DUREE
+							+ SEPARATEUR + "-100"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur nulle
+		args = new String[] {
+			PREFIXE + Configuration.OPTION_SIMULATION_DUREE + SEPARATEUR + "0"
+		};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur non spécifiée
+		args = new String[] {
+			PREFIXE + Configuration.OPTION_SIMULATION_DUREE + SEPARATEUR
+		};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// argument non spécifié
+		args = new String[] {
+			PREFIXE + Configuration.OPTION_SIMULATION_DUREE
+		};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+	}
+
+
+
 	/**
 	 * Spécifier des valeurs correctes pour le temps maximal inter-envois des
 	 * hôtes.
@@ -1009,4 +872,247 @@ public class ConfigurationTest {
 		} catch (ExceptionOptionsInvalides e) {
 		}
 	}
+
+
+
+	/**
+	 * Spécifier des valeurs correctes pour le temps de traitement d'un message
+	 * par un hote.
+	 * 
+	 * @throws ExceptionOptionsInvalides
+	 *         ne doit pas se produire
+	 */
+	@Test
+	public void testSimulationHoteTempsTraitementMessage()
+			throws ExceptionOptionsInvalides {
+		String valeur = "0"; // instantané
+		String[] args =
+				{
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Float.valueOf(valeur).floatValue() == configuration
+				.getConfigurationHotes().getTempsTraitementMessage());
+		valeur = "0.5";
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Float.valueOf(valeur).floatValue() == configuration
+				.getConfigurationHotes().getTempsTraitementMessage());
+		valeur = "1.0";
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Float.valueOf(valeur).floatValue() == configuration
+				.getConfigurationHotes().getTempsTraitementMessage());
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Spécifier des valeurs incorrectes pour le temps de traitement d'un
+	 * message par un hote.
+	 */
+	@Test
+	public void testSimulationHoteTempsTraitementMessageValeursIncorrectes() {
+		// valeur presque ok (frontière)
+		String[] args =
+				{
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + "-0.1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur trop basse
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + "-1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur trop haute
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + "1.1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+	}
+
+
+
+	/**
+	 * Spécifier des valeurs incorrectes pour la périodicité d'affichage des stats.
+	 */
+	@Test
+	public void testSimulationPeriodiciteAffichageValeursIncorrectes() {
+		// valeur négative
+		String[] args =
+				{
+					PREFIXE + Configuration.OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES
+							+ SEPARATEUR + "-1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur nulle
+		args = new String[] {
+			PREFIXE + Configuration.OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES + SEPARATEUR + "0"
+		};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur non spécifiée
+		args = new String[] {
+			PREFIXE + Configuration.OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES + SEPARATEUR
+		};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// argument non spécifié
+		args = new String[] {
+			PREFIXE + Configuration.OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES
+		};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Spécifier la périodicité d'affichage des stats.
+	 * 
+	 * @throws ExceptionOptionsInvalides
+	 *         ne doit pas avoir lieu
+	 */
+	@Test
+	public void testSimulationPerioridicteAffichageStats() throws ExceptionOptionsInvalides {
+		String valeur = "0.1";
+		String[] args =
+				{
+					PREFIXE + Configuration.OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Float.valueOf(valeur).floatValue() == configuration
+				.getConfigurationSimulationReseau().getPeriodiciteAffichageStatistiques());
+		valeur = "1";
+		args =
+				new String[] {
+					PREFIXE + Configuration.OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Float.valueOf(valeur).floatValue() == configuration
+				.getConfigurationSimulationReseau().getPeriodiciteAffichageStatistiques());
+	}
+
+
+
+	/**
+	 * Spécifier des valeurs incorrectes pour la taille des buffers des agents.
+	 */
+	@Test
+	public void testSimulationTailleBuffersAgentsValeursIncorrectes() {
+		// valeur presque ok (frontière)
+		String[] args =
+				{
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
+							+ SEPARATEUR + "-1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur trop basse
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
+							+ SEPARATEUR + "-100"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+	}
+	
 }

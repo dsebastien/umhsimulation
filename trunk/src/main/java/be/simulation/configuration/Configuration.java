@@ -27,79 +27,84 @@ public class Configuration {
 	/**
 	 * Logger.
 	 */
-	private static final Logger					LOGGER										=
-																									Logger
-																											.getLogger(Configuration.class);
+	private static final Logger					LOGGER													=
+																												Logger
+																														.getLogger(Configuration.class);
 	/**
 	 * Message utilisé quand les options sont mal spécifiées.
 	 */
-	private static final String					MSG_ERREUR_OPTIONS_INCORRECTES				=
-																									"Une erreur s'est produite pendant la vérification des options fournies. Vérifiez la syntaxe (-opt=valeur). Utilisez -aide pour plus d'informations sur les commandes disponibles.";
+	private static final String					MSG_ERREUR_OPTIONS_INCORRECTES							=
+																												"Une erreur s'est produite pendant la vérification des options fournies. Vérifiez la syntaxe (-opt=valeur). Utilisez -aide pour plus d'informations sur les commandes disponibles.";
 	/**
 	 * OPTION - Nombre d'hotes par agent.
 	 */
-	public static final String					OPTION_AGENTS_NOMBRE_HOTES					=
-																									"agentsNombreHotes";
+	public static final String					OPTION_AGENTS_NOMBRE_HOTES								=
+																												"agentsNombreHotes";
 	/**
 	 * OPTION - Taux de perte brutale des agents.
 	 */
-	public static final String					OPTION_AGENTS_TAUX_PERTE_BRUTALE			=
-																									"agentsTauxPerteBrutale";
+	public static final String					OPTION_AGENTS_TAUX_PERTE_BRUTALE						=
+																												"agentsTauxPerteBrutale";
 	/**
 	 * OPTION - Temps de traitement d'un message par un agent.
 	 */
-	public static final String					OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE		=
-																									"agentsTempsTraitementMessage";
+	public static final String					OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE					=
+																												"agentsTempsTraitementMessage";
 	/**
 	 * OPTION - Delai entre un agent et un hôte (et inversément).
 	 */
-	public static final String					OPTION_SIMULATION_DELAI_ENTRE_ENTITES		=
-																									"delaiEntreEntites";
+	public static final String					OPTION_SIMULATION_DELAI_ENTRE_ENTITES					=
+																												"delaiEntreEntites";
 	/**
 	 * OPTION - Taux de messages à destination d'un autre agent.
 	 */
-	public static final String					OPTION_HOTES_TAUX_MESSAGES_VERS_AUTRE_AGENT	=
-																									"hotesTauxMessagesVersAutreAgent";
+	public static final String					OPTION_HOTES_TAUX_MESSAGES_VERS_AUTRE_AGENT				=
+																												"hotesTauxMessagesVersAutreAgent";
 	/**
 	 * OPTION - Temps de traitement d'un message par un hote.
 	 */
-	public static final String					OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE		=
-																									"hotesTempsTraitementMessage";
+	public static final String					OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE					=
+																												"hotesTempsTraitementMessage";
 	/**
 	 * OPTION - Temps maximum entre deux envois d'un hôte.
 	 */
-	public static final String					OPTION_HOTES_TEMPS_MAX_INTER_ENVOIS			=
-																									"hotesTempsMaxInterEnvois";
+	public static final String					OPTION_HOTES_TEMPS_MAX_INTER_ENVOIS						=
+																												"hotesTempsMaxInterEnvois";
 	/**
 	 * OPTION - Durée de simulation.
 	 */
-	public static final String					OPTION_SIMULATION_DUREE						=
-																									"duree";
+	public static final String					OPTION_SIMULATION_DUREE									=
+																												"duree";
+	/**
+	 * OPTION - Périodicité d'affichage des statistiques.
+	 */
+	public static final String					OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES	=
+																												"periodiciteAffichageStats";
 	/**
 	 * OPTION - Durée de la période d'initialisation de la simulation.
 	 */
-	public static final String					OPTION_SIMULATION_DUREE_INITIALISATION		=
-																									"dureeInitialisation";
+	public static final String					OPTION_SIMULATION_DUREE_INITIALISATION					=
+																												"dureeInitialisation";
 	/**
 	 * OPTION - Taille maximale du buffer des agents.
 	 */
-	public static final String					OPTION_AGENTS_TAILLE_MAX_BUFFER					=
-																									"agentsTailleMaxBuffer";
+	public static final String					OPTION_AGENTS_TAILLE_MAX_BUFFER							=
+																												"agentsTailleMaxBuffer";
 	/**
 	 * OPTION - Timeout pour la réémission des messages.
 	 */
-	public static final String					OPTION_HOTES_TIMEOUT_REEMISSION_MESSAGES	=
-																									"hotesTimeoutReemissionMessages";
+	public static final String					OPTION_HOTES_TIMEOUT_REEMISSION_MESSAGES				=
+																												"hotesTimeoutReemissionMessages";
 	/**
 	 * OPTION - Aide.
 	 */
-	public static final List<String>			OPTIONS_AIDE								=
-																									Arrays
-																											.asList(
-																													"aide",
-																													"a",
-																													"help",
-																													"h");
+	public static final List<String>			OPTIONS_AIDE											=
+																												Arrays
+																														.asList(
+																																"aide",
+																																"a",
+																																"help",
+																																"h");
 	/**
 	 * Configuration des agents.
 	 */
@@ -129,6 +134,7 @@ public class Configuration {
 	private final OptionSpec<Long>				optionAgentsTailleMaxBuffer;
 	private final OptionSpec<Integer>			optionHotesTimeoutReemissionMessages;
 	private final OptionSpec<Integer>			optionSimulationDelaiEntreEntites;
+	private final OptionSpec<Float>				optionSimulationPeriodiciteAffichageStatistiques;
 
 
 
@@ -212,6 +218,12 @@ public class Configuration {
 								OPTION_SIMULATION_DELAI_ENTRE_ENTITES,
 								"Délai nécessaire pour qu'un message d'un hôte arrive à l'agent (et inversément) (>=0)")
 						.withRequiredArg().ofType(Integer.class);
+		optionSimulationPeriodiciteAffichageStatistiques =
+				optionParser
+						.accepts(
+								OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES,
+								"Périodicité d'affichage des statistiques (0 < periodicite <= 1)")
+						.withRequiredArg().ofType(Float.class);
 	}
 
 
@@ -402,6 +414,19 @@ public class Configuration {
 			configurationSimulationReseau
 					.setDelaiEntreEntites(delaiEntreEntites);
 		}
+		// périodicité d'affichage des statistiques
+		if (options.has(optionSimulationPeriodiciteAffichageStatistiques)) {
+			final float periodiciteAffichageStatistiques =
+					options
+							.valueOf(optionSimulationPeriodiciteAffichageStatistiques);
+			if (periodiciteAffichageStatistiques <= 0
+					|| periodiciteAffichageStatistiques > 1) {
+				throw new ExceptionOptionsInvalides(
+						"La périodicité d'affichage des stats doit être telle que: 0 < periodicite <= 1");
+			}
+			configurationSimulationReseau
+					.setPeriodiciteAffichageStatistiques(periodiciteAffichageStatistiques);
+		}
 	}
 
 
@@ -502,6 +527,9 @@ public class Configuration {
 		LOGGER.info("Simulation - Delai entre entités: "
 				+ this.getConfigurationSimulationReseau()
 						.getDelaiEntreEntites());
+		LOGGER.info("Simulation - Périodicité affichage statistiques: "
+				+ this.getConfigurationSimulationReseau()
+						.getPeriodiciteAffichageStatistiques());
 		LOGGER
 				.info("------------------------------------------------------------------");
 	}

@@ -2,11 +2,8 @@ package be.simulation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import be.simulation.core.AbstractSimulation;
 import be.simulation.core.evenements.Evenement;
 import be.simulation.entites.Agent;
@@ -18,9 +15,7 @@ import be.simulation.evenements.HoteEnvoieMessageOriginal;
 import be.simulation.evenements.HoteFinTraitementMessage;
 import be.simulation.evenements.HoteRecoitMessage;
 import be.simulation.evenements.HoteTimeoutReceptionAccuse;
-import be.simulation.messages.AccuseReception;
-import be.simulation.messages.MessageSimple;
-import be.simulation.messages.utilitaires.MessageTempsMax;
+import be.simulation.evenements.AffichageStatistiques;
 import be.simulation.utilitaires.Utilitaires;
 
 /**
@@ -65,20 +60,36 @@ public class SimulationReseau extends AbstractSimulation {
 	 */
 	@Override
 	public void calculerEtAfficherResultats() {
-		// TODO sortir aussi les résultats dans une forme plus clean
-		// pour pouvoir s'en servir pour créer les graphiques
-		LOGGER
-				.info("------------------------------------------------------------------");
-		LOGGER
-				.info("Résultats de la simulation:                                       ");
-		LOGGER
-				.info("------------------------------------------------------------------");
-		// messages perdus brutalement par les agents
-		calculerEtAfficherMessagesPerdusBrutalement();
-		// messages perdus pour cause de buffers pleins (agents)
-		calculerEtAfficherMessagesPerdusBufferPlein();
-		// taux d'utilisation des buffers
-		calculerEtAfficherTauxUtilisationBufferAgents();
+		
+		double tempsMoyenEntreEmissionEtReceptionAccuse =
+			(double) Hote.TOTAL_TEMPS_VOYAGE_MESSAGES / (double) Hote.TOTAL_ACCUSES_RECUS;
+		double tempsMoyenVoyageAbsolu =
+			((double) Hote.TOTAL_TEMPS_BUFFERS / (double) Hote.TOTAL_ACCUSES_RECUS);
+		double tempsMoyenVoyageComplet =
+			((double) Hote.TOTAL_TEMPS_BUFFERS / (double) Hote.TOTAL_TEMPS_VOYAGE_MESSAGES);
+
+		int totalMessagesPerdus = Agent.TOTAL_MESSAGES_PERDUS_BRUTALEMENT + Agent.TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN;
+		double pourcentageMessagesPerdus = (double) totalMessagesPerdus / (double) Agent.TOTAL_MESSAGES_RECUS;
+		 
+		LOGGER.info("Temps actuel de simulation: "+getHorloge()+"/"+getConfiguration().getConfigurationSimulationReseau().getDuree());
+		LOGGER.info("Agents - Messages reçus: "+Agent.TOTAL_MESSAGES_RECUS);
+		LOGGER.info("Agents - Messages perdus: "+totalMessagesPerdus+" ("+Utilitaires.pourcentage(pourcentageMessagesPerdus)+")");
+		LOGGER.info("Agents - Messages perdus brutalement: "+Agent.TOTAL_MESSAGES_PERDUS_BRUTALEMENT+" ("+Utilitaires.pourcentage((double)Agent.TOTAL_MESSAGES_PERDUS_BRUTALEMENT/(double)Agent.TOTAL_MESSAGES_RECUS)+")");
+		LOGGER.info("Agents - Messages perdus buffer plein: "+Agent.TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN+" ("+Utilitaires.pourcentage((double)Agent.TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN/(double)Agent.TOTAL_MESSAGES_RECUS)+")");
+		LOGGER.info("Agents - Messages en cours de traitement: "+Agent.TOTAL_MESSAGES_EN_COURS_TRAITEMENT);
+		LOGGER.info("Hotes - Messages originaux envoyés: "+Hote.TOTAL_MESSAGES_ENVOYES);
+		LOGGER.info("Hotes - Messages réexpédiés: "+Hote.TOTAL_MESSAGES_REEXPEDIES+" ("+Utilitaires.pourcentage((double) Hote.TOTAL_MESSAGES_REEXPEDIES / (double) Hote.TOTAL_MESSAGES_ENVOYES)+")");
+		LOGGER.info("Hotes - Accuses de réception reçus: "+Hote.TOTAL_ACCUSES_RECUS);
+		LOGGER.info("Hotes - Timeouts trop courts: "+Hote.TOTAL_TIMEOUTS_TROP_COURTS);
+		LOGGER.info("Hotes - Messages en cours de traitement: "+Hote.TOTAL_MESSAGES_EN_COURS_TRAITEMENT);
+		LOGGER.info("Hotes - Message le plus réémis: "+(Hote.MESSAGE_LE_PLUS_REEMIS.getNumeroEmission()-1)+" fois");
+		LOGGER.info("Le temps moyen entre l'émission d'un message et la réception de l'accusé correspondant est de "+ tempsMoyenEntreEmissionEtReceptionAccuse);
+		LOGGER.info("Les " + Hote.TOTAL_ACCUSES_RECUS + " messages ont passé en absolu " + tempsMoyenVoyageAbsolu + " unités de temps dans des buffers");
+		LOGGER.info("Les messages acquittés ont passé en moyenne " + Utilitaires.pourcentage(tempsMoyenVoyageComplet)	+ " de leur temps de voyage complet dans des buffers");
+		LOGGER.info("Le message ayant mis le plus de temps à être acquitté a pris "+ Hote.MESSAGE_TEMPS_MAX.getTempsTrajet()+" unités de temps");
+		
+
+		LOGGER.info("-----------------------------------------------------");
 	}
 
 
@@ -106,8 +117,6 @@ public class SimulationReseau extends AbstractSimulation {
 					+ " recus car son buffer était plein ("
 					+ Utilitaires.pourcentage(perdusBufferPlein, recus) + ")");
 		}
-		// globalement
-
 	}
 
 
@@ -186,7 +195,6 @@ public class SimulationReseau extends AbstractSimulation {
 	
 	
 	
-	
 
 
 	/**
@@ -197,69 +205,40 @@ public class SimulationReseau extends AbstractSimulation {
 		LOGGER.info("Démarrage de la simulation ("
 				+ getConfiguration().getConfigurationSimulationReseau()
 						.getNom() + ")");
+		LOGGER
+		.info("------------------------------------------------------------------");
 		
-		// dernier temps (réel) où on a affiché les informations sur la simulation
-		long dernierAffichageProgres = System.currentTimeMillis();
-
-		// à chaque tour de boucle on récupère
-		// l'évènement imminent dans la FEL et on le traite
+		// boucle principale de la simulation
 		while (!getFutureEventList().estVide()) {
-			if(System.currentTimeMillis() - dernierAffichageProgres > 1000){
-				dernierAffichageProgres = System.currentTimeMillis();
-				
-				double tempsMoyenEntreEmissionEtReceptionAccuse =
-					(double) Hote.TOTAL_TEMPS_VOYAGE_MESSAGES / (double) Hote.TOTAL_ACCUSES_RECUS;
-				double tempsMoyenVoyageAbsolu =
-					((double) Hote.TOTAL_TEMPS_BUFFERS / (double) Hote.TOTAL_ACCUSES_RECUS);
-				double tempsMoyenVoyageComplet =
-					((double) Hote.TOTAL_TEMPS_BUFFERS / (double) Hote.TOTAL_TEMPS_VOYAGE_MESSAGES);
 
-				int totalMessagesPerdus = Agent.TOTAL_MESSAGES_PERDUS_BRUTALEMENT + Agent.TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN;
-				double pourcentageMessagesPerdus = (double) totalMessagesPerdus / (double) Agent.TOTAL_MESSAGES_RECUS;
-				 
-				LOGGER.info("Temps actuel de simulation: "+getHorloge()+"/"+getConfiguration().getConfigurationSimulationReseau().getDuree());
-				LOGGER.info("Agents - Messages reçus: "+Agent.TOTAL_MESSAGES_RECUS);
-				LOGGER.info("Agents - Messages perdus: "+totalMessagesPerdus+" ("+Utilitaires.pourcentage(pourcentageMessagesPerdus));
-				LOGGER.info("Agents - Messages perdus brutalement: "+Agent.TOTAL_MESSAGES_PERDUS_BRUTALEMENT+" ("+Utilitaires.pourcentage((double)Agent.TOTAL_MESSAGES_PERDUS_BRUTALEMENT/(double)Agent.TOTAL_MESSAGES_RECUS)+")");
-				LOGGER.info("Agents - Messages perdus buffer plein: "+Agent.TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN+" ("+Utilitaires.pourcentage((double)Agent.TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN/(double)Agent.TOTAL_MESSAGES_RECUS)+")");
-				LOGGER.info("Agents - Messages en cours de traitement: "+Agent.TOTAL_MESSAGES_EN_COURS_TRAITEMENT);
-				LOGGER.info("Hotes - Messages originaux envoyés: "+Hote.TOTAL_MESSAGES_ENVOYES);
-				LOGGER.info("Hotes - Messages réexpédiés: "+Hote.TOTAL_MESSAGES_REEXPEDIES+" ("+Utilitaires.pourcentage((double) Hote.TOTAL_MESSAGES_REEXPEDIES / (double) Hote.TOTAL_MESSAGES_ENVOYES)+")");
-				LOGGER.info("Hotes - Accuses de réception reçus: "+Hote.TOTAL_ACCUSES_RECUS);
-				LOGGER.info("Hotes - Timeouts trop courts: "+Hote.TOTAL_TIMEOUTS_TROP_COURTS);
-				LOGGER.info("Hotes - Messages en cours de traitement: "+Hote.TOTAL_MESSAGES_EN_COURS_TRAITEMENT);
-				LOGGER.info("Hotes - Message le plus réémis: "+(Hote.MESSAGE_LE_PLUS_REEMIS.getNumeroEmission()-1)+" fois");
-				LOGGER.info("Le temps moyen entre l'émission d'un message et la réception de l'accusé correspondant est de "+ tempsMoyenEntreEmissionEtReceptionAccuse);
-				LOGGER.info("Les " + Hote.TOTAL_ACCUSES_RECUS + " messages ont passé en absolu " + tempsMoyenVoyageAbsolu + " unités de temps dans des buffers");
-				LOGGER.info("Les messages acquittés ont passé en moyenne " + Utilitaires.pourcentage(tempsMoyenVoyageComplet)	+ " de leur temps de voyage complet dans des buffers");
-				LOGGER.info("Le message ayant mis le plus de temps à être acquitté a pris "+ Hote.MESSAGE_TEMPS_MAX.getTempsTrajet()+" unités de temps");
-				
-				
-				
-				
-				LOGGER.info("-----------------------------------------------------");
+			// Pour un temps t donné:
+			// En tout premier lieu, on affiche les statistiques si nécessaire
+			Evenement 
+			evenementImminent = getFutureEventList().getEvenementImminent(AffichageStatistiques.class);
+
+			// S'il n'y a plus de statistiques à afficher, on vérifie si la simulation ne doit pas
+			// se terminer
+			if(evenementImminent == null){
+				evenementImminent = getFutureEventList().getEvenementImminent(FinDeSimulation.class);
 			}
-			
-			
-			
-			
-			
-			
 			
 			
 			// TODO V2.0: récupérer d'abord les évènements de type
 			// AgentEnvoieInfosRoutage et AgentRecoitInfosRoutage
-			// on essaie en priorité de traiter la réception des messages par
-			// les hôtes
-			// car ça peut éviter l'envoi le déclenchement inutile de timeouts
-			Evenement evenementImminent =
+			
+			// ensuite on essaie en priorité de traiter la réception des messages par
+			// les hôtes car ça peut éviter le déclenchement inutile de timeouts
+			if(evenementImminent == null){
+				evenementImminent =
 					getFutureEventList().getEvenementImminent(
 							HoteRecoitMessage.class);
+			}
+			
+			// dans tous les autres cas on traite l'évènement imminent
 			if (evenementImminent == null) {
-				// s'il n'y a pas de réception de message à traiter
-				// on récupère simplement l'évènement imminent
 				evenementImminent = getFutureEventList().getEvenementImminent();
 			}
+			
 			LOGGER.trace(evenementImminent.toString());
 			// On avance le temps de simulation au temps de l'évènement imminent
 			this.setHorloge(evenementImminent.getTempsPrevu());
@@ -294,6 +273,9 @@ public class SimulationReseau extends AbstractSimulation {
 				HoteFinTraitementMessage evt =
 						(HoteFinTraitementMessage) evenementImminent;
 				evt.getHote().finitTraiterMessage(evt.getMessage());
+			} else if (evenementImminent instanceof AffichageStatistiques){
+				// on calcule affiche les statistiques actuelles
+				calculerEtAfficherResultats();
 			} else if (evenementImminent instanceof FinDeSimulation) {
 				// on met à jour la statistique du taux d'utilisation du buffer
 				// de chaque agent
@@ -306,34 +288,7 @@ public class SimulationReseau extends AbstractSimulation {
 				LOGGER.info("Fin de la simulation");	
 			}
 		}
-		// on calcule et on affiche les résultats de la simulation
-		calculerEtAfficherResultats();
 	}
-
-
-
-	/**
-	 * Méthode utilisée pour générer et placer sur la FEL les premiers
-	 * évènements d'envoi des hôtes des agents
-	 */
-	private void genererPremiersEvenementsEnvoiDesHotes() {
-		// avant d'ajouter quoi que ce soit sur la FEL on ajoute
-		// à l'horloge la durée d'initialisation de la simulation
-		// pour la première version ce temps est de 0
-		// pour la seconde version utilisant le distance vector
-		// on le fixera par exemple à 1000
-		// pour dire que les 1000 premiers temps serviront à l'initialisation
-		ajouterTempsHorloge(getConfiguration()
-				.getConfigurationSimulationReseau().getDureeInitialisation());
-		for (Agent agent : agents) {
-			for (Hote h : agent.getHotes()) {
-				HoteEnvoieMessageOriginal evt =
-						h.genererEvenementHoteEnvoieMessageOriginal();
-				getFutureEventList().planifierEvenement(evt);
-			}
-		}
-	}
-
 
 
 	/**
@@ -486,10 +441,44 @@ public class SimulationReseau extends AbstractSimulation {
 		// AgentEnvoieInfosRoutage
 		// ces envois commencent au temps 0 jusqu'au temps dureeInitialisation
 		// au max
-		// Génération des premiers évènement d'envoi des hôtes
-		// TODO v2.0 ne générer des envois qu'à partir d'un temps donné
-		// pour laisser le temps au distance vector de se stabiliser
-		genererPremiersEvenementsEnvoiDesHotes();
+		
+		
+		// Génération des premiers évènements	
+		// avant d'ajouter quoi que ce soit sur la FEL on ajoute
+		// à l'horloge la durée d'initialisation de la simulation
+		// pour la première version ce temps est de 0
+		// pour la seconde version utilisant le distance vector
+		// on le fixera par exemple à 1000
+		// pour dire que les 1000 premiers temps serviront à l'initialisation
+		ajouterTempsHorloge(getConfiguration()
+				.getConfigurationSimulationReseau().getDureeInitialisation());
+		
+		
+		// on prévoit des évènements spéciaux pour afficher 
+		// les statistiques à des moments bien déterminés pendant la simulation
+		// (par exemple tous les 10% de la simulation)
+		float periodiciteAffichageStats = getConfiguration().getConfigurationSimulationReseau().getPeriodiciteAffichageStatistiques();
+		long tempsEntreAffichageStats = Math.round((float)getConfiguration().getConfigurationSimulationReseau().getDuree() * periodiciteAffichageStats); 
+		if(tempsEntreAffichageStats == 0){
+			// l'unité de temps minimale
+			tempsEntreAffichageStats = 1;
+		}
+		long tempsTemp = 0;
+		while(tempsTemp <= getConfiguration().getConfigurationSimulationReseau().getDuree()){
+			AffichageStatistiques evtAffichageStats = new AffichageStatistiques(getHorloge() + tempsTemp);
+			getFutureEventList().planifierEvenement(evtAffichageStats);
+			tempsTemp += tempsEntreAffichageStats;
+		}
+		
+		// premiers évènements d'envoi par les hôtes
+		for (Agent agent : agents) {
+			for (Hote h : agent.getHotes()) {
+				HoteEnvoieMessageOriginal evt =
+						h.genererEvenementHoteEnvoieMessageOriginal();
+				getFutureEventList().planifierEvenement(evt);
+			}
+		}
+		
 		// On ajoute directement l'évènement de fin de simulation à la FEL
 		// la fin doit avoir lieu après la durée d'initialisation + la durée de
 		// la simulation
