@@ -148,6 +148,7 @@ public class ConfigurationHotes extends AbstractConfiguration {
 	 *        le timeout.
 	 */
 	public void setTimeoutReemissionMessages(final int timeoutReemissionMessages) {
+		//TODO remettre
 		//int timeoutMinimal = 80;
 		//if (timeoutReemissionMessages < timeoutMinimal) {
 		//	throw new IllegalArgumentException(

@@ -19,15 +19,19 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	 * Durée de simulation (> 0).
 	 */
 	private long	duree;
-	
 	/**
 	 * Durée de la période d'initialisation du système (>= 0).
 	 */
-	private long dureeInitialisation;
+	private long	dureeInitialisation;
 	/**
 	 * Nom de la simulation.
 	 */
 	private String	nom;
+	/**
+	 * Quand afficher les statistiques? (exemple: 0.1 = tous les 10% de la
+	 * simulation).
+	 */
+	private float	periodiciteAffichageStatistiques;
 
 
 
@@ -54,7 +58,8 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 		return duree;
 	}
 
-	
+
+
 	/**
 	 * Récupérer la durée de la période d'initialisation de la simulation (>=0)
 	 * 
@@ -63,11 +68,7 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	public long getDureeInitialisation() {
 		return dureeInitialisation;
 	}
-	
-	
-	
-	
-	
+
 
 
 	/**
@@ -81,7 +82,14 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 
 
 
-
+	/**
+	 * Récupérer la périodicité pour l'affichage des stats.
+	 * 
+	 * @return la périodicité pour l'affichage des stats.
+	 */
+	public float getPeriodiciteAffichageStatistiques() {
+		return periodiciteAffichageStatistiques;
+	}
 
 
 
@@ -114,9 +122,12 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 		}
 		this.duree = duree;
 	}
-	
+
+
+
 	/**
-	 * Déterminer la durée de la période d'initialisation de la simulation (>= 0).
+	 * Déterminer la durée de la période d'initialisation de la simulation (>=
+	 * 0).
 	 * 
 	 * @param dureeInit
 	 *        durée de la période d'initialisation de la simulation
@@ -147,5 +158,20 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 
 
 
-
+	/**
+	 * Définir la périodicité pour l'affichage des stats.
+	 * 
+	 * @param periodiciteAffichageStatistiques
+	 *        la périodicité pour l'affichage des stats.
+	 */
+	public void setPeriodiciteAffichageStatistiques(
+			float periodiciteAffichageStatistiques) {
+		if (periodiciteAffichageStatistiques <= 0
+				|| periodiciteAffichageStatistiques > 1) {
+			throw new IllegalArgumentException(
+					"La périodicité d'affichage des stats doit être telle que: 0 < periodicite <= 1");
+		}
+		this.periodiciteAffichageStatistiques =
+				periodiciteAffichageStatistiques;
+	}
 }
