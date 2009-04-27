@@ -47,7 +47,7 @@ public class Utilitaires {
 	 * @param valeur la valeur à transformer en pourcentage
 	 * @return la réprésentation en pourcentage
 	 */
-	public static String pourcentage(double valeur){
+	public static String pourcentage(final double valeur){
 		return formatPourcentages.format(valeur);
 	}
 
