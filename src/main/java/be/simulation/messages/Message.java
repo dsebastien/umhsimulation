@@ -14,8 +14,6 @@ public abstract class Message extends AbstractMessage<Hote> {
 	/**
 	 * temps de simulation au moment de l'émission de ce message.
 	 */
-	// FIXME Déplacer dans la super classe! Utile pour les accusés aussi!
-	// et ajouter la mise à jour de l'info (ajout au constructeur + checks)
 	private final long	tempsEmission;
 	/**
 	 * le temps total passé par ce message dans des buffers.
