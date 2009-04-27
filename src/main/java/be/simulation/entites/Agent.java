@@ -7,6 +7,7 @@ import be.simulation.evenements.AgentFinTraitementMessage;
 import be.simulation.evenements.AgentRecoitMessage;
 import be.simulation.evenements.HoteRecoitMessage;
 import be.simulation.messages.Message;
+import be.simulation.messages.routage.InfosRoutage;
 import be.simulation.messages.utilitaires.MessageEnAttente;
 import be.simulation.routage.Route;
 import be.simulation.routage.TableDeRoutage;
@@ -19,63 +20,72 @@ import be.simulation.routage.TableDeRoutage;
  * @author Mernier Jean-François
  */
 public class Agent extends AbstractEntiteSimulationReseau {
+	public static int				TOTAL_MESSAGES_EN_COURS_TRAITEMENT					=
+																								0;
+	public static int				TOTAL_MESSAGES_PERDUS_BRUTALEMENT					=
+																								0;
+	public static int				TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN					=
+																								0;
 	// variables tenant l'information globale (pour tous les agents)
-	public static int TOTAL_MESSAGES_RECUS = 0;
-	public static int TOTAL_MESSAGES_PERDUS_BRUTALEMENT = 0;
-	public static int TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN = 0;
-	public static int TOTAL_MESSAGES_EN_COURS_TRAITEMENT = 0;
-	public static int TOTAL_SOMME_NIVEAUX_OCCUPATION_BUFFERS = 0;
-	//TODO occupation globale des buffers en temps réel aussi?
-	
+	public static int				TOTAL_MESSAGES_RECUS								=
+																								0;
+	public static int				TOTAL_SOMME_NIVEAUX_OCCUPATION_BUFFERS				=
+																								0;
+	// TODO occupation globale des buffers en temps réel aussi?
 	/**
 	 * Dernier temps de simulation ou le taux d'utilisation du buffer a été mis
 	 * à jour.
 	 */
-	private long				dernierTempsMiseAJourSommeNiveauxOccupationBuffer	= 0;
+	private long					dernierTempsMiseAJourSommeNiveauxOccupationBuffer	=
+																								0;
 	/**
 	 * PRNG utilisé pour choisir un hôte au hasard parmi les hôtes connectés à
 	 * cet agent.
 	 */
-	private final Random		generateurChoixHote							=
-																					new Random();
+	private final Random			generateurChoixHote									=
+																								new Random();
 	/**
 	 * PRNG utilisé pour déterminer si un message reçu est perdu ou non (suivant
 	 * la configuration).
 	 */
-	private final Random		generateurMessagesPerdus					=
-																					new Random();
+	private final Random			generateurMessagesPerdus							=
+																								new Random();
 	/**
 	 * Hôtes connectés à cet agent.
 	 */
-	private final List<Hote>	hotes										=
-																					new ArrayList<Hote>();
+	private final List<Hote>		hotes												=
+																								new ArrayList<Hote>();
 	/**
 	 * Le nombre de messages en cours de traitement.
 	 */
-	private int					messagesEnCoursTraitement					= 0;
+	private int						messagesEnCoursTraitement							=
+																								0;
 	/**
 	 * Le nombre de messages perdus brutalement.
 	 */
-	private int					messagesPerdusBrutalement					= 0;
+	private int						messagesPerdusBrutalement							=
+																								0;
 	/**
 	 * Le nombre de messages perdus car le buffer était plein.
 	 */
-	private int					messagesPerdusBufferPlein					= 0;
+	private int						messagesPerdusBufferPlein							=
+																								0;
 	/**
 	 * Le nombre de messages reçus.
 	 */
-	private int					messagesRecus								= 0;
+	private int						messagesRecus										=
+																								0;
+	/**
+	 * La somme des utilisations du buffer.
+	 */
+	private long					sommeNiveauOccupationBuffer							=
+																								0L;
 	/**
 	 * Les informations de routage dont dispose cet agent (lui permet de savoir
 	 * vers où forwarder les messages).
 	 */
-	private final TableDeRoutage		tableDeRoutage										=
-																					new TableDeRoutage();
-	/**
-	 * La somme des utilisations du buffer.
-	 */
-	private long				sommeNiveauOccupationBuffer					=
-																					0L;
+	private final TableDeRoutage	tableDeRoutage										=
+																								new TableDeRoutage();
 
 
 
@@ -97,6 +107,16 @@ public class Agent extends AbstractEntiteSimulationReseau {
 
 
 	/**
+	 * Méthode appelée quand cet agent envoie ses informations de routage à ses
+	 * voisins.
+	 */
+	public void envoyerInfosRoutage() {
+		// FIXME v2.0 implémenter!
+	}
+
+
+
+	/**
 	 * Détermine si on perd le message ou non (sur base de la configuration) en
 	 * utilisant un PRNG.
 	 * 
@@ -111,26 +131,6 @@ public class Agent extends AbstractEntiteSimulationReseau {
 			retVal = true;
 		}
 		return retVal;
-	}
-	
-	/**
-	 * Met à jour la statistique concernant le taux d'utilisation du buffer.
-	 */
-	public void mettreAJourStatTauxUtilisationBuffer(){
-		long tailleMaxBuffer = getConfiguration().getConfigurationAgents().getTailleMaxBuffer();
-		long differenceTempsActuelEtTempsDerniereMaj = getSimulation().getHorloge() - dernierTempsMiseAJourSommeNiveauxOccupationBuffer;
-		// on ne le fait que si le buffer n'est pas illimité
-		// et si la différence de temps entre la dernière mise à jour et le temps actuel n'est pas =0
-		if(differenceTempsActuelEtTempsDerniereMaj > 0 && tailleMaxBuffer < Long.MAX_VALUE){
-			// on l'incrémente de n * le nombre d'éléments actuellement dans le buffer (pour représenter le fait que le buffer
-			// a été à ce niveau d'occupation pendant n unités de temps
-			long niveauOccupation = getBuffer().size() * differenceTempsActuelEtTempsDerniereMaj;
-			sommeNiveauOccupationBuffer += niveauOccupation;
-			
-			// on incrémente aussi l'information globale (pour tous les agents)
-			TOTAL_SOMME_NIVEAUX_OCCUPATION_BUFFERS += niveauOccupation;
-		}
-		dernierTempsMiseAJourSommeNiveauxOccupationBuffer = getSimulation().getHorloge();
 	}
 
 
@@ -148,7 +148,6 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		}
 		// on met à jour la statistique du taux d'utilisation du buffer
 		mettreAJourStatTauxUtilisationBuffer();
-		
 		// vérification du destinataire final de ce message
 		if (this.equals(message.getDestination().getAgent())) {
 			// message à destination d'un hôte de cet agent
@@ -166,7 +165,8 @@ public class Agent extends AbstractEntiteSimulationReseau {
 			// le message est à destination d'un hôte connecté à un autre agent
 			// on cherche où forwarder le message
 			Route route =
-					tableDeRoutage.trouverMeilleureRoute(message.getDestination());
+					tableDeRoutage.trouverMeilleureRoute(message
+							.getDestination());
 			// on génère l'évènement de réception par le voisin correspondant à
 			// cette route
 			AgentRecoitMessage evtReceptionAgent =
@@ -181,7 +181,6 @@ public class Agent extends AbstractEntiteSimulationReseau {
 			// plus rien à traiter, on décrémente le nombre de messages en cours
 			// de traitement
 			messagesEnCoursTraitement--;
-			
 			// on incrémente aussi l'info globale (pour tous les agents)
 			TOTAL_MESSAGES_EN_COURS_TRAITEMENT--;
 		} else {
@@ -231,7 +230,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		return hotes.get(position);
 	}
 
-	
+
 
 	/**
 	 * Récupérer un hôte aléatoire de cet agent pouvant être n'importe quel hôte
@@ -300,23 +299,23 @@ public class Agent extends AbstractEntiteSimulationReseau {
 
 
 	/**
-	 * Récupérer les infos de routage de cet agent.
-	 * 
-	 * @return les infos de routage de cet agent
-	 */
-	public TableDeRoutage getTableDeRoutage() {
-		return tableDeRoutage;
-	}
-
-
-
-	/**
 	 * Récupérer la somme des niveaux d'occupation du buffer.
 	 * 
 	 * @return la somme des niveaux d'occupation d'utilisation du buffer.
 	 */
 	public double getSommeNiveauxOccupationBuffer() {
 		return sommeNiveauOccupationBuffer;
+	}
+
+
+
+	/**
+	 * Récupérer les infos de routage de cet agent.
+	 * 
+	 * @return les infos de routage de cet agent
+	 */
+	public TableDeRoutage getTableDeRoutage() {
+		return tableDeRoutage;
 	}
 
 
@@ -338,6 +337,49 @@ public class Agent extends AbstractEntiteSimulationReseau {
 
 
 	/**
+	 * Met à jour la statistique concernant le taux d'utilisation du buffer.
+	 */
+	public void mettreAJourStatTauxUtilisationBuffer() {
+		long tailleMaxBuffer =
+				getConfiguration().getConfigurationAgents()
+						.getTailleMaxBuffer();
+		long differenceTempsActuelEtTempsDerniereMaj =
+				getSimulation().getHorloge()
+						- dernierTempsMiseAJourSommeNiveauxOccupationBuffer;
+		// on ne le fait que si le buffer n'est pas illimité
+		// et si la différence de temps entre la dernière mise à jour et le
+		// temps actuel n'est pas =0
+		if (differenceTempsActuelEtTempsDerniereMaj > 0
+				&& tailleMaxBuffer < Long.MAX_VALUE) {
+			// on l'incrémente de n * le nombre d'éléments actuellement dans le
+			// buffer (pour représenter le fait que le buffer
+			// a été à ce niveau d'occupation pendant n unités de temps
+			long niveauOccupation =
+					getBuffer().size()
+							* differenceTempsActuelEtTempsDerniereMaj;
+			sommeNiveauOccupationBuffer += niveauOccupation;
+			// on incrémente aussi l'information globale (pour tous les agents)
+			TOTAL_SOMME_NIVEAUX_OCCUPATION_BUFFERS += niveauOccupation;
+		}
+		dernierTempsMiseAJourSommeNiveauxOccupationBuffer =
+				getSimulation().getHorloge();
+	}
+
+
+
+	/**
+	 * Méthode appelée quand cet agent reçoit des informations de routage.
+	 * 
+	 * @param infosRoutage
+	 *        les informations de routage reçues
+	 */
+	public void recoitInfosRoutage(final InfosRoutage infosRoutage) {
+		// FIXME v2.0 implémenter!
+	}
+
+
+
+	/**
 	 * Appelé quand cet agent reçoit un message.
 	 * 
 	 * @param message
@@ -350,9 +392,9 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		}
 		// on incrémente le nombre de messages reçus
 		messagesRecus++;
-		// on incrémente aussi le nombre de messages reçus par les agents en général
-		TOTAL_MESSAGES_RECUS++; 
-		
+		// on incrémente aussi le nombre de messages reçus par les agents en
+		// général
+		TOTAL_MESSAGES_RECUS++;
 		// on détermine si ce message est perdu ou non
 		// (utilisation d'une variable aléatoire)
 		if (estPerdu()) {
@@ -361,14 +403,14 @@ public class Agent extends AbstractEntiteSimulationReseau {
 					+ getSimulation().getHorloge());
 			// on incrémente le compteur de messages perdus brutalement
 			messagesPerdusBrutalement++;
-			
-			// on incrémente le nombre de messages perdus brutalement par tous les agents
+			// on incrémente le nombre de messages perdus brutalement par tous
+			// les agents
 			TOTAL_MESSAGES_PERDUS_BRUTALEMENT++;
-			
-		}else{
+		} else {
 			// est-ce qu'on peut encore traiter un message?
 			if (messagesEnCoursTraitement < getConfiguration()
-					.getConfigurationAgents().getNombreMaxTraitementsSimultanes()) {
+					.getConfigurationAgents()
+					.getNombreMaxTraitementsSimultanes()) {
 				// on peut traiter le message directement donc on génère
 				// l'évènement de fin de traitement
 				AgentFinTraitementMessage evtAgentFinTraitementMessage =
@@ -378,38 +420,41 @@ public class Agent extends AbstractEntiteSimulationReseau {
 						evtAgentFinTraitementMessage);
 				// on incrémente le compteur de messages en cours de traitement
 				messagesEnCoursTraitement++;
-				
 				// on incrémente aussi l'info globale (pour tous les agents)
 				TOTAL_MESSAGES_EN_COURS_TRAITEMENT++;
-			}else{
-				// TODO v2.0 ajouter les détails de la vérification de l'occupation
-				// du buffer pour générer des évènements AgentEnvoieInfosRoutage
-				
-				
-				
+			} else {
+				if (getConfiguration().getConfigurationSimulationReseau()
+						.isDistanceVectorActive()) {
+					// TODO v2.0 ajouter les détails de la vérification de
+					// l'occupation
+					// du buffer pour générer des évènements
+					// AgentEnvoieInfosRoutage
+				}
 				// on met à jour la statistique du taux d'utilisation du buffer
 				mettreAJourStatTauxUtilisationBuffer();
-				
-				// on ne peut plus traiter de message pour l'instant donc on doit le
-				// mettre en attente on essaie donc de le placer dans le buffer si
+				// on ne peut plus traiter de message pour l'instant donc on
+				// doit le
+				// mettre en attente on essaie donc de le placer dans le buffer
+				// si
 				// possible
 				boolean bufferInfini =
-						getConfiguration().getConfigurationAgents().getTailleMaxBuffer() == Long.MAX_VALUE;
+						getConfiguration().getConfigurationAgents()
+								.getTailleMaxBuffer() == Long.MAX_VALUE;
 				boolean bufferRempli =
 						getBuffer().size() == getConfiguration()
 								.getConfigurationAgents().getTailleMaxBuffer();
 				// si le buffer n'est pas rempli ou est infini, pas de problème
 				if (!bufferRempli || bufferInfini) {
-					// le buffer n'est pas plein alors on peut y placer le message.
-					// on enregistre le temps de simulation auquel on l'y a placé
-					getBuffer()
-							.add(
-									new MessageEnAttente(message, getSimulation()
-											.getHorloge()));
+					// le buffer n'est pas plein alors on peut y placer le
+					// message.
+					// on enregistre le temps de simulation auquel on l'y a
+					// placé
+					getBuffer().add(
+							new MessageEnAttente(message, getSimulation()
+									.getHorloge()));
 				} else {
 					// le buffer est plein donc le message est perdu
 					messagesPerdusBufferPlein++;
-					
 					// on incrémente le nombre global de messages perdus à cause
 					// d'un buffer plein (pour tous les agents)
 					TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN++;
