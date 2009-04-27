@@ -24,34 +24,34 @@ import be.simulation.messages.utilitaires.MessageTempsMax;
  * @author Mernier Jean-François
  */
 public class Hote extends AbstractEntiteSimulationReseau {
+	public static MessageSimple MESSAGE_LE_PLUS_REEMIS = MessageSimple.creerFauxMessage();
+	public static MessageTempsMax	MESSAGE_TEMPS_MAX =	new MessageTempsMax();
 	// variables tenant l'information globale (pour tous les hôtes)
 	public static int TOTAL_ACCUSES_RECUS = 0;
-	public static int TOTAL_MESSAGES_ENVOYES = 0;
-	public static int TOTAL_MESSAGES_REEXPEDIES = 0;
-	public static int TOTAL_TIMEOUTS_TROP_COURTS = 0;
-	public static int TOTAL_MESSAGES_EN_COURS_TRAITEMENT = 0;
-	public static MessageSimple MESSAGE_LE_PLUS_REEMIS = MessageSimple.creerFauxMessage();
-	public static long TOTAL_TEMPS_VOYAGE_MESSAGES = 0L;
-	public static long TOTAL_TEMPS_BUFFERS = 0L;
-	public static MessageTempsMax	MESSAGE_TEMPS_MAX =	new MessageTempsMax();
-	
-	
-	
-	
 	/**
 	 * Utilisé pour attribuer un numéro unique à chaque hôte.
 	 */
 	public static long				TOTAL_HOTES					= 0;
+	public static int TOTAL_MESSAGES_EN_COURS_TRAITEMENT = 0;
+	public static int TOTAL_MESSAGES_ENVOYES = 0;
+	public static int TOTAL_MESSAGES_REEXPEDIES = 0;
+	public static long TOTAL_TEMPS_BUFFERS = 0L;
+	public static long TOTAL_TEMPS_VOYAGE_MESSAGES = 0L;
+	
+	
+	
+	
+	public static int TOTAL_TIMEOUTS_TROP_COURTS = 0;
+	/**
+	 * Nombre d'accusés de réception reçus.
+	 */
+	private int						accusesReceptionRecus		= 0;
+	
 	/**
 	 * Liste des accusés de réception reçus.
 	 */
 	private final Map<Integer, AccuseReception>		accusesRecus				=
 																		new HashMap<Integer,AccuseReception>();
-	
-	/**
-	 * Nombre d'accusés de réception reçus.
-	 */
-	private int						accusesReceptionRecus		= 0;
 	/**
 	 * Agent auquel cet hote est relié (pour pouvoir communiquer avec lui).
 	 */
@@ -108,13 +108,6 @@ public class Hote extends AbstractEntiteSimulationReseau {
 
 	
 	
-
-
-	//TODO remove
-	public Map<Integer, AccuseReception> getAccusesRecus() {
-		return accusesRecus;
-	}
-
 
 
 	/**
@@ -419,6 +412,16 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	 */
 	public int getAccusesReceptionRecus() {
 		return accusesReceptionRecus;
+	}
+
+
+
+	/**
+	 * Récupérer la liste des accusés de réception reçus par cet hôte.
+	 * @return la liste des accusés de réception reçus par cet hôte
+	 */
+	public Map<Integer, AccuseReception> getAccusesRecus() {
+		return accusesRecus;
 	}
 
 

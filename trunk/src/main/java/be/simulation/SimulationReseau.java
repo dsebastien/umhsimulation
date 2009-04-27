@@ -18,6 +18,8 @@ import be.simulation.evenements.HoteFinTraitementMessage;
 import be.simulation.evenements.HoteRecoitMessage;
 import be.simulation.evenements.HoteTimeoutReceptionAccuse;
 import be.simulation.evenements.AffichageStatistiques;
+import be.simulation.evenements.routage.AgentEnvoieInfosRoutage;
+import be.simulation.evenements.routage.AgentRecoitInfosRoutage;
 import be.simulation.utilitaires.Utilitaires;
 
 /**
@@ -57,19 +59,32 @@ public class SimulationReseau extends AbstractSimulation {
 
 
 
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		super.afterPropertiesSet();
+	}
+
+
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void calculerEtAfficherResultats() {
-		double tempsMoyenEntreEmissionEtReceptionAccuse =
-				(double) Hote.TOTAL_TEMPS_VOYAGE_MESSAGES
-						/ (double) Hote.TOTAL_ACCUSES_RECUS;
-		double tempsMoyenVoyageAbsolu =
-				((double) Hote.TOTAL_TEMPS_BUFFERS / (double) Hote.TOTAL_ACCUSES_RECUS);
-		double tempsMoyenVoyageComplet = 0;
+		double tempsMoyenEntreEmissionEtReceptionAccuse = 0;
+		if (Hote.TOTAL_ACCUSES_RECUS > 0) {
+			tempsMoyenEntreEmissionEtReceptionAccuse =
+					(double) Hote.TOTAL_TEMPS_VOYAGE_MESSAGES
+							/ (double) Hote.TOTAL_ACCUSES_RECUS;
+		}
+		double tempsMoyenDansBuffersVoyageAbsolu = 0;
+		if (Hote.TOTAL_ACCUSES_RECUS > 0) {
+			tempsMoyenDansBuffersVoyageAbsolu =
+					((double) Hote.TOTAL_TEMPS_BUFFERS / (double) Hote.TOTAL_ACCUSES_RECUS);
+		}
+		double tempsMoyenDansBuffersVoyageComplet = 0;
 		if (Hote.TOTAL_TEMPS_VOYAGE_MESSAGES > 0) {
-			tempsMoyenVoyageComplet =
+			tempsMoyenDansBuffersVoyageComplet =
 					((double) Hote.TOTAL_TEMPS_BUFFERS / (double) Hote.TOTAL_TEMPS_VOYAGE_MESSAGES);
 		}
 		int totalMessagesPerdus =
@@ -99,7 +114,7 @@ public class SimulationReseau extends AbstractSimulation {
 					(double) Hote.TOTAL_MESSAGES_REEXPEDIES
 							/ (double) Hote.TOTAL_MESSAGES_ENVOYES;
 		}
-		double sommeSommeTauxUtilisationBuffersAgents = 0.0;
+		double sommeSommeTauxUtilisationBuffersAgents = 0;
 		Map<Agent, Double> utilisationMoyenneBufferAgent =
 				new HashMap<Agent, Double>();
 		for (Agent agent : agents) {
@@ -200,23 +215,17 @@ public class SimulationReseau extends AbstractSimulation {
 				.info("Le temps moyen entre l'émission d'un message et la réception de l'accusé correspondant est de "
 						+ tempsMoyenEntreEmissionEtReceptionAccuse);
 		LOGGER.info("Les " + Hote.TOTAL_ACCUSES_RECUS
-				+ " messages ont passé en absolu " + tempsMoyenVoyageAbsolu
+				+ " messages ont passé en absolu "
+				+ tempsMoyenDansBuffersVoyageAbsolu
 				+ " unités de temps dans des buffers");
 		LOGGER.info("Les messages acquittés ont passé en moyenne "
-				+ Utilitaires.pourcentage(tempsMoyenVoyageComplet)
+				+ Utilitaires.pourcentage(tempsMoyenDansBuffersVoyageComplet)
 				+ " de leur temps de voyage complet dans des buffers");
 		LOGGER
 				.info("Le message ayant mis le plus de temps à être acquitté a pris "
 						+ Hote.MESSAGE_TEMPS_MAX.getTempsTrajet()
 						+ " unités de temps");
 		LOGGER.info("-----------------------------------------------------");
-	}
-
-
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
 	}
 
 
@@ -246,11 +255,22 @@ public class SimulationReseau extends AbstractSimulation {
 						getFutureEventList().getEvenementImminent(
 								FinDeSimulation.class);
 			}
-			// TODO V2.0: récupérer d'abord les évènements de type
-			// AgentEnvoieInfosRoutage et AgentRecoitInfosRoutage
-			// ensuite on essaie en priorité de traiter la réception des
-			// messages par
-			// les hôtes car ça peut éviter le déclenchement inutile de timeouts
+			// TODO v2.0 déterminer lequel des deux devrait avoir priorité (si
+			// utile)
+			// on traiter d'abord l'envoi et la réception d'informations de
+			// routage
+			if (evenementImminent == null) {
+				evenementImminent =
+						getFutureEventList().getEvenementImminent(
+								AgentRecoitInfosRoutage.class);
+			}
+			if (evenementImminent == null) {
+				evenementImminent =
+						getFutureEventList().getEvenementImminent(
+								AgentEnvoieInfosRoutage.class);
+			}
+			// finalement on traite en priorité la réception de messages
+			// de manière à éviter le déclenchement inutile de timeouts
 			if (evenementImminent == null) {
 				evenementImminent =
 						getFutureEventList().getEvenementImminent(
@@ -297,6 +317,14 @@ public class SimulationReseau extends AbstractSimulation {
 			} else if (evenementImminent instanceof AffichageStatistiques) {
 				// on calcule affiche les statistiques actuelles
 				calculerEtAfficherResultats();
+			} else if (evenementImminent instanceof AgentEnvoieInfosRoutage) {
+				AgentEnvoieInfosRoutage evt =
+						(AgentEnvoieInfosRoutage) evenementImminent;
+				evt.getAgent().envoyerInfosRoutage();
+			} else if (evenementImminent instanceof AgentRecoitInfosRoutage) {
+				AgentRecoitInfosRoutage evt =
+						(AgentRecoitInfosRoutage) evenementImminent;
+				evt.getAgent().recoitInfosRoutage(evt.getInfosRoutage());
 			} else if (evenementImminent instanceof FinDeSimulation) {
 				// on met à jour la statistique du taux d'utilisation du buffer
 				// de chaque agent
@@ -373,7 +401,8 @@ public class SimulationReseau extends AbstractSimulation {
 		// coût de Y: agentA...addRoute(agentB,agentX,Y);
 		if (getConfiguration().getConfigurationSimulationReseau()
 				.isDistanceVectorActive()) {
-			//FIXME v2.0 remplir les routes avec les infos disponibles pour chaque agent
+			// FIXME v2.0 remplir les routes avec les infos disponibles pour
+			// chaque agent
 			// (donc uniquement ses voisins directs)
 		} else {
 			// routes de l'agent 1
@@ -451,10 +480,9 @@ public class SimulationReseau extends AbstractSimulation {
 		agent5.reset();
 		agent6.reset();
 		agent7.reset();
-		// TODO v2.0: peut être à modifier
 		reinitialiserTablesRoutageAgents();
 		// on ajoute les agents à la liste
-		// (pour simplifier le calcul de certaines stats
+		// (pour simplifier certains traitements
 		agents.clear();
 		agents.add(agent1);
 		agents.add(agent2);
@@ -463,12 +491,13 @@ public class SimulationReseau extends AbstractSimulation {
 		agents.add(agent5);
 		agents.add(agent6);
 		agents.add(agent7);
-		
-		if(getConfiguration().getConfigurationSimulationReseau().isDistanceVectorActive()){
-			// Si le distance vector est activé, on planifie les évènements d'envoi d'informations de routage
-			// TODO v2.0
+		if (getConfiguration().getConfigurationSimulationReseau()
+				.isDistanceVectorActive()) {
+			// Si le distance vector est activé, on planifie les évènements
+			// d'envoi d'informations de routage
+			// TODO v2.0: qui envoie ces messages? tout le monde? un agent
+			// particulier? si oui lequel?
 		}
-		
 		// Génération des premiers évènements de la simulation
 		// avant d'ajouter quoi que ce soit sur la FEL on ajoute
 		// à l'horloge la durée d'initialisation de la simulation
