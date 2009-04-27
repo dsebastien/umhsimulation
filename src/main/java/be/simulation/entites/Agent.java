@@ -9,7 +9,7 @@ import be.simulation.evenements.HoteRecoitMessage;
 import be.simulation.messages.Message;
 import be.simulation.messages.utilitaires.MessageEnAttente;
 import be.simulation.routage.Route;
-import be.simulation.routage.Routeur;
+import be.simulation.routage.TableDeRoutage;
 
 /**
  * Agent du système (= serveur).
@@ -69,8 +69,8 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * Les informations de routage dont dispose cet agent (lui permet de savoir
 	 * vers où forwarder les messages).
 	 */
-	private final Routeur		routeur										=
-																					new Routeur();
+	private final TableDeRoutage		tableDeRoutage										=
+																					new TableDeRoutage();
 	/**
 	 * La somme des utilisations du buffer.
 	 */
@@ -166,7 +166,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 			// le message est à destination d'un hôte connecté à un autre agent
 			// on cherche où forwarder le message
 			Route route =
-					routeur.trouverMeilleureRoute(message.getDestination());
+					tableDeRoutage.trouverMeilleureRoute(message.getDestination());
 			// on génère l'évènement de réception par le voisin correspondant à
 			// cette route
 			AgentRecoitMessage evtReceptionAgent =
@@ -304,8 +304,8 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * 
 	 * @return les infos de routage de cet agent
 	 */
-	public Routeur getRouteur() {
-		return routeur;
+	public TableDeRoutage getTableDeRoutage() {
+		return tableDeRoutage;
 	}
 
 

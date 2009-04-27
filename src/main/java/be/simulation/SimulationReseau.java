@@ -342,61 +342,61 @@ public class SimulationReseau extends AbstractSimulation {
 		// pour aller de l'agent A à l'agent B, on passe par le voisin X avec un
 		// coût de Y: agentA...addRoute(agentB,agentX,Y);
 		// routes de l'agent 1
-		agent1.getRouteur().reset();
-		agent1.getRouteur().ajouterRoute(agent2, agent2, 10);
-		agent1.getRouteur().ajouterRoute(agent3, agent3, 20);
-		agent1.getRouteur().ajouterRoute(agent4, agent2, 10);
-		agent1.getRouteur().ajouterRoute(agent5, agent2, 10);
-		agent1.getRouteur().ajouterRoute(agent6, agent2, 10);
-		agent1.getRouteur().ajouterRoute(agent7, agent2, 10);
+		agent1.getTableDeRoutage().reset();
+		agent1.getTableDeRoutage().ajouterRoute(agent2, agent2, 10);
+		agent1.getTableDeRoutage().ajouterRoute(agent3, agent3, 20);
+		agent1.getTableDeRoutage().ajouterRoute(agent4, agent2, 10);
+		agent1.getTableDeRoutage().ajouterRoute(agent5, agent2, 10);
+		agent1.getTableDeRoutage().ajouterRoute(agent6, agent2, 10);
+		agent1.getTableDeRoutage().ajouterRoute(agent7, agent2, 10);
 		// routes de l'agent 2
-		agent2.getRouteur().reset();
-		agent2.getRouteur().ajouterRoute(agent1, agent1, 10);
-		agent2.getRouteur().ajouterRoute(agent3, agent4, 10);
-		agent2.getRouteur().ajouterRoute(agent4, agent4, 10);
-		agent2.getRouteur().ajouterRoute(agent5, agent4, 10);
-		agent2.getRouteur().ajouterRoute(agent6, agent7, 30);
-		agent2.getRouteur().ajouterRoute(agent7, agent7, 30);
+		agent2.getTableDeRoutage().reset();
+		agent2.getTableDeRoutage().ajouterRoute(agent1, agent1, 10);
+		agent2.getTableDeRoutage().ajouterRoute(agent3, agent4, 10);
+		agent2.getTableDeRoutage().ajouterRoute(agent4, agent4, 10);
+		agent2.getTableDeRoutage().ajouterRoute(agent5, agent4, 10);
+		agent2.getTableDeRoutage().ajouterRoute(agent6, agent7, 30);
+		agent2.getTableDeRoutage().ajouterRoute(agent7, agent7, 30);
 		// routes de l'agent 3
-		agent3.getRouteur().reset();
-		agent3.getRouteur().ajouterRoute(agent1, agent1, 20);
-		agent3.getRouteur().ajouterRoute(agent2, agent4, 10);
-		agent3.getRouteur().ajouterRoute(agent4, agent4, 10);
-		agent3.getRouteur().ajouterRoute(agent5, agent4, 10);
-		agent3.getRouteur().ajouterRoute(agent6, agent4, 10);
-		agent3.getRouteur().ajouterRoute(agent7, agent4, 10);
+		agent3.getTableDeRoutage().reset();
+		agent3.getTableDeRoutage().ajouterRoute(agent1, agent1, 20);
+		agent3.getTableDeRoutage().ajouterRoute(agent2, agent4, 10);
+		agent3.getTableDeRoutage().ajouterRoute(agent4, agent4, 10);
+		agent3.getTableDeRoutage().ajouterRoute(agent5, agent4, 10);
+		agent3.getTableDeRoutage().ajouterRoute(agent6, agent4, 10);
+		agent3.getTableDeRoutage().ajouterRoute(agent7, agent4, 10);
 		// routes de l'agent 4
-		agent4.getRouteur().reset();
-		agent4.getRouteur().ajouterRoute(agent1, agent2, 10);
-		agent4.getRouteur().ajouterRoute(agent2, agent2, 10);
-		agent4.getRouteur().ajouterRoute(agent3, agent3, 10);
-		agent4.getRouteur().ajouterRoute(agent5, agent5, 20);
-		agent4.getRouteur().ajouterRoute(agent6, agent2, 10);
-		agent4.getRouteur().ajouterRoute(agent7, agent5, 20);
+		agent4.getTableDeRoutage().reset();
+		agent4.getTableDeRoutage().ajouterRoute(agent1, agent2, 10);
+		agent4.getTableDeRoutage().ajouterRoute(agent2, agent2, 10);
+		agent4.getTableDeRoutage().ajouterRoute(agent3, agent3, 10);
+		agent4.getTableDeRoutage().ajouterRoute(agent5, agent5, 20);
+		agent4.getTableDeRoutage().ajouterRoute(agent6, agent2, 10);
+		agent4.getTableDeRoutage().ajouterRoute(agent7, agent5, 20);
 		// routes de l'agent 5
-		agent5.getRouteur().reset();
-		agent5.getRouteur().ajouterRoute(agent1, agent4, 20);
-		agent5.getRouteur().ajouterRoute(agent2, agent4, 20);
-		agent5.getRouteur().ajouterRoute(agent3, agent4, 20);
-		agent5.getRouteur().ajouterRoute(agent4, agent4, 20);
-		agent5.getRouteur().ajouterRoute(agent6, agent7, 10);
-		agent5.getRouteur().ajouterRoute(agent7, agent7, 10);
+		agent5.getTableDeRoutage().reset();
+		agent5.getTableDeRoutage().ajouterRoute(agent1, agent4, 20);
+		agent5.getTableDeRoutage().ajouterRoute(agent2, agent4, 20);
+		agent5.getTableDeRoutage().ajouterRoute(agent3, agent4, 20);
+		agent5.getTableDeRoutage().ajouterRoute(agent4, agent4, 20);
+		agent5.getTableDeRoutage().ajouterRoute(agent6, agent7, 10);
+		agent5.getTableDeRoutage().ajouterRoute(agent7, agent7, 10);
 		// routes de l'agent 6
-		agent6.getRouteur().reset();
-		agent6.getRouteur().ajouterRoute(agent1, agent7, 20);
-		agent6.getRouteur().ajouterRoute(agent2, agent7, 20);
-		agent6.getRouteur().ajouterRoute(agent3, agent7, 20);
-		agent6.getRouteur().ajouterRoute(agent4, agent7, 20);
-		agent6.getRouteur().ajouterRoute(agent5, agent7, 20);
-		agent6.getRouteur().ajouterRoute(agent7, agent7, 20);
+		agent6.getTableDeRoutage().reset();
+		agent6.getTableDeRoutage().ajouterRoute(agent1, agent7, 20);
+		agent6.getTableDeRoutage().ajouterRoute(agent2, agent7, 20);
+		agent6.getTableDeRoutage().ajouterRoute(agent3, agent7, 20);
+		agent6.getTableDeRoutage().ajouterRoute(agent4, agent7, 20);
+		agent6.getTableDeRoutage().ajouterRoute(agent5, agent7, 20);
+		agent6.getTableDeRoutage().ajouterRoute(agent7, agent7, 20);
 		// routes de l'agent 7
-		agent7.getRouteur().reset();
-		agent7.getRouteur().ajouterRoute(agent1, agent2, 30);
-		agent7.getRouteur().ajouterRoute(agent2, agent2, 30);
-		agent7.getRouteur().ajouterRoute(agent3, agent5, 10);
-		agent7.getRouteur().ajouterRoute(agent4, agent5, 10);
-		agent7.getRouteur().ajouterRoute(agent5, agent5, 10);
-		agent7.getRouteur().ajouterRoute(agent6, agent6, 20);
+		agent7.getTableDeRoutage().reset();
+		agent7.getTableDeRoutage().ajouterRoute(agent1, agent2, 30);
+		agent7.getTableDeRoutage().ajouterRoute(agent2, agent2, 30);
+		agent7.getTableDeRoutage().ajouterRoute(agent3, agent5, 10);
+		agent7.getTableDeRoutage().ajouterRoute(agent4, agent5, 10);
+		agent7.getTableDeRoutage().ajouterRoute(agent5, agent5, 10);
+		agent7.getTableDeRoutage().ajouterRoute(agent6, agent6, 20);
 	}
 
 

@@ -6,14 +6,14 @@ import be.simulation.entites.Agent;
 import be.simulation.entites.Hote;
 
 /**
- * Routeur interne à un agent, lui permet de déterminer où envoyer un message
- * donné (contient la table de routage de l'agent).
+ * Table de routage interne à un agent, lui permet de déterminer où envoyer un message
+ * donné.
  * 
  * @author Dubois Sebastien
  * @author Regnier Frederic
  * @author Mernier Jean-François
  */
-public class Routeur {
+public class TableDeRoutage {
 	/**
 	 * Les différentes routes disponibles.
 	 */
@@ -21,7 +21,7 @@ public class Routeur {
 	/**
 	 * Constructeur par défaut.
 	 */
-	public Routeur() {
+	public TableDeRoutage() {
 	}
 	
 	/**
@@ -47,7 +47,7 @@ public class Routeur {
 	}
 	
 	/**
-	 * Remise à zéro de ce routeur (effacement de la table de routage).
+	 * Remise à zéro de cette table de routage.
 	 */
 	public void reset() {
 		this.routes.clear();
