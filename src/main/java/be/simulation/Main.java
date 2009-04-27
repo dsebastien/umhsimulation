@@ -58,8 +58,9 @@ public class Main {
 		// Lancement de la simulation
 		simulation.demarrer();
 
-		// TODO v2.0 ajouter option "tempsInterEnvoiInfosRoutage" à la configuration
-		// des agents
+		
+		//TODO v2.0 ajouter tests là où nécessaire pour effectuer les traitements nécessaires quand DV est activé
+		
 		
 		//TODO virer les caractères spéciaux des outputs (LOGGER. ...)
 		//pour éviter les problèmes d'affichage sous windows

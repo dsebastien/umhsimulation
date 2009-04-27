@@ -41,60 +41,70 @@ public class Configuration {
 	public static final String					OPTION_AGENTS_NOMBRE_HOTES								=
 																												"agentsNombreHotes";
 	/**
+	 * OPTION - Taille maximale du buffer des agents.
+	 */
+	public static final String					OPTION_AGENTS_TAILLE_MAX_BUFFER							=
+																												"agentsTailleMaxBuffer";
+	/**
 	 * OPTION - Taux de perte brutale des agents.
 	 */
 	public static final String					OPTION_AGENTS_TAUX_PERTE_BRUTALE						=
 																												"agentsTauxPerteBrutale";
+	/**
+	 * OPTION - Temps entre deux envois des infos de routage.
+	 */
+	public static final String					OPTION_AGENTS_TEMPS_INTER_ENVOIS_INFOS_ROUTAGE			=
+																												"agentsTempsInterEnvoiInfosRoutage";
 	/**
 	 * OPTION - Temps de traitement d'un message par un agent.
 	 */
 	public static final String					OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE					=
 																												"agentsTempsTraitementMessage";
 	/**
-	 * OPTION - Delai entre un agent et un hôte (et inversément).
-	 */
-	public static final String					OPTION_SIMULATION_DELAI_ENTRE_ENTITES					=
-																												"delaiEntreEntites";
-	/**
 	 * OPTION - Taux de messages à destination d'un autre agent.
 	 */
 	public static final String					OPTION_HOTES_TAUX_MESSAGES_VERS_AUTRE_AGENT				=
 																												"hotesTauxMessagesVersAutreAgent";
-	/**
-	 * OPTION - Temps de traitement d'un message par un hote.
-	 */
-	public static final String					OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE					=
-																												"hotesTempsTraitementMessage";
 	/**
 	 * OPTION - Temps maximum entre deux envois d'un hôte.
 	 */
 	public static final String					OPTION_HOTES_TEMPS_MAX_INTER_ENVOIS						=
 																												"hotesTempsMaxInterEnvois";
 	/**
+	 * OPTION - Temps de traitement d'un message par un hote.
+	 */
+	public static final String					OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE					=
+																												"hotesTempsTraitementMessage";
+	/**
+	 * OPTION - Timeout pour la réémission des messages.
+	 */
+	public static final String					OPTION_HOTES_TIMEOUT_REEMISSION_MESSAGES				=
+																												"hotesTimeoutReemissionMessages";
+	/**
+	 * OPTION - Delai entre un agent et un hôte (et inversément).
+	 */
+	public static final String					OPTION_SIMULATION_DELAI_ENTRE_ENTITES					=
+																												"delaiEntreEntites";
+	/**
+	 * OPTION - Distance vector active
+	 */
+	public static final String					OPTION_SIMULATION_DISTANCE_VECTOR_ACTIVE				=
+																												"dvActive";
+	/**
 	 * OPTION - Durée de simulation.
 	 */
 	public static final String					OPTION_SIMULATION_DUREE									=
 																												"duree";
-	/**
-	 * OPTION - Périodicité d'affichage des statistiques.
-	 */
-	public static final String					OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES	=
-																												"periodiciteAffichageStats";
 	/**
 	 * OPTION - Durée de la période d'initialisation de la simulation.
 	 */
 	public static final String					OPTION_SIMULATION_DUREE_INITIALISATION					=
 																												"dureeInitialisation";
 	/**
-	 * OPTION - Taille maximale du buffer des agents.
+	 * OPTION - Périodicité d'affichage des statistiques.
 	 */
-	public static final String					OPTION_AGENTS_TAILLE_MAX_BUFFER							=
-																												"agentsTailleMaxBuffer";
-	/**
-	 * OPTION - Timeout pour la réémission des messages.
-	 */
-	public static final String					OPTION_HOTES_TIMEOUT_REEMISSION_MESSAGES				=
-																												"hotesTimeoutReemissionMessages";
+	public static final String					OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES	=
+																												"periodiciteAffichageStats";
 	/**
 	 * OPTION - Aide.
 	 */
@@ -110,7 +120,7 @@ public class Configuration {
 	 */
 	private final ConfigurationAgents			configurationAgents;
 	/**
-	 * Configuration des hôtes.
+	 * OptionsInvalideException Configuration des hôtes.
 	 */
 	private final ConfigurationHotes			configurationHotes;
 	/**
@@ -119,21 +129,23 @@ public class Configuration {
 	private final ConfigurationSimulationReseau	configurationSimulationReseau;
 	// options (interne)
 	private final OptionSpec<Long>				optionAgentsNombreHotes;
+	private final OptionSpec<Long>				optionAgentsTailleMaxBuffer;
 	private final OptionSpec<Float>				optionAgentsTauxPerteBrutale;
+	private final OptionSpec<Integer>			optionAgentsTempsInterEnvoisInfosRoutage;
 	private final OptionSpec<Float>				optionAgentsTempsTraitementMessage;
 	private final OptionSpec<Void>				optionAide;
 	private final OptionSpec<Float>				optionHotesTauxMessagesVersAutreAgent;
 	private final OptionSpec<Float>				optionHotesTempsTraitementMessage;
 	private final OptionSpec<Integer>			optionHotesTempxMaximalInterEnvois;
+	private final OptionSpec<Integer>			optionHotesTimeoutReemissionMessages;
 	/**
 	 * Parser pour récupérer les options données via la ligne de commande.
 	 */
 	private final OptionParser					optionParser;
+	private final OptionSpec<Integer>			optionSimulationDelaiEntreEntites;
+	private final OptionSpec<Void>				optionSimulationDistanceVectorActive;
 	private final OptionSpec<Long>				optionSimulationDuree;
 	private final OptionSpec<Long>				optionSimulationDureeInitialisation;
-	private final OptionSpec<Long>				optionAgentsTailleMaxBuffer;
-	private final OptionSpec<Integer>			optionHotesTimeoutReemissionMessages;
-	private final OptionSpec<Integer>			optionSimulationDelaiEntreEntites;
 	private final OptionSpec<Float>				optionSimulationPeriodiciteAffichageStatistiques;
 
 
@@ -224,6 +236,72 @@ public class Configuration {
 								OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES,
 								"Périodicité d'affichage des statistiques (0 < periodicite <= 1)")
 						.withRequiredArg().ofType(Float.class);
+		optionSimulationDistanceVectorActive =
+				optionParser
+						.accepts(OPTION_SIMULATION_DISTANCE_VECTOR_ACTIVE,
+								"Pour activer le distance vector (si non spécifié, désactivé!)");
+		optionAgentsTempsInterEnvoisInfosRoutage =
+				optionParser
+						.accepts(
+								OPTION_AGENTS_TEMPS_INTER_ENVOIS_INFOS_ROUTAGE,
+								"Temps entre deux envois des informations de routage (>=0)")
+						.withRequiredArg().ofType(Integer.class);
+	}
+
+
+
+	/**
+	 * Affiche la configuration.
+	 */
+	public void afficher() {
+		LOGGER
+				.info("------------------------------------------------------------------");
+		LOGGER.info("Configuration utilisée:");
+		LOGGER
+				.info("------------------------------------------------------------------");
+		LOGGER.info("Agents - Nombre d'hotes: "
+				+ this.getConfigurationAgents().getNombreHotes());
+		LOGGER.info("Agents - Taille de buffer: "
+				+ this.getConfigurationAgents().getTailleMaxBuffer());
+		LOGGER.info("Agents - Taux de pertes brutales: "
+				+ Utilitaires.pourcentage(this.getConfigurationAgents()
+						.getTauxPerteBrutale()));
+		LOGGER.info("Agents - Temps de traitement: "
+				+ this.getConfigurationAgents().getTempsTraitementMessage());
+		LOGGER.info("Agents - Nombre de messages traitables simultanément: "
+				+ this.getConfigurationAgents()
+						.getNombreMaxTraitementsSimultanes());
+		LOGGER
+				.info("Hotes - Pourcentage de messages à destination d'un hôte connecté à un autre agent: "
+						+ Utilitaires.pourcentage(this.getConfigurationHotes()
+								.getTauxMessagesVersAutreAgent()));
+		LOGGER.info("Hotes - Temps max entre deux envois: "
+				+ this.getConfigurationHotes().getTempsMaxInterEnvois());
+		LOGGER.info("Hotes - Temps de traitement: "
+				+ this.getConfigurationHotes().getTempsTraitementMessage());
+		LOGGER.info("Hotes - Nombre de messages traitables simultanément: "
+				+ this.getConfigurationHotes()
+						.getNombreMaxTraitementsSimultanes());
+		LOGGER.info("Hotes - Durée du timeout pour la réception d'un accusé: "
+				+ this.getConfigurationHotes().getTimeoutReemissionMessages());
+		LOGGER.info("Simulation - Durée: "
+				+ this.getConfigurationSimulationReseau().getDuree());
+		if (this.getConfigurationSimulationReseau().isDistanceVectorActive()) {
+			LOGGER.info("Simulation - Distance vector activé: OUI");
+		} else {
+			LOGGER.info("Simulation - Distance vector activé: NON");
+		}
+		LOGGER.info("Simulation - Période d'initialisation: "
+				+ this.getConfigurationSimulationReseau()
+						.getDureeInitialisation());
+		LOGGER.info("Simulation - Périodicité affichage statistiques: "
+				+ this.getConfigurationSimulationReseau()
+						.getPeriodiciteAffichageStatistiques());
+		LOGGER.info("Simulation - Delai entre entités: "
+				+ this.getConfigurationSimulationReseau()
+						.getDelaiEntreEntites());
+		LOGGER
+				.info("------------------------------------------------------------------");
 	}
 
 
@@ -311,6 +389,16 @@ public class Configuration {
 						"La taille maximale du buffer des agents ne peut pas être < 0");
 			}
 			configurationAgents.setTailleMaxBuffer(tailleBufferAgents);
+		}
+		// temps entre deux envois des infos de routage
+		if (options.has(optionAgentsTempsInterEnvoisInfosRoutage)) {
+			final int tempsInter =
+					options.valueOf(optionAgentsTempsInterEnvoisInfosRoutage);
+			if (tempsInter < 0) {
+				throw new ExceptionOptionsInvalides(
+						"Le temps entre deux envois des infos de routage doit être >=0");
+			}
+			configurationAgents.setTempsInterEnvoiInfosRoutage(tempsInter);
 		}
 	}
 
@@ -427,6 +515,10 @@ public class Configuration {
 			configurationSimulationReseau
 					.setPeriodiciteAffichageStatistiques(periodiciteAffichageStatistiques);
 		}
+		// distance vector active?
+		if (options.has(optionSimulationDistanceVectorActive)) {
+			configurationSimulationReseau.setDistanceVectorActive(true);
+		}
 	}
 
 
@@ -481,56 +573,5 @@ public class Configuration {
 			throw new ExceptionOptionsInvalides(MSG_ERREUR_OPTIONS_INCORRECTES);
 		}
 		return false; // on a pas affiché l'aide
-	}
-
-
-
-	/**
-	 * Affiche la configuration.
-	 */
-	public void afficher() {
-		LOGGER
-				.info("------------------------------------------------------------------");
-		LOGGER.info("Configuration utilisée:");
-		LOGGER
-				.info("------------------------------------------------------------------");
-		LOGGER.info("Agents - Nombre d'hotes: "
-				+ this.getConfigurationAgents().getNombreHotes());
-		LOGGER.info("Agents - Taille de buffer: "
-				+ this.getConfigurationAgents().getTailleMaxBuffer());
-		LOGGER.info("Agents - Taux de pertes brutales: "
-				+ Utilitaires.pourcentage(this.getConfigurationAgents()
-						.getTauxPerteBrutale()));
-		LOGGER.info("Agents - Temps de traitement: "
-				+ this.getConfigurationAgents().getTempsTraitementMessage());
-		LOGGER.info("Agents - Nombre de messages traitables simultanément: "
-				+ this.getConfigurationAgents()
-						.getNombreMaxTraitementsSimultanes());
-		LOGGER
-				.info("Hotes - Pourcentage de messages à destination d'un hôte connecté à un autre agent: "
-						+ Utilitaires.pourcentage(this.getConfigurationHotes()
-								.getTauxMessagesVersAutreAgent()));
-		LOGGER.info("Hotes - Temps max entre deux envois: "
-				+ this.getConfigurationHotes().getTempsMaxInterEnvois());
-		LOGGER.info("Hotes - Temps de traitement: "
-				+ this.getConfigurationHotes().getTempsTraitementMessage());
-		LOGGER.info("Hotes - Nombre de messages traitables simultanément: "
-				+ this.getConfigurationHotes()
-						.getNombreMaxTraitementsSimultanes());
-		LOGGER.info("Hotes - Durée du timeout pour la réception d'un accusé: "
-				+ this.getConfigurationHotes().getTimeoutReemissionMessages());
-		LOGGER.info("Simulation - Durée: "
-				+ this.getConfigurationSimulationReseau().getDuree());
-		LOGGER.info("Simulation - Période d'initialisation: "
-				+ this.getConfigurationSimulationReseau()
-						.getDureeInitialisation());
-		LOGGER.info("Simulation - Delai entre entités: "
-				+ this.getConfigurationSimulationReseau()
-						.getDelaiEntreEntites());
-		LOGGER.info("Simulation - Périodicité affichage statistiques: "
-				+ this.getConfigurationSimulationReseau()
-						.getPeriodiciteAffichageStatistiques());
-		LOGGER
-				.info("------------------------------------------------------------------");
 	}
 }

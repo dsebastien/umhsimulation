@@ -23,6 +23,7 @@
 		<property name="dureeInitialisation" value="${general.duree_initialisation}" />
 		<property name="delaiEntreEntites" value="${general.delai_entre_entites}" />
 		<property name="periodiciteAffichageStatistiques" value="${general.periodicite_affichage_statistiques}" />
+		<property name="distanceVectorActive" value="${general.distance_vector_active}" />
 	</bean>
 
 	<bean id="configurationAgents" class="be.simulation.configuration.ConfigurationAgents"
@@ -31,6 +32,7 @@
 		<property name="tauxPerteBrutale" value="${agents.taux_perte_brutale}" />
 		<property name="tempsTraitementMessage" value="${agents.temps_traitement_message}" />
 		<property name="tailleMaxBuffer" value="${agents.taille_buffer}" />
+		<property name="tempsInterEnvoiInfosRoutage" value="${agents.temps_inter_envoi_infos_routage}" />
 	</bean>
 
 	<bean id="configurationHotes" class="be.simulation.configuration.ConfigurationHotes"
