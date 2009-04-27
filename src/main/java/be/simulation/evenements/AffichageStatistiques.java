@@ -9,7 +9,6 @@ import be.simulation.core.evenements.Evenement;
  * @author Regnier Frederic
  * @author Mernier Jean-François
  */
-//TODO ajouter à l'UML (+ modif déroulement sim etc)
 public class AffichageStatistiques extends Evenement {
 
 	/**
