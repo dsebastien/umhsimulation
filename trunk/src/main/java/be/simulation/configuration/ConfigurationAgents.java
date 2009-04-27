@@ -29,6 +29,11 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	 */
 	private float	tauxPerteBrutale;
 	/**
+	 * Temps entre deux envois des informations de routage aux voisins (>= 0).
+	 */
+	private int tempsInterEnvoisInfosRoutage;
+	
+	/**
 	 * Le temps de traitement d'un message (0 <= temps traitement <= 1). 0 =
 	 * traitement instantané.
 	 */
@@ -55,6 +60,8 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	public int getNombreMaxTraitementsSimultanes() {
 		return nombreMaxTraitementsSimultanes;
 	}
+	
+	
 
 
 
@@ -76,6 +83,16 @@ public class ConfigurationAgents extends AbstractConfiguration {
 	 */
 	public float getTauxPerteBrutale() {
 		return tauxPerteBrutale;
+	}
+
+
+
+	/**
+	 * Récupérer le temps entre deux envois des informations de routage aux voisins.
+	 * @return temps entre deux envois des informations de routage aux voisins
+	 */
+	public int getTempsInterEnvoisInfosRoutage() {
+		return tempsInterEnvoisInfosRoutage;
 	}
 
 
@@ -142,6 +159,19 @@ public class ConfigurationAgents extends AbstractConfiguration {
 					"Le taux de perte brutale doit être tel que: 0 <= taux < 1");
 		}
 		this.tauxPerteBrutale = tauxPerteBrutale;
+	}
+
+
+
+	/**
+	 * Définir le temps entre deux envois des informations de routage aux voisins.
+	 * @param tempsInterEnvoisInfosRoutage le temps entre deux envois des informations de routage aux voisins
+	 */
+	public void setTempsInterEnvoiInfosRoutage(final int tempsInterEnvoisInfosRoutage) {
+		if(tempsInterEnvoisInfosRoutage < 0){
+			throw new IllegalArgumentException("Le temps entre deux envois des informations de routage aux voisins doit être > 0");
+		}
+		this.tempsInterEnvoisInfosRoutage = tempsInterEnvoisInfosRoutage;
 	}
 
 

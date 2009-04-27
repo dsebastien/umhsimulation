@@ -142,23 +142,20 @@ public class ConfigurationTest {
 	 *         ne doit pas se produire
 	 */
 	@Test
-	public void testAgentsTailleBuffer()
-			throws ExceptionOptionsInvalides {
+	public void testAgentsTailleMaxBuffer() throws ExceptionOptionsInvalides {
 		String valeur = "0";
 		String[] args =
 				{
-					PREFIXE
-							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
+					PREFIXE + Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
 							+ SEPARATEUR + valeur
 				};
 		configuration.parse(args);
-		assertTrue(Long.MAX_VALUE == configuration
-				.getConfigurationAgents().getTailleMaxBuffer());
+		assertTrue(Long.MAX_VALUE == configuration.getConfigurationAgents()
+				.getTailleMaxBuffer());
 		valeur = "500";
 		args =
 				new String[] {
-					PREFIXE
-							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
+					PREFIXE + Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
 							+ SEPARATEUR + valeur
 				};
 		configuration.parse(args);
@@ -167,13 +164,43 @@ public class ConfigurationTest {
 		valeur = "1";
 		args =
 				new String[] {
-					PREFIXE
-							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
+					PREFIXE + Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
 							+ SEPARATEUR + valeur
 				};
 		configuration.parse(args);
 		assertTrue(Long.valueOf(valeur).intValue() == configuration
 				.getConfigurationAgents().getTailleMaxBuffer());
+	}
+
+
+
+	/**
+	 * Spécifier des valeurs incorrectes pour la taille des buffers des agents.
+	 */
+	@Test
+	public void testAgentsTailleMaxBufferValeursIncorrectes() {
+		// valeur presque ok (frontière)
+		String[] args =
+				{
+					PREFIXE + Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
+							+ SEPARATEUR + "-1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur trop basse
+		args =
+				new String[] {
+					PREFIXE + Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
+							+ SEPARATEUR + "-100"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
 	}
 
 
@@ -242,6 +269,174 @@ public class ConfigurationTest {
 				new String[] {
 					PREFIXE + Configuration.OPTION_AGENTS_TAUX_PERTE_BRUTALE
 							+ SEPARATEUR + "50"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+	}
+
+
+
+	/**
+	 * Spécifier des valeurs correctes pour le temps entre deux envois des infos
+	 * de routage.
+	 * 
+	 * @throws ExceptionOptionsInvalides
+	 *         ne doit pas se produire
+	 */
+	@Test
+	public void testAgentsTempsInterEnvoisInfosRoutage()
+			throws ExceptionOptionsInvalides {
+		String valeur = "0";
+		String[] args =
+				{
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TEMPS_INTER_ENVOIS_INFOS_ROUTAGE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Integer.valueOf(valeur).intValue() == configuration
+				.getConfigurationAgents().getTempsInterEnvoisInfosRoutage());
+		valeur = "1";
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TEMPS_INTER_ENVOIS_INFOS_ROUTAGE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Integer.valueOf(valeur).intValue() == configuration
+				.getConfigurationAgents().getTempsInterEnvoisInfosRoutage());
+		valeur = "5";
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TEMPS_INTER_ENVOIS_INFOS_ROUTAGE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Integer.valueOf(valeur).intValue() == configuration
+				.getConfigurationAgents().getTempsInterEnvoisInfosRoutage());
+	}
+
+
+
+	/**
+	 * Spécifier des valeurs incorrectes pour le temps inter envois infos
+	 * routage.
+	 */
+	@Test
+	public void testAgentsTempsInterEnvoisInfosRoutageValeursIncorrectes() {
+		// valeur presque ok (frontière)
+		String[] args =
+				{
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TEMPS_INTER_ENVOIS_INFOS_ROUTAGE
+							+ SEPARATEUR + "-0.1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur trop basse
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TEMPS_INTER_ENVOIS_INFOS_ROUTAGE
+							+ SEPARATEUR + "-1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+	}
+
+
+
+	/**
+	 * Spécifier des valeurs correctes pour le temps de traitement d'un message
+	 * par un agent.
+	 * 
+	 * @throws ExceptionOptionsInvalides
+	 *         ne doit pas se produire
+	 */
+	@Test
+	public void testAgentsTempsTraitementMessage()
+			throws ExceptionOptionsInvalides {
+		String valeur = "0"; // instantané
+		String[] args =
+				{
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Float.valueOf(valeur).floatValue() == configuration
+				.getConfigurationAgents().getTempsTraitementMessage());
+		valeur = "0.5";
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Float.valueOf(valeur).floatValue() == configuration
+				.getConfigurationAgents().getTempsTraitementMessage());
+		valeur = "1";
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Float.valueOf(valeur).floatValue() == configuration
+				.getConfigurationAgents().getTempsTraitementMessage());
+	}
+
+
+
+	/**
+	 * Spécifier des valeurs incorrectes pour le temps de traitement d'un
+	 * message par un agent.
+	 */
+	@Test
+	public void testAgentsTempsTraitementMessageValeursIncorrectes() {
+		// valeur presque ok (frontière)
+		String[] args =
+				{
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + "-0.1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur trop basse
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + "-1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur trop haute
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + "1.1"
 				};
 		try {
 			configuration.parse(args);
@@ -403,14 +598,167 @@ public class ConfigurationTest {
 
 
 	/**
+	 * Spécifier des valeurs correctes pour le temps maximal inter-envois des
+	 * hôtes.
+	 * 
+	 * @throws ExceptionOptionsInvalides
+	 *         ne doit pas se produire
+	 */
+	@Test
+	public void testHotesTempsMaxInterEnvois() throws ExceptionOptionsInvalides {
+		String valeur = "200";
+		String[] args =
+				{
+					PREFIXE + Configuration.OPTION_HOTES_TEMPS_MAX_INTER_ENVOIS
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Integer.valueOf(valeur).intValue() == configuration
+				.getConfigurationHotes().getTempsMaxInterEnvois());
+		valeur = "1";
+		args =
+				new String[] {
+					PREFIXE + Configuration.OPTION_HOTES_TEMPS_MAX_INTER_ENVOIS
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Integer.valueOf(valeur).intValue() == configuration
+				.getConfigurationHotes().getTempsMaxInterEnvois());
+	}
+
+
+
+	/**
+	 * Spécifier des valeurs incorrectes pour le temps maximal inter-envois des
+	 * hôtes.
+	 */
+	@Test
+	public void testHotesTempsMaxInterEnvoisValeursIncorrectes() {
+		// valeur presque ok (frontière)
+		String[] args =
+				{
+					PREFIXE + Configuration.OPTION_HOTES_TEMPS_MAX_INTER_ENVOIS
+							+ SEPARATEUR + "0"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur trop basse
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + "-1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+	}
+
+
+
+	/**
+	 * Spécifier des valeurs correctes pour le temps de traitement d'un message
+	 * par un hote.
+	 * 
+	 * @throws ExceptionOptionsInvalides
+	 *         ne doit pas se produire
+	 */
+	@Test
+	public void testHotesTempsTraitementMessage()
+			throws ExceptionOptionsInvalides {
+		String valeur = "0"; // instantané
+		String[] args =
+				{
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Float.valueOf(valeur).floatValue() == configuration
+				.getConfigurationHotes().getTempsTraitementMessage());
+		valeur = "0.5";
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Float.valueOf(valeur).floatValue() == configuration
+				.getConfigurationHotes().getTempsTraitementMessage());
+		valeur = "1.0";
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + valeur
+				};
+		configuration.parse(args);
+		assertTrue(Float.valueOf(valeur).floatValue() == configuration
+				.getConfigurationHotes().getTempsTraitementMessage());
+	}
+
+
+
+	/**
+	 * Spécifier des valeurs incorrectes pour le temps de traitement d'un
+	 * message par un hote.
+	 */
+	@Test
+	public void testHotesTempsTraitementMessageValeursIncorrectes() {
+		// valeur presque ok (frontière)
+		String[] args =
+				{
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + "-0.1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur trop basse
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + "-1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+		// valeur trop haute
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
+							+ SEPARATEUR + "1.1"
+				};
+		try {
+			configuration.parse(args);
+			fail("Une exception aurait du avoir lieu!");
+		} catch (ExceptionOptionsInvalides e) {
+		}
+	}
+
+
+
+	/**
 	 * Spécifier des valeurs correctes pour le timeout de réémission.
 	 * 
 	 * @throws ExceptionOptionsInvalides
 	 *         ne doit pas se produire
 	 */
 	@Test
-	public void testHotesTimeoutReemission()
-			throws ExceptionOptionsInvalides {
+	public void testHotesTimeoutReemission() throws ExceptionOptionsInvalides {
 		final String valeur = "85";
 		final String[] args =
 				{
@@ -420,11 +768,11 @@ public class ConfigurationTest {
 				};
 		configuration.parse(args);
 		assertTrue(Integer.valueOf(valeur).intValue() == configuration
-				.getConfigurationHotes()
-				.getTimeoutReemissionMessages());
+				.getConfigurationHotes().getTimeoutReemissionMessages());
 	}
-	
-	
+
+
+
 	/**
 	 * Spécifier des valeurs incorrectes pour le timeout de réémission.
 	 */
@@ -457,6 +805,7 @@ public class ConfigurationTest {
 	}
 
 
+
 	/**
 	 * Parser une option incorrecte.
 	 * 
@@ -482,96 +831,6 @@ public class ConfigurationTest {
 	@Test(expected = ExceptionOptionsInvalides.class)
 	public void testOptionsNonFournies() throws ExceptionOptionsInvalides {
 		configuration.parse((String[]) null);
-	}
-
-
-
-	/**
-	 * Spécifier des valeurs correctes pour le temps de traitement d'un message
-	 * par un agent.
-	 * 
-	 * @throws ExceptionOptionsInvalides
-	 *         ne doit pas se produire
-	 */
-	@Test
-	public void testSimulationAgentTempsTraitementMessage()
-			throws ExceptionOptionsInvalides {
-		String valeur = "0"; // instantané
-		String[] args =
-				{
-					PREFIXE
-							+ Configuration.OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE
-							+ SEPARATEUR + valeur
-				};
-		configuration.parse(args);
-		assertTrue(Float.valueOf(valeur).floatValue() == configuration
-				.getConfigurationAgents().getTempsTraitementMessage());
-		valeur = "0.5";
-		args =
-				new String[] {
-					PREFIXE
-							+ Configuration.OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE
-							+ SEPARATEUR + valeur
-				};
-		configuration.parse(args);
-		assertTrue(Float.valueOf(valeur).floatValue() == configuration
-				.getConfigurationAgents().getTempsTraitementMessage());
-		valeur = "1";
-		args =
-				new String[] {
-					PREFIXE
-							+ Configuration.OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE
-							+ SEPARATEUR + valeur
-				};
-		configuration.parse(args);
-		assertTrue(Float.valueOf(valeur).floatValue() == configuration
-				.getConfigurationAgents().getTempsTraitementMessage());
-	}
-
-
-
-	/**
-	 * Spécifier des valeurs incorrectes pour le temps de traitement d'un
-	 * message par un agent.
-	 */
-	@Test
-	public void testSimulationAgentTempsTraitementMessageValeursIncorrectes() {
-		// valeur presque ok (frontière)
-		String[] args =
-				{
-					PREFIXE
-							+ Configuration.OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE
-							+ SEPARATEUR + "-0.1"
-				};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
-		// valeur trop basse
-		args =
-				new String[] {
-					PREFIXE
-							+ Configuration.OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE
-							+ SEPARATEUR + "-1"
-				};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
-		// valeur trop haute
-		args =
-				new String[] {
-					PREFIXE
-							+ Configuration.OPTION_AGENTS_TEMPS_TRAITEMENT_MESSAGE
-							+ SEPARATEUR + "1.1"
-				};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
 	}
 
 
@@ -655,6 +914,24 @@ public class ConfigurationTest {
 
 
 	/**
+	 * Essayer d'activer le DV.
+	 * 
+	 * @throws ExceptionOptionsInvalides
+	 *         ne doit pas se produire
+	 */
+	@Test
+	public void testSimulationDistanceVector() throws ExceptionOptionsInvalides {
+		String[] args = {
+			PREFIXE + Configuration.OPTION_SIMULATION_DISTANCE_VECTOR_ACTIVE
+		};
+		configuration.parse(args);
+		assertTrue(true == configuration.getConfigurationSimulationReseau()
+				.isDistanceVectorActive());
+	}
+
+
+
+	/**
 	 * Spécifier la durée de la simulation et vérifier que c'est bien pris en
 	 * compte.
 	 * 
@@ -686,18 +963,20 @@ public class ConfigurationTest {
 
 
 	/**
-	 * Spécifier la durée de la période d'initialisation de la simulation et vérifier que c'est bien pris en
-	 * compte.
+	 * Spécifier la durée de la période d'initialisation de la simulation et
+	 * vérifier que c'est bien pris en compte.
 	 * 
 	 * @throws ExceptionOptionsInvalides
 	 *         ne doit pas avoir lieu
 	 */
 	@Test
-	public void testSimulationDureeInitialisation() throws ExceptionOptionsInvalides {
+	public void testSimulationDureeInitialisation()
+			throws ExceptionOptionsInvalides {
 		String valeur = "50";
 		String[] args =
 				{
-					PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
 							+ SEPARATEUR + valeur
 				};
 		configuration.parse(args);
@@ -706,7 +985,8 @@ public class ConfigurationTest {
 		valeur = "1";
 		args =
 				new String[] {
-					PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
 							+ SEPARATEUR + valeur
 				};
 		configuration.parse(args);
@@ -715,7 +995,8 @@ public class ConfigurationTest {
 		valeur = "0";
 		args =
 				new String[] {
-					PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
 							+ SEPARATEUR + valeur
 				};
 		configuration.parse(args);
@@ -726,14 +1007,16 @@ public class ConfigurationTest {
 
 
 	/**
-	 * Spécifier des valeurs incorrectes pour la durée de la période d'initialisation de la simulation.
+	 * Spécifier des valeurs incorrectes pour la durée de la période
+	 * d'initialisation de la simulation.
 	 */
 	@Test
 	public void testSimulationDureeInitialisationValeursIncorrectes() {
 		// valeur négative
 		String[] args =
 				{
-					PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
 							+ SEPARATEUR + "-100"
 				};
 		try {
@@ -742,9 +1025,12 @@ public class ConfigurationTest {
 		} catch (ExceptionOptionsInvalides e) {
 		}
 		// valeur non spécifiée
-		args = new String[] {
-			PREFIXE + Configuration.OPTION_SIMULATION_DUREE_INITIALISATION + SEPARATEUR
-		};
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_DUREE_INITIALISATION
+							+ SEPARATEUR
+				};
 		try {
 			configuration.parse(args);
 			fail("Une exception aurait du avoir lieu!");
@@ -811,183 +1097,16 @@ public class ConfigurationTest {
 
 
 	/**
-	 * Spécifier des valeurs correctes pour le temps maximal inter-envois des
-	 * hôtes.
-	 * 
-	 * @throws ExceptionOptionsInvalides
-	 *         ne doit pas se produire
-	 */
-	@Test
-	public void testSimulationHoteTempsMaxInterEnvois()
-			throws ExceptionOptionsInvalides {
-		String valeur = "200";
-		String[] args =
-				{
-					PREFIXE + Configuration.OPTION_HOTES_TEMPS_MAX_INTER_ENVOIS
-							+ SEPARATEUR + valeur
-				};
-		configuration.parse(args);
-		assertTrue(Integer.valueOf(valeur).intValue() == configuration
-				.getConfigurationHotes().getTempsMaxInterEnvois());
-		valeur = "1";
-		args =
-				new String[] {
-					PREFIXE + Configuration.OPTION_HOTES_TEMPS_MAX_INTER_ENVOIS
-							+ SEPARATEUR + valeur
-				};
-		configuration.parse(args);
-		assertTrue(Integer.valueOf(valeur).intValue() == configuration
-				.getConfigurationHotes().getTempsMaxInterEnvois());
-	}
-
-
-
-	/**
-	 * Spécifier des valeurs incorrectes pour le temps maximal inter-envois des
-	 * hôtes.
-	 */
-	@Test
-	public void testSimulationHoteTempsMaxInterEnvoisValeursIncorrectes() {
-		// valeur presque ok (frontière)
-		String[] args =
-				{
-					PREFIXE + Configuration.OPTION_HOTES_TEMPS_MAX_INTER_ENVOIS
-							+ SEPARATEUR + "0"
-				};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
-		// valeur trop basse
-		args =
-				new String[] {
-					PREFIXE
-							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
-							+ SEPARATEUR + "-1"
-				};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
-	}
-
-
-
-	/**
-	 * Spécifier des valeurs correctes pour le temps de traitement d'un message
-	 * par un hote.
-	 * 
-	 * @throws ExceptionOptionsInvalides
-	 *         ne doit pas se produire
-	 */
-	@Test
-	public void testSimulationHoteTempsTraitementMessage()
-			throws ExceptionOptionsInvalides {
-		String valeur = "0"; // instantané
-		String[] args =
-				{
-					PREFIXE
-							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
-							+ SEPARATEUR + valeur
-				};
-		configuration.parse(args);
-		assertTrue(Float.valueOf(valeur).floatValue() == configuration
-				.getConfigurationHotes().getTempsTraitementMessage());
-		valeur = "0.5";
-		args =
-				new String[] {
-					PREFIXE
-							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
-							+ SEPARATEUR + valeur
-				};
-		configuration.parse(args);
-		assertTrue(Float.valueOf(valeur).floatValue() == configuration
-				.getConfigurationHotes().getTempsTraitementMessage());
-		valeur = "1.0";
-		args =
-				new String[] {
-					PREFIXE
-							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
-							+ SEPARATEUR + valeur
-				};
-		configuration.parse(args);
-		assertTrue(Float.valueOf(valeur).floatValue() == configuration
-				.getConfigurationHotes().getTempsTraitementMessage());
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/**
-	 * Spécifier des valeurs incorrectes pour le temps de traitement d'un
-	 * message par un hote.
-	 */
-	@Test
-	public void testSimulationHoteTempsTraitementMessageValeursIncorrectes() {
-		// valeur presque ok (frontière)
-		String[] args =
-				{
-					PREFIXE
-							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
-							+ SEPARATEUR + "-0.1"
-				};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
-		// valeur trop basse
-		args =
-				new String[] {
-					PREFIXE
-							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
-							+ SEPARATEUR + "-1"
-				};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
-		// valeur trop haute
-		args =
-				new String[] {
-					PREFIXE
-							+ Configuration.OPTION_HOTES_TEMPS_TRAITEMENT_MESSAGE
-							+ SEPARATEUR + "1.1"
-				};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
-	}
-
-
-
-	/**
-	 * Spécifier des valeurs incorrectes pour la périodicité d'affichage des stats.
+	 * Spécifier des valeurs incorrectes pour la périodicité d'affichage des
+	 * stats.
 	 */
 	@Test
 	public void testSimulationPeriodiciteAffichageValeursIncorrectes() {
 		// valeur négative
 		String[] args =
 				{
-					PREFIXE + Configuration.OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES
 							+ SEPARATEUR + "-1"
 				};
 		try {
@@ -996,64 +1115,44 @@ public class ConfigurationTest {
 		} catch (ExceptionOptionsInvalides e) {
 		}
 		// valeur nulle
-		args = new String[] {
-			PREFIXE + Configuration.OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES + SEPARATEUR + "0"
-		};
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES
+							+ SEPARATEUR + "0"
+				};
 		try {
 			configuration.parse(args);
 			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 		// valeur non spécifiée
-		args = new String[] {
-			PREFIXE + Configuration.OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES + SEPARATEUR
-		};
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES
+							+ SEPARATEUR
+				};
 		try {
 			configuration.parse(args);
 			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 		// argument non spécifié
-		args = new String[] {
-			PREFIXE + Configuration.OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES
-		};
+		args =
+				new String[] {
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES
+				};
 		try {
 			configuration.parse(args);
 			fail("Une exception aurait du avoir lieu!");
 		} catch (ExceptionOptionsInvalides e) {
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
 	/**
 	 * Spécifier la périodicité d'affichage des stats.
 	 * 
@@ -1061,58 +1160,29 @@ public class ConfigurationTest {
 	 *         ne doit pas avoir lieu
 	 */
 	@Test
-	public void testSimulationPerioridicteAffichageStats() throws ExceptionOptionsInvalides {
+	public void testSimulationPerioridicteAffichageStats()
+			throws ExceptionOptionsInvalides {
 		String valeur = "0.1";
 		String[] args =
 				{
-					PREFIXE + Configuration.OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES
 							+ SEPARATEUR + valeur
 				};
 		configuration.parse(args);
 		assertTrue(Float.valueOf(valeur).floatValue() == configuration
-				.getConfigurationSimulationReseau().getPeriodiciteAffichageStatistiques());
+				.getConfigurationSimulationReseau()
+				.getPeriodiciteAffichageStatistiques());
 		valeur = "1";
 		args =
 				new String[] {
-					PREFIXE + Configuration.OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES
+					PREFIXE
+							+ Configuration.OPTION_SIMULATION_PERIODICITE_AFFICHAGE_STATISTIQUES
 							+ SEPARATEUR + valeur
 				};
 		configuration.parse(args);
 		assertTrue(Float.valueOf(valeur).floatValue() == configuration
-				.getConfigurationSimulationReseau().getPeriodiciteAffichageStatistiques());
+				.getConfigurationSimulationReseau()
+				.getPeriodiciteAffichageStatistiques());
 	}
-
-
-
-	/**
-	 * Spécifier des valeurs incorrectes pour la taille des buffers des agents.
-	 */
-	@Test
-	public void testSimulationTailleBuffersAgentsValeursIncorrectes() {
-		// valeur presque ok (frontière)
-		String[] args =
-				{
-					PREFIXE
-							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
-							+ SEPARATEUR + "-1"
-				};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
-		// valeur trop basse
-		args =
-				new String[] {
-					PREFIXE
-							+ Configuration.OPTION_AGENTS_TAILLE_MAX_BUFFER
-							+ SEPARATEUR + "-100"
-				};
-		try {
-			configuration.parse(args);
-			fail("Une exception aurait du avoir lieu!");
-		} catch (ExceptionOptionsInvalides e) {
-		}
-	}
-	
 }

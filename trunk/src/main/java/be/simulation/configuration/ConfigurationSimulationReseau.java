@@ -16,6 +16,10 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	 */
 	private int		delaiEntreEntites;
 	/**
+	 * Vrai si le distance vector est activé.
+	 */
+	private boolean distanceVectorActive = false;
+	/**
 	 * Durée de simulation (> 0).
 	 */
 	private long	duree;
@@ -27,13 +31,14 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	 * Nom de la simulation.
 	 */
 	private String	nom;
+
+
 	/**
 	 * Quand afficher les statistiques? (exemple: 0.1 = tous les 10% de la
 	 * simulation).
 	 */
 	private float	periodiciteAffichageStatistiques;
-
-
+	
 
 	/**
 	 * Constructeur par défaut.
@@ -46,6 +51,8 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	public int getDelaiEntreEntites() {
 		return delaiEntreEntites;
 	}
+	
+	
 
 
 
@@ -94,6 +101,16 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 
 
 	/**
+	 * Est-ce que le distance vector est activé?
+	 * @return vrai si oui
+	 */
+	public boolean isDistanceVectorActive() {
+		return distanceVectorActive;
+	}
+
+
+
+	/**
 	 * Définir le délai entre entités (agent <-> hôte).
 	 * 
 	 * @param delaiEntreEntites
@@ -105,6 +122,16 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 					"Le délai entre entités doit être >= 0");
 		}
 		this.delaiEntreEntites = delaiEntreEntites;
+	}
+
+
+
+	/**
+	 * Définir si le distance vector est activé ou non.
+	 * @param distanceVectorActive vrai s'il est activé
+	 */
+	public void setDistanceVectorActive(final boolean distanceVectorActive) {
+		this.distanceVectorActive = distanceVectorActive;
 	}
 
 
@@ -165,7 +192,7 @@ public class ConfigurationSimulationReseau extends AbstractConfiguration {
 	 *        la périodicité pour l'affichage des stats.
 	 */
 	public void setPeriodiciteAffichageStatistiques(
-			float periodiciteAffichageStatistiques) {
+			final float periodiciteAffichageStatistiques) {
 		if (periodiciteAffichageStatistiques <= 0
 				|| periodiciteAffichageStatistiques > 1) {
 			throw new IllegalArgumentException(
