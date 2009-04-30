@@ -10,7 +10,6 @@ import be.simulation.core.AbstractSimulation;
 import be.simulation.core.evenements.Evenement;
 import be.simulation.entites.Agent;
 import be.simulation.entites.Hote;
-import be.simulation.evenements.AffichageStatistiques;
 import be.simulation.evenements.AgentFinTraitementMessage;
 import be.simulation.evenements.AgentRecoitMessage;
 import be.simulation.evenements.FinDeSimulation;
@@ -18,6 +17,7 @@ import be.simulation.evenements.HoteEnvoieMessageOriginal;
 import be.simulation.evenements.HoteFinTraitementMessage;
 import be.simulation.evenements.HoteRecoitMessage;
 import be.simulation.evenements.HoteTimeoutReceptionAccuse;
+import be.simulation.evenements.AffichageStatistiques;
 import be.simulation.evenements.routage.AgentEnvoieInfosRoutage;
 import be.simulation.evenements.routage.AgentRecoitInfosRoutage;
 import be.simulation.utilitaires.Utilitaires;
@@ -228,12 +228,6 @@ public class SimulationReseau extends AbstractSimulation {
 						.getNom() + ")");
 		LOGGER
 				.info("------------------------------------------------------------------");
-		
-		// TODO ajouter ici la logique pour le calcul du temps entre affichages
-		// de stats
-		// dans la boucle, afficher si delai dépassé.
-		
-		
 		// boucle principale de la simulation
 		while (!getFutureEventList().estVide()) {
 			// Pour un temps t donné:
@@ -555,8 +549,11 @@ public class SimulationReseau extends AbstractSimulation {
 				.isDistanceVectorActive()) {
 			// Si le distance vector est activé, on planifie les évènements
 			// réguliers d'envoi d'informations de routage
-			
-			
+
+			// FIXME v2.0 qui envoie ces messages? tout le monde?
+			// un agent en particulier? Si oui, lequel?
+			// -> pour le moment, TOUT LE MONDE
+
 			long tempsTmp = 0L;
 			while (tempsTmp <= getConfiguration()
 					.getConfigurationSimulationReseau().getDuree()) {
@@ -586,7 +583,7 @@ public class SimulationReseau extends AbstractSimulation {
 		float periodiciteAffichageStats = getConfiguration()
 				.getConfigurationSimulationReseau()
 				.getPeriodiciteAffichageStatistiques();
-		long tempsEntreAffichageStats = Math.round(getConfiguration()
+		long tempsEntreAffichageStats = Math.round((float) getConfiguration()
 				.getConfigurationSimulationReseau().getDuree()
 				* periodiciteAffichageStats);
 		if (tempsEntreAffichageStats == 0) {
