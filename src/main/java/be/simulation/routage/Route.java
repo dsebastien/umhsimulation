@@ -12,21 +12,48 @@ import be.simulation.entites.Agent;
  */
 public class Route {
 	/**
+	 * Le coût du lien entre l'agent actuel et le voisin par lequel passer.
+	 */
+	private final int cout;
+
+	/**
 	 * Destination finale.
 	 */
-	private final Agent	destination;
-
+	private final Agent destination;
 	/**
 	 * Voisin chez qui envoyer le message pour atteindre le plus efficacement
 	 * possible l'agent de destination.
 	 */
-	private final Agent	voisin;
+	private final Voisin voisin;
+
 	/**
-	 * Le coût du lien entre l'agent actuel et le voisin par lequel passer.
+	 * Création d'une route.
+	 * 
+	 * @param destination
+	 *            agent de destination de cette route
+	 * @param voisin
+	 *            l'agent voisin par lequel passer pour atteindre cette
+	 *            destination
+	 * @param cout
+	 *            le coût du lien entre l'agent actuel et le voisin par lequel
+	 *            passer
 	 */
-	private final int		cout;
-
-
+	public Route(final Agent destination, final Voisin voisin, final int cout) {
+		if (destination == null) {
+			throw new IllegalArgumentException(
+					"L'agent de destination ne peut pas etre null!");
+		}
+		if (voisin == null) {
+			throw new IllegalArgumentException(
+					"Le voisin ne peut pas être null!");
+		}
+		if (cout < 0) {
+			throw new IllegalArgumentException("Le coût ne peut pas être < 0!");
+		}
+		this.destination = destination;
+		this.voisin = voisin;
+		this.cout = cout;
+	}
 
 	/**
 	 * Récupérer le coût du lien entre l'agent actuel et le voisin par lequel
@@ -39,51 +66,6 @@ public class Route {
 		return cout;
 	}
 
-
-
-	/**
-	 * Récupérer le voisin par lequel passer pour atteindre la destination
-	 * voulue.
-	 * 
-	 * @return le voisin par lequel passer pour atteindre la destination voulue.
-	 */
-	public Agent getVoisin() {
-		return voisin;
-	}
-
-
-
-	/**
-	 * Création d'une route.
-	 * 
-	 * @param destination
-	 *        agent de destination de cette route
-	 * @param voisin
-	 *        l'agent voisin par lequel passer pour atteindre cette destination
-	 * @param cout
-	 *        le coût du lien entre l'agent actuel et le voisin par lequel
-	 *        passer
-	 */
-	public Route(final Agent destination, final Agent voisin, final int cout) {
-		if (destination == null) {
-			throw new IllegalArgumentException(
-					"L'agent de destination ne peut pas etre null!");
-		}
-		if (voisin == null) {
-			throw new IllegalArgumentException(
-					"Le voisin ne peut pas être null!");
-		}
-		if (cout < 0) {
-			throw new IllegalArgumentException(
-					"Le coût ne peut pas être < 0!");
-		}
-		this.destination = destination;
-		this.voisin = voisin;
-		this.cout = cout;
-	}
-
-
-
 	/**
 	 * Récupérer l'agent de destination de cette route
 	 * 
@@ -92,9 +74,20 @@ public class Route {
 	public Agent getDestination() {
 		return destination;
 	}
-	
+
+	/**
+	 * Récupérer le voisin par lequel passer pour atteindre la destination
+	 * voulue.
+	 * 
+	 * @return le voisin par lequel passer pour atteindre la destination voulue.
+	 */
+	public Voisin getVoisin() {
+		return voisin;
+	}
+
 	@Override
-	public String toString(){
-		return "La route pour à destination de "+destination.getNumero()+" passe par "+voisin;
+	public String toString() {
+		return "La route pour à destination de " + destination.getNumero()
+				+ " passe par " + voisin;
 	}
 }

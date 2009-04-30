@@ -9,6 +9,7 @@ import be.simulation.core.evenements.Evenement;
  * @author Regnier Frederic
  * @author Mernier Jean-François
  */
+//FIXME supprimer...
 public class AffichageStatistiques extends Evenement {
 
 	/**

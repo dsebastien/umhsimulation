@@ -40,8 +40,8 @@ public class Main {
 		// par l'utilisateur
 		try {
 			boolean aideAffichee = configuration.parse(args);
+			// on quitte car l'utilisateur voulait juste voir l'aide
 			if (aideAffichee) {
-				// on quitte car l'utilisateur voulait juste voir l'aide
 				System.exit(0);
 			}
 		} catch (ExceptionOptionsInvalides e) {
@@ -60,7 +60,6 @@ public class Main {
 
 		
 		//TODO v2.0 ajouter tests là où nécessaire pour effectuer les traitements nécessaires quand DV est activé
-		
 		
 		//TODO virer les caractères spéciaux des outputs (LOGGER. ...)
 		//pour éviter les problèmes d'affichage sous windows

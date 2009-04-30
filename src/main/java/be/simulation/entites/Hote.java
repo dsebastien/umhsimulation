@@ -1,11 +1,9 @@
 package be.simulation.entites;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
 import be.simulation.evenements.AgentRecoitMessage;
 import be.simulation.evenements.HoteEnvoieMessageOriginal;
 import be.simulation.evenements.HoteFinTraitementMessage;
@@ -24,9 +22,9 @@ import be.simulation.messages.utilitaires.MessageTempsMax;
  * @author Mernier Jean-François
  */
 public class Hote extends AbstractEntiteSimulationReseau {
+	// variables tenant l'information globale (pour tous les hôtes)
 	public static MessageSimple MESSAGE_LE_PLUS_REEMIS = MessageSimple.creerFauxMessage();
 	public static MessageTempsMax	MESSAGE_TEMPS_MAX =	new MessageTempsMax();
-	// variables tenant l'information globale (pour tous les hôtes)
 	public static int TOTAL_ACCUSES_RECUS = 0;
 	/**
 	 * Utilisé pour attribuer un numéro unique à chaque hôte.
