@@ -17,7 +17,6 @@ import be.simulation.evenements.HoteEnvoieMessageOriginal;
 import be.simulation.evenements.HoteFinTraitementMessage;
 import be.simulation.evenements.HoteRecoitMessage;
 import be.simulation.evenements.HoteTimeoutReceptionAccuse;
-import be.simulation.evenements.AffichageStatistiques;
 import be.simulation.evenements.routage.AgentEnvoieInfosRoutage;
 import be.simulation.evenements.routage.AgentRecoitInfosRoutage;
 import be.simulation.utilitaires.Utilitaires;
@@ -228,25 +227,45 @@ public class SimulationReseau extends AbstractSimulation {
 						.getNom() + ")");
 		LOGGER
 				.info("------------------------------------------------------------------");
+		
+		
+		float periodiciteAffichageStats = getConfiguration()
+		.getConfigurationSimulationReseau()
+		.getPeriodiciteAffichageStatistiques();
+		
+		long dernierTempsAffichageStats = getHorloge();
+		LOGGER.info(getHorloge());
+		
+		long tempsEntreAffichagesStats = Math.round((float) getConfiguration()
+				.getConfigurationSimulationReseau().getDuree()
+				* periodiciteAffichageStats);
+		
+		if (tempsEntreAffichagesStats == 0) {
+			// l'unité de temps minimale
+			tempsEntreAffichagesStats = 1;
+		}
+		// on affiche les "stats" avant que la simulation ne commence
+		calculerEtAfficherResultats();
+		
+		
 		// boucle principale de la simulation
 		while (!getFutureEventList().estVide()) {
-			// Pour un temps t donné:
 			// En tout premier lieu, on affiche les statistiques si nécessaire
-			
-			//TODO utiliser un timer ici
-			// calculer en fonction de la cfg, le délai entre affichages des stats
-			// ici, vérifier si ça fait au moins x temps qu'on a pas affiché les stats
-			// si oui on affiche et on enregistre le dernier temps d'affichage
-			
-			Evenement evenementImminent = getFutureEventList()
-					.getEvenementImminent(AffichageStatistiques.class);
-			// S'il n'y a plus de statistiques à afficher, on vérifie si la
-			// simulation ne doit pas
-			// se terminer
-			if (evenementImminent == null) {
-				evenementImminent = getFutureEventList().getEvenementImminent(
-						FinDeSimulation.class);
+			if(getHorloge() - dernierTempsAffichageStats >= tempsEntreAffichagesStats){
+				// dans ce cas on doit réafficher les stats
+				dernierTempsAffichageStats += tempsEntreAffichagesStats; // ou juste = getHorloge();
+				
+				// on calcule affiche les statistiques actuelles
+				calculerEtAfficherResultats();
 			}
+			
+			//TODO décider si on doit prendre la fin de simulation en 
+			// premier pour un temps t ou tout le reste d'abord!!
+			// on vérifie si la simulation 
+			// ne doit pas se terminer en premier lieu
+			Evenement evenementImminent = getFutureEventList().getEvenementImminent(
+					FinDeSimulation.class);
+			
 			// TODO v2.0 déterminer lequel des deux devrait avoir priorité (si
 			// utile)
 			// on traiter d'abord l'envoi et la réception d'informations de
@@ -299,9 +318,6 @@ public class SimulationReseau extends AbstractSimulation {
 				// fin de traitement d'un message par un hote
 				HoteFinTraitementMessage evt = (HoteFinTraitementMessage) evenementImminent;
 				evt.getHote().finitTraiterMessage(evt.getMessage());
-			} else if (evenementImminent instanceof AffichageStatistiques) {
-				// on calcule affiche les statistiques actuelles
-				calculerEtAfficherResultats();
 			} else if (evenementImminent instanceof AgentEnvoieInfosRoutage) {
 				AgentEnvoieInfosRoutage evt = (AgentEnvoieInfosRoutage) evenementImminent;
 				evt.getAgent().envoyerInfosRoutage();
@@ -315,8 +331,13 @@ public class SimulationReseau extends AbstractSimulation {
 				for (Agent a : agents) {
 					a.mettreAJourStatTauxUtilisationBuffer();
 				}
+				
+				// on calcule et affiche les statistiques finales
+				calculerEtAfficherResultats();
+				
 				// on vide la FEL, ce qui provoque la sortie de cette boucle
 				getFutureEventList().reset();
+
 				LOGGER.info("Fin de la simulation");
 			}
 		}
@@ -577,27 +598,8 @@ public class SimulationReseau extends AbstractSimulation {
 		// stabilisé.
 		ajouterTempsHorloge(getConfiguration()
 				.getConfigurationSimulationReseau().getDureeInitialisation());
-		// on prévoit des évènements spéciaux pour afficher
-		// les statistiques à des moments bien déterminés pendant la simulation
-		// (par exemple tous les 10% de la simulation)
-		float periodiciteAffichageStats = getConfiguration()
-				.getConfigurationSimulationReseau()
-				.getPeriodiciteAffichageStatistiques();
-		long tempsEntreAffichageStats = Math.round((float) getConfiguration()
-				.getConfigurationSimulationReseau().getDuree()
-				* periodiciteAffichageStats);
-		if (tempsEntreAffichageStats == 0) {
-			// l'unité de temps minimale
-			tempsEntreAffichageStats = 1;
-		}
-		long tempsTemp = 0;
-		while (tempsTemp <= getConfiguration()
-				.getConfigurationSimulationReseau().getDuree()) {
-			AffichageStatistiques evtAffichageStats = new AffichageStatistiques(
-					getHorloge() + tempsTemp);
-			getFutureEventList().planifierEvenement(evtAffichageStats);
-			tempsTemp += tempsEntreAffichageStats;
-		}
+
+		
 		// premiers évènements d'envoi par les hôtes
 		for (Agent agent : agents) {
 			for (Hote h : agent.getHotes()) {
