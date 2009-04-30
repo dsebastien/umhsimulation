@@ -6,11 +6,12 @@ import java.util.Random;
 import be.simulation.evenements.AgentFinTraitementMessage;
 import be.simulation.evenements.AgentRecoitMessage;
 import be.simulation.evenements.HoteRecoitMessage;
+import be.simulation.evenements.routage.AgentRecoitInfosRoutage;
 import be.simulation.messages.Message;
 import be.simulation.messages.routage.InfosRoutage;
 import be.simulation.messages.utilitaires.MessageEnAttente;
-import be.simulation.routage.Route;
 import be.simulation.routage.TableDeRoutage;
+import be.simulation.routage.Voisin;
 
 /**
  * Agent du système (= serveur).
@@ -20,18 +21,17 @@ import be.simulation.routage.TableDeRoutage;
  * @author Mernier Jean-François
  */
 public class Agent extends AbstractEntiteSimulationReseau {
+	// variables tenant l'information globale (pour tous les agents)
 	public static int				TOTAL_MESSAGES_EN_COURS_TRAITEMENT					=
 																								0;
 	public static int				TOTAL_MESSAGES_PERDUS_BRUTALEMENT					=
 																								0;
 	public static int				TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN					=
 																								0;
-	// variables tenant l'information globale (pour tous les agents)
 	public static int				TOTAL_MESSAGES_RECUS								=
 																								0;
 	public static int				TOTAL_SOMME_NIVEAUX_OCCUPATION_BUFFERS				=
 																								0;
-	// TODO occupation globale des buffers en temps réel aussi?
 	/**
 	 * Dernier temps de simulation ou le taux d'utilisation du buffer a été mis
 	 * à jour.
@@ -84,8 +84,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * Les informations de routage dont dispose cet agent (lui permet de savoir
 	 * vers où forwarder les messages).
 	 */
-	private final TableDeRoutage	tableDeRoutage										=
-																								new TableDeRoutage();
+	private TableDeRoutage	tableDeRoutage;
 
 
 
@@ -102,6 +101,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		tableDeRoutage = new TableDeRoutage(getConfiguration().getConfigurationSimulationReseau().isDistanceVectorActive());
 	}
 
 
@@ -111,7 +111,17 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * voisins.
 	 */
 	public void envoyerInfosRoutage() {
-		// FIXME v2.0 implémenter!
+		// FIXME v2.0 améliorer
+		for(Voisin voisin: tableDeRoutage.getVoisins()){
+			// pour n'envoyer qu'aux voisins (et pas à soi même)
+			if(!this.equals(voisin.getAgent())){
+				InfosRoutage infosRoutage = new InfosRoutage(this, voisin.getAgent(), tableDeRoutage.getRoutes());				
+				AgentRecoitInfosRoutage evtAgentRecoitInfosRoutage = new AgentRecoitInfosRoutage(infosRoutage, voisin.getAgent(), getSimulation().getHorloge() + voisin.getDistance() );
+				
+				getSimulation().getFutureEventList().planifierEvenement(evtAgentRecoitInfosRoutage);
+			}
+		}
+		
 	}
 
 
@@ -164,14 +174,15 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		} else {
 			// le message est à destination d'un hôte connecté à un autre agent
 			// on cherche où forwarder le message
-			Route route =
-					tableDeRoutage.trouverMeilleureRoute(message
+			//TODO màj UML
+			Voisin voisin =
+					tableDeRoutage.trouverMeilleureVoisin(message
 							.getDestination());
 			// on génère l'évènement de réception par le voisin correspondant à
 			// cette route
 			AgentRecoitMessage evtReceptionAgent =
-					new AgentRecoitMessage(message, route.getVoisin(),
-							getSimulation().getHorloge() + route.getCout());
+					new AgentRecoitMessage(message, voisin.getAgent(),
+							getSimulation().getHorloge() + voisin.getDistance());
 			// on l'ajoute à la FEL
 			getSimulation().getFutureEventList().planifierEvenement(
 					evtReceptionAgent);
@@ -374,7 +385,17 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 *        les informations de routage reçues
 	 */
 	public void recoitInfosRoutage(final InfosRoutage infosRoutage) {
+		//FIXME v2.0 pour le moment on ne passe jamais par un buffer, ce message
+		// est donc prioritaire et ne se préoccupe pas de l'occupation de l'agent!
+		
+		// on essaie de mettre à jour la table de routage avec les infos reçues
+		boolean tableModifiee = tableDeRoutage.mettreAJour(infosRoutage);
+		
+		// si la table de routage à été modifiée, alors on doit renvoyer
+		// les nouvelles infos de routage aux voisins
+		
 		// FIXME v2.0 implémenter!
+		throw new UnsupportedOperationException("bouh");
 	}
 
 
