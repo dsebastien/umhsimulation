@@ -23,7 +23,7 @@ public class TableDeRoutage {
 	/**
 	 * Les voisins directs de cet hôte.
 	 */
-	private final List<Voisin> voisins = new ArrayList<Voisin>();
+	private List<Voisin> voisins = new ArrayList<Voisin>();
 
 	/**
 	 * Récupérer la liste des voisins.
@@ -82,6 +82,20 @@ public class TableDeRoutage {
 	}
 
 	/**
+	 * Ajouter une route à la table de routage.
+	 * 
+	 * @param route
+	 *            la route à ajouter
+	 */
+	public void ajouterRoute(final Route route) {
+		if (route == null) {
+			throw new IllegalArgumentException(
+					"La route ne peut pas être null!");
+		}
+		this.routes.add(route);
+	}
+
+	/**
 	 * Récupérer la liste des routes.
 	 * 
 	 * @return la liste des routes
@@ -107,15 +121,12 @@ public class TableDeRoutage {
 	 *            le destinataire final
 	 * @return le meilleur voisin pour aller à la destination
 	 */
-	public Voisin trouverMeilleureVoisin(final Hote destinataire) {
+	public Voisin trouverMeilleurVoisin(final Hote destinataire) {
 		Voisin meilleurVoisin = null;
 		
 		// Si le DV n'est pas activé, on trouve simplement la route
 		// puisqu'on l'a déjà (elle est fixée)
-		if (distanceVectorActive) {
-			// FIXME implémenter!
-			throw new UnsupportedOperationException("Non implémenté");
-		} else {
+		if(!distanceVectorActive){
 			// On cherche parmi les routes connues celle définie pour aller vers le
 			// destinataire voulu
 			for (Route route : routes) {
@@ -123,6 +134,9 @@ public class TableDeRoutage {
 					meilleurVoisin = route.getVoisin();
 				}
 			}
+		}else{
+			//FIXME implémenter!
+			throw new UnsupportedOperationException("Non implémenté");
 		}
 
 		if (meilleurVoisin == null) {
@@ -162,7 +176,6 @@ public class TableDeRoutage {
 			// est-ce qu'on a une route avec la même destination 
 			// passant par l'agent voisin nous ayant fourni les infos?
 			boolean trouve = false;
-			
 			for(Route routeLocale: routes){
 				if(routeLocale.getDestination().equals(routeVoisin.getDestination())){
 					if(routeLocale.getVoisin().equals(routeVoisin.getVoisin())){

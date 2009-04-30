@@ -176,7 +176,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 			// on cherche où forwarder le message
 			//TODO màj UML
 			Voisin voisin =
-					tableDeRoutage.trouverMeilleureVoisin(message
+					tableDeRoutage.trouverMeilleurVoisin(message
 							.getDestination());
 			// on génère l'évènement de réception par le voisin correspondant à
 			// cette route
