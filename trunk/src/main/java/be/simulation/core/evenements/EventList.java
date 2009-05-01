@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.log4j.Logger;
+import be.simulation.entites.Agent;
+import be.simulation.evenements.AgentEnvoieInfosRoutage;
 import be.simulation.evenements.HoteTimeoutReceptionAccuse;
 import be.simulation.messages.MessageSimple;
 
@@ -190,5 +192,35 @@ public class EventList {
 		if(resultat == false){
 			LOGGER.warn("L'évènement n'a pas été supprimé, il n'était apparemment pas dans l'event list");
 		}
+	}
+	
+	
+	
+	
+	/**
+	 * Essaie de trouver un évènement d'envoi d'infos de routage pour un agent donné.
+	 * 
+	 * REMARQUE: par simplicité nous avons placé cette méthode ici mais si le but avait été de réutiliser le code, nous aurions pu la placer dans une sous classe
+	 * @param agent l'agent pour lequel on veut trouver l'évènement d'envoi d'infos de routage
+	 * @return l'évènement correspondant s'il existe, NULL sinon
+	 */
+	public AgentEnvoieInfosRoutage trouverEvenementEnvoiInfosRoutagePourAgent(final Agent agent) {
+		if(agent == null){
+			throw new IllegalArgumentException("L'agent ne peut pas être null!");
+		}
+		
+		AgentEnvoieInfosRoutage retVal = null;
+		
+		for(Evenement evt: eventList){
+			if(evt instanceof AgentEnvoieInfosRoutage){
+				AgentEnvoieInfosRoutage tmp = (AgentEnvoieInfosRoutage) evt;
+				
+				if(tmp.getAgent().equals(agent)){
+					// on l'a trouvé!
+					retVal = tmp;
+				}
+			}
+		}
+		return retVal;
 	}
 }

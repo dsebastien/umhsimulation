@@ -1,4 +1,4 @@
-package be.simulation.evenements.routage;
+package be.simulation.evenements;
 
 import be.simulation.core.evenements.Evenement;
 import be.simulation.entites.Agent;

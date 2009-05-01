@@ -92,5 +92,13 @@ public class Voisin {
         result = 29 * result + distance;
         return result;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString(){
+    	return "Voisin: "+getAgent().toString()+" (distance: "+getDistance()+")";
+    }
 
 }

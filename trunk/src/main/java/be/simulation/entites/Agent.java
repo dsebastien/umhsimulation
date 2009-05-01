@@ -3,10 +3,11 @@ package be.simulation.entites;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import be.simulation.evenements.AgentEnvoieInfosRoutage;
 import be.simulation.evenements.AgentFinTraitementMessage;
+import be.simulation.evenements.AgentRecoitInfosRoutage;
 import be.simulation.evenements.AgentRecoitMessage;
 import be.simulation.evenements.HoteRecoitMessage;
-import be.simulation.evenements.routage.AgentRecoitInfosRoutage;
 import be.simulation.messages.Message;
 import be.simulation.messages.routage.InfosRoutage;
 import be.simulation.messages.utilitaires.MessageEnAttente;
@@ -22,69 +23,69 @@ import be.simulation.routage.Voisin;
  */
 public class Agent extends AbstractEntiteSimulationReseau {
 	// variables tenant l'information globale (pour tous les agents)
-	public static int				TOTAL_MESSAGES_EN_COURS_TRAITEMENT					=
-																								0;
-	public static int				TOTAL_MESSAGES_PERDUS_BRUTALEMENT					=
-																								0;
-	public static int				TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN					=
-																								0;
-	public static int				TOTAL_MESSAGES_RECUS								=
-																								0;
-	public static int				TOTAL_SOMME_NIVEAUX_OCCUPATION_BUFFERS				=
-																								0;
+	public static int			TOTAL_MESSAGES_EN_COURS_TRAITEMENT					=
+																							0;
+	public static int			TOTAL_MESSAGES_PERDUS_BRUTALEMENT					=
+																							0;
+	public static int			TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN					=
+																							0;
+	public static int			TOTAL_MESSAGES_RECUS								=
+																							0;
+	public static int			TOTAL_SOMME_NIVEAUX_OCCUPATION_BUFFERS				=
+																							0;
 	/**
 	 * Dernier temps de simulation ou le taux d'utilisation du buffer a été mis
 	 * à jour.
 	 */
-	private long					dernierTempsMiseAJourSommeNiveauxOccupationBuffer	=
-																								0;
+	private long				dernierTempsMiseAJourSommeNiveauxOccupationBuffer	=
+																							0;
 	/**
 	 * PRNG utilisé pour choisir un hôte au hasard parmi les hôtes connectés à
 	 * cet agent.
 	 */
-	private final Random			generateurChoixHote									=
-																								new Random();
+	private final Random		generateurChoixHote									=
+																							new Random();
 	/**
 	 * PRNG utilisé pour déterminer si un message reçu est perdu ou non (suivant
 	 * la configuration).
 	 */
-	private final Random			generateurMessagesPerdus							=
-																								new Random();
+	private final Random		generateurMessagesPerdus							=
+																							new Random();
 	/**
 	 * Hôtes connectés à cet agent.
 	 */
-	private final List<Hote>		hotes												=
-																								new ArrayList<Hote>();
+	private final List<Hote>	hotes												=
+																							new ArrayList<Hote>();
 	/**
 	 * Le nombre de messages en cours de traitement.
 	 */
-	private int						messagesEnCoursTraitement							=
-																								0;
+	private int					messagesEnCoursTraitement							=
+																							0;
 	/**
 	 * Le nombre de messages perdus brutalement.
 	 */
-	private int						messagesPerdusBrutalement							=
-																								0;
+	private int					messagesPerdusBrutalement							=
+																							0;
 	/**
 	 * Le nombre de messages perdus car le buffer était plein.
 	 */
-	private int						messagesPerdusBufferPlein							=
-																								0;
+	private int					messagesPerdusBufferPlein							=
+																							0;
 	/**
 	 * Le nombre de messages reçus.
 	 */
-	private int						messagesRecus										=
-																								0;
+	private int					messagesRecus										=
+																							0;
 	/**
 	 * La somme des utilisations du buffer.
 	 */
-	private long					sommeNiveauOccupationBuffer							=
-																								0L;
+	private long				sommeNiveauOccupationBuffer							=
+																							0L;
 	/**
 	 * Les informations de routage dont dispose cet agent (lui permet de savoir
 	 * vers où forwarder les messages).
 	 */
-	private TableDeRoutage	tableDeRoutage;
+	private TableDeRoutage		tableDeRoutage;
 
 
 
@@ -101,7 +102,10 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		tableDeRoutage = new TableDeRoutage(getConfiguration().getConfigurationSimulationReseau().isDistanceVectorActive());
+		tableDeRoutage =
+				new TableDeRoutage(this, getConfiguration()
+						.getConfigurationSimulationReseau()
+						.isDistanceVectorActive());
 	}
 
 
@@ -110,18 +114,30 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * Méthode appelée quand cet agent envoie ses informations de routage à ses
 	 * voisins.
 	 */
-	public void envoyerInfosRoutage() {
-		// FIXME v2.0 améliorer
-		for(Voisin voisin: tableDeRoutage.getVoisins()){
-			// pour n'envoyer qu'aux voisins (et pas à soi même)
-			if(!this.equals(voisin.getAgent())){
-				InfosRoutage infosRoutage = new InfosRoutage(this, voisin.getAgent(), tableDeRoutage.getRoutes());				
-				AgentRecoitInfosRoutage evtAgentRecoitInfosRoutage = new AgentRecoitInfosRoutage(infosRoutage, voisin.getAgent(), getSimulation().getHorloge() + voisin.getDistance() );
-				
-				getSimulation().getFutureEventList().planifierEvenement(evtAgentRecoitInfosRoutage);
-			}
+	public void envoieInfosRoutage() {
+		// TODO ajouter à l'UML!
+		// on envoie notre distance vector
+		// a chaque voisin
+		for (Voisin voisin : tableDeRoutage.getVoisins()) {
+			InfosRoutage infosRoutage =
+					new InfosRoutage(this, voisin.getAgent(), tableDeRoutage
+							.getDistanceVector());
+			AgentRecoitInfosRoutage evtAgentRecoitInfosRoutage =
+					new AgentRecoitInfosRoutage(infosRoutage,
+							voisin.getAgent(), getSimulation().getHorloge()
+									+ voisin.getDistance());
+			getSimulation().getFutureEventList().planifierEvenement(
+					evtAgentRecoitInfosRoutage);
 		}
-		
+		// on génère le prochain évènement d'envoi
+		long prochainTempsEnvoi =
+				getSimulation().getHorloge()
+						+ getConfiguration().getConfigurationAgents()
+								.getTempsInterEnvoisInfosRoutage();
+		AgentEnvoieInfosRoutage evtEnvoiInfosRoutage =
+				new AgentEnvoieInfosRoutage(this, prochainTempsEnvoi);
+		getSimulation().getFutureEventList().planifierEvenement(
+				evtEnvoiInfosRoutage);
 	}
 
 
@@ -174,7 +190,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		} else {
 			// le message est à destination d'un hôte connecté à un autre agent
 			// on cherche où forwarder le message
-			//TODO màj UML
+			// TODO màj UML
 			Voisin voisin =
 					tableDeRoutage.trouverMeilleurVoisin(message
 							.getDestination());
@@ -385,17 +401,31 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 *        les informations de routage reçues
 	 */
 	public void recoitInfosRoutage(final InfosRoutage infosRoutage) {
-		//FIXME v2.0 pour le moment on ne passe jamais par un buffer, ce message
-		// est donc prioritaire et ne se préoccupe pas de l'occupation de l'agent!
-		
+		// TODO v2.0 ajouter à l'UML
+		// ce message est prioritaire et ne se préoccupe pas de
+		// l'occupation de l'agent
 		// on essaie de mettre à jour la table de routage avec les infos reçues
 		boolean tableModifiee = tableDeRoutage.mettreAJour(infosRoutage);
-		
 		// si la table de routage à été modifiée, alors on doit renvoyer
 		// les nouvelles infos de routage aux voisins
-		
-		// FIXME v2.0 implémenter!
-		throw new UnsupportedOperationException("bouh");
+		if (tableModifiee) {
+			// on annule l'évènement d'envoi initialement prévu
+			AgentEnvoieInfosRoutage evtASupprimer =
+					getSimulation().getFutureEventList()
+							.trouverEvenementEnvoiInfosRoutagePourAgent(this);
+			if (evtASupprimer == null) {
+				throw new IllegalStateException(
+						"L'évènement d'envoi d'infos de routage à supprimer n'a pas été trouvé, ceci ne devrait pas arriver!");
+			} else {
+				getSimulation().getFutureEventList().supprimer(evtASupprimer);
+			}
+			// on en génère un nouveau (envoi immédiat)
+			AgentEnvoieInfosRoutage evtAgentEnvoieInfosRoutage =
+					new AgentEnvoieInfosRoutage(this, getSimulation()
+							.getHorloge());
+			getSimulation().getFutureEventList().planifierEvenement(
+					evtAgentEnvoieInfosRoutage);
+		}
 	}
 
 
@@ -450,6 +480,13 @@ public class Agent extends AbstractEntiteSimulationReseau {
 					// l'occupation
 					// du buffer pour générer des évènements
 					// AgentEnvoieInfosRoutage
+					// ne PAS oublier la logique pour aller virer l'évènement
+					// initialement prévu
+					// TODO aller checker directement le buffer de chaque
+					// voisin?
+					// Seb: je vote oui, car je ne vois pas comment on dit aux
+					// autres
+					// "je suis plus occupé qu'avant"
 				}
 				// on met à jour la statistique du taux d'utilisation du buffer
 				mettreAJourStatTauxUtilisationBuffer();

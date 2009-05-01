@@ -57,7 +57,7 @@ column=16
 encoding=UTF-8
 highlight=LaTeX
 line=4
-open=false
+open=true
 order=0
 
 [item:tex/temp.tex]
