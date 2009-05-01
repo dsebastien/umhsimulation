@@ -301,7 +301,6 @@ public class TableDeRoutage {
 					if (!routeTrouvee) {
 						// on a pas de route vers cette destination via ce
 						// voisin on doit l'ajouter!
-						//FIXME BUG ici, on ajoute parfois de mauvaises routes!
 						routesLocales
 								.add(creerRoute(agentDestination,
 										voisinAyantEnvoyeInfos.getAgent(),
