@@ -1,6 +1,7 @@
 package be.simulation.messages.routage;
 
 import java.util.List;
+import java.util.Map;
 
 import be.simulation.core.messages.AbstractMessage;
 import be.simulation.entites.Agent;
@@ -15,9 +16,9 @@ import be.simulation.routage.Route;
  */
 public class InfosRoutage extends AbstractMessage<Agent> {
 	/**
-	 * Les routes données dans le message.
+	 * Un distance vector.
 	 */
-	private final List<Route> routes;
+	private final Map<Agent,List<Route>> distanceVector;
 
 	/**
 	 * Informations de routage.
@@ -26,25 +27,23 @@ public class InfosRoutage extends AbstractMessage<Agent> {
 	 *            l'agent à la source de l'envoi des informations de routage
 	 * @param destination
 	 *            l'agent destinataire des informations de routage
-	 * @param routes les routes
+	 * @param distanceVector le distance vector
 	 */
 	public InfosRoutage(final Agent source, final Agent destination,
-			final List<Route> routes) {
+			final Map<Agent,List<Route>> distanceVector) {
 		super(source, destination);
-		if (routes == null) {
+		if (distanceVector == null) {
 			throw new IllegalArgumentException(
-					"Les routes ne peuvent pas être null!");
+					"Le distance vector ne peut pas être null!");
 		}
-		this.routes = routes;
+		this.distanceVector = distanceVector;
 	}
-	// TODO v2.0: à définir
-
 	/**
-	 * Récupérer les routes.
+	 * Récupérer le distance vector.
 	 * 
-	 * @return les routes.
+	 * @return le distance vector.
 	 */
-	public List<Route> getRoutes() {
-		return routes;
+	public Map<Agent,List<Route>> getDistanceVector() {
+		return distanceVector;
 	}
 }

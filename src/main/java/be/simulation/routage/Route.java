@@ -12,40 +12,36 @@ import be.simulation.entites.Agent;
  */
 public class Route {
 	/**
-	 * Le coût du lien entre l'agent actuel et le voisin par lequel passer.
+	 * Le coût associé à cette route.
 	 */
-	private final int cout;
-
+	private int			cout;
 	/**
 	 * Destination finale.
 	 */
-	private final Agent destination;
+	private final Agent	destination;
 	/**
 	 * Voisin chez qui envoyer le message pour atteindre le plus efficacement
 	 * possible l'agent de destination.
 	 */
-	private final Voisin voisin;
+	private Voisin		voisin;
+
+
 
 	/**
 	 * Création d'une route.
 	 * 
 	 * @param destination
-	 *            agent de destination de cette route
+	 *        agent de destination de cette route
 	 * @param voisin
-	 *            l'agent voisin par lequel passer pour atteindre cette
-	 *            destination
+	 *        l'agent voisin par lequel passer pour atteindre cette destination
 	 * @param cout
-	 *            le coût du lien entre l'agent actuel et le voisin par lequel
-	 *            passer
+	 *        le coût du lien entre l'agent actuel et le voisin par lequel
+	 *        passer
 	 */
 	public Route(final Agent destination, final Voisin voisin, final int cout) {
 		if (destination == null) {
 			throw new IllegalArgumentException(
 					"L'agent de destination ne peut pas etre null!");
-		}
-		if (voisin == null) {
-			throw new IllegalArgumentException(
-					"Le voisin ne peut pas être null!");
 		}
 		if (cout < 0) {
 			throw new IllegalArgumentException("Le coût ne peut pas être < 0!");
@@ -54,6 +50,8 @@ public class Route {
 		this.voisin = voisin;
 		this.cout = cout;
 	}
+
+
 
 	/**
 	 * Récupérer le coût du lien entre l'agent actuel et le voisin par lequel
@@ -66,6 +64,8 @@ public class Route {
 		return cout;
 	}
 
+
+
 	/**
 	 * Récupérer l'agent de destination de cette route
 	 * 
@@ -74,6 +74,8 @@ public class Route {
 	public Agent getDestination() {
 		return destination;
 	}
+
+
 
 	/**
 	 * Récupérer le voisin par lequel passer pour atteindre la destination
@@ -85,9 +87,36 @@ public class Route {
 		return voisin;
 	}
 
+
+
+	/**
+	 * Définir le coût de cette route.
+	 * 
+	 * @param cout
+	 *        le cout de la route
+	 */
+	public void setCout(final int cout) {
+		this.cout = cout;
+	}
+
+
+
+	/**
+	 * Définir le voisin chez qui envoyer le message pour atteindre le plus
+	 * efficacement possible l'agent de destination
+	 * 
+	 * @param voisin
+	 *        le voisin
+	 */
+	public void setVoisin(final Voisin voisin) {
+		this.voisin = voisin;
+	}
+
+
+
 	@Override
 	public String toString() {
-		return "La route pour à destination de " + destination.getNumero()
-				+ " passe par " + voisin;
+		return "La route à destination de " + destination.getNumero()
+				+ " passe par " + voisin+" avec un cout de "+getCout();
 	}
 }
