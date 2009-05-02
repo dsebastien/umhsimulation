@@ -11,6 +11,7 @@ import be.simulation.evenements.HoteRecoitMessage;
 import be.simulation.messages.Message;
 import be.simulation.messages.routage.InfosRoutage;
 import be.simulation.messages.utilitaires.MessageEnAttente;
+import be.simulation.routage.Route;
 import be.simulation.routage.TableDeRoutage;
 import be.simulation.routage.Voisin;
 
@@ -114,18 +115,22 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * Méthode appelée quand cet agent envoie ses informations de routage à ses
 	 * voisins.
 	 */
-	public void envoieInfosRoutage() {
+	public void envoieInfosRoutage(boolean initialisation) {
 		// TODO ajouter à l'UML!
 		// on envoie notre distance vector
 		// a chaque voisin
 		for (Voisin voisin : tableDeRoutage.getVoisins()) {
+			if(this.equals(voisin.getAgent())){
+				// pas la peine de s'envoyer les informations
+				continue;
+			}
 			InfosRoutage infosRoutage =
 					new InfosRoutage(this, voisin.getAgent(), tableDeRoutage
 							.getDistanceVector());
 			AgentRecoitInfosRoutage evtAgentRecoitInfosRoutage =
 					new AgentRecoitInfosRoutage(infosRoutage,
 							voisin.getAgent(), getSimulation().getHorloge()
-									+ voisin.getDistance());
+									+ voisin.getDistance(), initialisation);
 			getSimulation().getFutureEventList().planifierEvenement(
 					evtAgentRecoitInfosRoutage);
 		}
@@ -135,7 +140,8 @@ public class Agent extends AbstractEntiteSimulationReseau {
 						+ getConfiguration().getConfigurationAgents()
 								.getTempsInterEnvoisInfosRoutage();
 		AgentEnvoieInfosRoutage evtEnvoiInfosRoutage =
-				new AgentEnvoieInfosRoutage(this, prochainTempsEnvoi);
+				new AgentEnvoieInfosRoutage(this, prochainTempsEnvoi,
+						initialisation);
 		getSimulation().getFutureEventList().planifierEvenement(
 				evtEnvoiInfosRoutage);
 	}
@@ -400,32 +406,42 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * @param infosRoutage
 	 *        les informations de routage reçues
 	 */
-	public void recoitInfosRoutage(final InfosRoutage infosRoutage) {
-		// TODO v2.0 ajouter à l'UML
+	public void recoitInfosRoutage(final InfosRoutage infosRoutage,
+			boolean initialisation) {
+		// TODO v2.0 ajouter à l'UML (détailler la méthode replanifier...)
 		// ce message est prioritaire et ne se préoccupe pas de
 		// l'occupation de l'agent
 		// on essaie de mettre à jour la table de routage avec les infos reçues
-		boolean tableModifiee = tableDeRoutage.mettreAJour(infosRoutage);
+		boolean tableModifiee =
+				tableDeRoutage.mettreAJour(infosRoutage, initialisation);
 		// si la table de routage à été modifiée, alors on doit renvoyer
 		// les nouvelles infos de routage aux voisins
 		if (tableModifiee) {
-			// on annule l'évènement d'envoi initialement prévu
-			AgentEnvoieInfosRoutage evtASupprimer =
-					getSimulation().getFutureEventList()
-							.trouverEvenementEnvoiInfosRoutagePourAgent(this);
-			if (evtASupprimer == null) {
-				throw new IllegalStateException(
-						"L'évènement d'envoi d'infos de routage à supprimer n'a pas été trouvé, ceci ne devrait pas arriver!");
-			} else {
-				getSimulation().getFutureEventList().supprimer(evtASupprimer);
-			}
-			// on en génère un nouveau (envoi immédiat)
-			AgentEnvoieInfosRoutage evtAgentEnvoieInfosRoutage =
-					new AgentEnvoieInfosRoutage(this, getSimulation()
-							.getHorloge());
-			getSimulation().getFutureEventList().planifierEvenement(
-					evtAgentEnvoieInfosRoutage);
+			replanifierEvenementEnvoiInfosRoutage(initialisation);
 		}
+	}
+	
+	/**
+	 * Les circonstances obligent l'agent à prévenir ses voisins de changements dans son distance vector.
+	 */
+	private void replanifierEvenementEnvoiInfosRoutage(boolean initialisation) {
+		// on annule l'évènement d'envoi initialement prévu
+		AgentEnvoieInfosRoutage evtASupprimer =
+				getSimulation().getFutureEventList()
+						.trouverEvenementEnvoiInfosRoutagePourAgent(this);
+		if (evtASupprimer == null) {
+			throw new IllegalStateException(
+					"L'évènement d'envoi d'infos de routage à supprimer n'a pas été trouvé, ceci ne devrait pas arriver!");
+		} else {
+			getSimulation().getFutureEventList().supprimer(evtASupprimer);
+		}
+		// on en génère un nouveau (envoi immédiat)
+		AgentEnvoieInfosRoutage evtAgentEnvoieInfosRoutage =
+				new AgentEnvoieInfosRoutage(this, getSimulation()
+						.getHorloge(),
+						initialisation);
+		getSimulation().getFutureEventList().planifierEvenement(
+				evtAgentEnvoieInfosRoutage);
 	}
 
 
@@ -474,30 +490,66 @@ public class Agent extends AbstractEntiteSimulationReseau {
 				// on incrémente aussi l'info globale (pour tous les agents)
 				TOTAL_MESSAGES_EN_COURS_TRAITEMENT++;
 			} else {
+				boolean bufferInfini =
+					getConfiguration().getConfigurationAgents()
+							.getTailleMaxBuffer() == Long.MAX_VALUE;
+				//FIXME màj l'uml
 				if (getConfiguration().getConfigurationSimulationReseau()
-						.isDistanceVectorActive()) {
-					// TODO v2.0 ajouter les détails de la vérification de
-					// l'occupation
-					// du buffer pour générer des évènements
-					// AgentEnvoieInfosRoutage
-					// ne PAS oublier la logique pour aller virer l'évènement
-					// initialement prévu
-					// TODO aller checker directement le buffer de chaque
-					// voisin?
-					// Seb: je vote oui, car je ne vois pas comment on dit aux
-					// autres
-					// "je suis plus occupé qu'avant"
+						.isDistanceVectorActive() && !bufferInfini) {
+					// si le buffer n'est pas infini, on vérifie son état
+					// pour déterminer s'il faut prévenir que
+					// l'agent est surchargé si nécessaire
+					//FIXME màj l'uml
+					//FIXME v2.0 décider si on augmente de 20-50-100
+					// ou si on place à + infini
+					
+					
+					double occupationActuelle = (double)getBuffer().size() / (double) getConfiguration().getConfigurationAgents().getTailleMaxBuffer();
+					int modificationCout = 5000;
+					Route routeLocale = null;
+					
+					for (Route route : tableDeRoutage.getDistanceVector().get(
+							this)) {
+						if (route.getVoisin().getAgent().equals(this)) {
+							routeLocale = route;
+						}
+					}
+					
+					if (routeLocale == null) {
+						throw new IllegalStateException(
+								"La route locale n'a pas été trouvée!");
+					}
+					
+					int coutActuel = routeLocale.getCout();
+					
+					boolean envoiInfosNecessaire = false;
+					if(occupationActuelle >= 0.8){
+						if(coutActuel == 0){
+							// on augmente le coût local
+							// ça fera peut être passer les autres par une autre route
+							routeLocale.setCout(coutActuel + modificationCout);
+							envoiInfosNecessaire = true;
+						}
+						
+					} else if (occupationActuelle <= 0.2) {
+						if(coutActuel > 0){
+							routeLocale.setCout(coutActuel - modificationCout);
+							envoiInfosNecessaire = true;
+						}
+					}
+					
+					// si un changement important a eu lieu, on doit prévenir les voisins
+					// la méthode appelée supprime l'évènement d'envoi initialement prévu
+					// et en génère un autre immédiat
+					if(envoiInfosNecessaire){
+						replanifierEvenementEnvoiInfosRoutage(false);
+					}
 				}
 				// on met à jour la statistique du taux d'utilisation du buffer
 				mettreAJourStatTauxUtilisationBuffer();
 				// on ne peut plus traiter de message pour l'instant donc on
-				// doit le
-				// mettre en attente on essaie donc de le placer dans le buffer
-				// si
-				// possible
-				boolean bufferInfini =
-						getConfiguration().getConfigurationAgents()
-								.getTailleMaxBuffer() == Long.MAX_VALUE;
+				// doit le mettre en attente on essaie 
+				// donc de le placer dans le buffer si possible
 				boolean bufferRempli =
 						getBuffer().size() == getConfiguration()
 								.getConfigurationAgents().getTailleMaxBuffer();
