@@ -16,6 +16,13 @@ public class AgentEnvoieInfosRoutage extends Evenement {
 	 */
 	private final Agent	agent;
 
+	private final boolean	initialisation;
+
+
+	public boolean isInitialisation() {
+		return initialisation;
+	}
+
 
 
 	/**
@@ -26,12 +33,14 @@ public class AgentEnvoieInfosRoutage extends Evenement {
 	 * @param tempsPrevu
 	 *        le temps prévu pour cet évènement
 	 */
-	public AgentEnvoieInfosRoutage(final Agent agent, final long tempsPrevu) {
+	public AgentEnvoieInfosRoutage(final Agent agent, final long tempsPrevu,
+			final boolean initialisation) {
 		super(tempsPrevu);
 		if (agent == null) {
 			throw new IllegalArgumentException("L'agent ne peut pas être null!");
 		}
 		this.agent = agent;
+		this.initialisation = initialisation;
 	}
 
 
