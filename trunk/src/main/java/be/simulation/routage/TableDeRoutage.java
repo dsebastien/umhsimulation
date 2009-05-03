@@ -267,8 +267,10 @@ public class TableDeRoutage {
 				infosRoutage.getDistanceVector();
 		
 		// FIXME commenter ou supprimer:
-		afficher(this.agent, this.distanceVectorComplet, true);
-		afficher(voisinAyantEnvoyeInfos.getAgent(), distanceVectorVoisin, false);
+		// afficher(this.agent, this.distanceVectorComplet, true);
+		// afficher(voisinAyantEnvoyeInfos.getAgent(), distanceVectorVoisin,
+		// false);
+		
 		// variable qui nous permet à la fin de savoir si
 		// le distance vector local a changé
 		// suite à la mise à jour
@@ -295,11 +297,11 @@ public class TableDeRoutage {
 			// pour chaque route pour cette destination
 			for (Route routeLocale : routesLocales) {
 				if (!routeLocale.getVoisin().equals(voisinAyantEnvoyeInfos)) {
-					// on ne considère par les routes passant par un autre
-					// voisin
+					// on ne considère par les routes
+					// passant par un autre voisin
 					continue;
 				}
-				// ok on a une route via ce voisin
+				
 				// est-ce que le coût a changé?
 				int nouveauCout =
 						routeVoisin.getCout()
@@ -324,8 +326,8 @@ public class TableDeRoutage {
 			}
 		}
 		// FIXME commenter ou supprimer:
-		LOGGER.info("après modifs ");
-		afficher(this.agent, distanceVectorComplet, true);
+		// LOGGER.info("après modifs ");
+		// afficher(this.agent, distanceVectorComplet, true);
 		return distanceVectorLocalModifie;
 	}
 

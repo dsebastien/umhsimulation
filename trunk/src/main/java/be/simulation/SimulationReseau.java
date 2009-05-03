@@ -267,10 +267,7 @@ public class SimulationReseau extends AbstractSimulation {
 			// En tout premier lieu, on affiche les statistiques si nécessaire
 			if (getHorloge() - dernierTempsAffichageStats >= tempsEntreAffichagesStats) {
 				// dans ce cas on doit réafficher les stats
-				dernierTempsAffichageStats += tempsEntreAffichagesStats; // ou
-				// juste
-				// =
-				// getHorloge();
+				dernierTempsAffichageStats += tempsEntreAffichagesStats;
 				// on calcule affiche les statistiques actuelles
 				calculerEtAfficherResultats();
 			}
@@ -314,15 +311,16 @@ public class SimulationReseau extends AbstractSimulation {
 			// pour le traiter
 			if (evenementImminent instanceof HoteEnvoieMessageOriginal) {
 				
-				for (Agent agent : agents) {
-					agent.getTableDeRoutage().afficher(
-							agent,
-							agent.getTableDeRoutage()
-									.getDistanceVectorComplet(), true);
-					agent.getTableDeRoutage().afficher(agent,
-							agent.getTableDeRoutage().getDistanceVectorLocal(),
-							false);
-				}
+				// TODO supprimer:
+				// for (Agent agent : agents) {
+				// agent.getTableDeRoutage().afficher(
+				// agent,
+				// agent.getTableDeRoutage()
+				// .getDistanceVectorComplet(), true);
+				// agent.getTableDeRoutage().afficher(agent,
+				// agent.getTableDeRoutage().getDistanceVectorLocal(),
+				// false);
+				// }
 			
 				
 				// envoi d'un message original par un hôte
