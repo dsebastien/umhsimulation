@@ -505,7 +505,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 					
 					
 					double occupationActuelle = (double)getBuffer().size() / (double) getConfiguration().getConfigurationAgents().getTailleMaxBuffer();
-					int modificationCout = 5000;
+					int modificationCout = 200;
 					Route routeLocale = null;
 					
 					for (Route route : tableDeRoutage.getDistanceVector().get(

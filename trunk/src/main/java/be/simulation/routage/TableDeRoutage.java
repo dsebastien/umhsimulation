@@ -18,6 +18,7 @@ import be.simulation.messages.routage.InfosRoutage;
  * @author Mernier Jean-François
  */
 public class TableDeRoutage {
+	public static final int					INFINI			= Integer.MAX_VALUE;
 	/**
 	 * L'agent a qui appartient cette table de routage.
 	 */
@@ -117,7 +118,7 @@ public class TableDeRoutage {
 	 * 
 	 * @param destination
 	 *        agent de destination
-	 * @param voisin
+	 * @param agentVoisin
 	 *        l'agent voisin par lequel passer
 	 * @param distance
 	 *        la distance entre cet agent et l'agent voisin
@@ -203,7 +204,6 @@ public class TableDeRoutage {
 				}
 			}
 		} else {
-			// FIXME vérifier
 			Route meilleureRoute = null;
 			for (Route route : distanceVector.get(destinataire.getAgent())) {
 				if (meilleureRoute == null
@@ -235,7 +235,7 @@ public class TableDeRoutage {
 	 * @return vrai si la table de routage locale a été modifiée
 	 */
 	public boolean mettreAJour(final InfosRoutage infosRoutage,
-			boolean initialisation) {		
+			boolean initialisation) {
 		// on cherche quel voisin a envoyé les infos
 		Voisin voisinAyantEnvoyeInfos = null;
 		for (Voisin voisin : voisins) {
@@ -248,11 +248,9 @@ public class TableDeRoutage {
 					"Celui ayant envoyé les infos n'est pas un voisin connu!");
 		}
 		// FIXME commenter ou supprimer:
-		if (!initialisation) {
-			afficherDistanceVector();
-			voisinAyantEnvoyeInfos.getAgent().getTableDeRoutage()
-					.afficherDistanceVector();
-		}
+		afficherDistanceVector();
+		voisinAyantEnvoyeInfos.getAgent().getTableDeRoutage()
+				.afficherDistanceVector();
 		// variable qui nous permet à la fin de savoir si
 		// le distance vector local a changé
 		// suite à la mise à jour
@@ -268,148 +266,82 @@ public class TableDeRoutage {
 			}
 			List<Route> routesVoisin =
 					distanceVectorVoisin.get(agentDestination);
-			if (!distanceVector.containsKey(agentDestination)) {
-				// on a encore aucune route
-				// pour cette destination
-				// on les ajoute
-				List<Route> nouvellesRoutes = new ArrayList<Route>();
-				for (Route routeVoisin : routesVoisin) {
-					Route routeRecemmentAjouteeCorrespondante = null;
-					for (Route routeLocale : nouvellesRoutes) {
-						if (routeLocale.getVoisin().equals(
-								voisinAyantEnvoyeInfos)) {
-							routeRecemmentAjouteeCorrespondante = routeLocale;
-						}
-					}
-					if (routeRecemmentAjouteeCorrespondante != null) {
-						// on en a déjà une, on doit garder la moins chère
-						// on doit PEUT ETRE mettre à jour la route
-						int coutNouvelleRoutePossible =
-								routeVoisin.getCout()
-										+ getCoutEstimePourAllerVers(voisinAyantEnvoyeInfos);
-						if (coutNouvelleRoutePossible < routeRecemmentAjouteeCorrespondante
-								.getCout()) {
-							// dans ce cas on change le coût mais on ajoute pas
-							// de route!
-							routeRecemmentAjouteeCorrespondante
-									.setCout(coutNouvelleRoutePossible);
-						}
-					} else {
-						Route nouvelleRoute =
-								creerRoute(agentDestination,
-										voisinAyantEnvoyeInfos.getAgent(),
-										// distance = la distance de ce voisin
-										voisinAyantEnvoyeInfos.getDistance(),
-										// cout = cout estime par le voisin +
-										// cout qu'on estime pour aller a ce
-										// voisin
-										routeVoisin.getCout()
-												+ getCoutEstimePourAllerVers(voisinAyantEnvoyeInfos));
-						nouvellesRoutes.add(nouvelleRoute);
-					}
+			List<Route> routesLocales = distanceVector.get(agentDestination);
+			// pour chaque route dans le DV du voisin
+			// pour cette destination
+			for (Route routeVoisin : routesVoisin) {
+				if (this.agent.equals(routeVoisin.getVoisin().getAgent())) {
+					// si on est le next hop
+					// d'une route du voisin
+					// on l'ignore
+					continue;
 				}
-				distanceVector.put(agentDestination, nouvellesRoutes);
-				distanceVectorLocalModifie = true;
-			} else {
-				// on a déjà des routes pour cette destination
-				List<Route> routesLocales =
-						distanceVector.get(agentDestination);
-				// pour chaque route dans le DV du voisin
-				// pour cette destination
-				for (Route routeVoisin : routesVoisin) {
-					if (this.agent.equals(routeVoisin.getVoisin().getAgent())) {
-						// si on est le next hop
-						// d'une route du voisin
-						// on l'ignore
-						continue;
-					}
-					boolean routeTrouvee = false;
-					// on cherche dans les routes connues pour cette destination
-					// si on en a déjà une qui passe par ce voisin
-					for (Route routeLocale : routesLocales) {
-						// FIXME les seuls coûts qui peuvent changer ce sont
-						// d'abord les coûts
-						// des voisins directs (0 -> 5000)
-						// donc d'abord voir ça puis uh? .. :(
-						
-						if (routeLocale.getVoisin().equals(
-								voisinAyantEnvoyeInfos)) {
-							routeTrouvee = true;
-							if (!agent.equals(routeVoisin.getVoisin()
-									.getAgent())) {
-								routeTrouvee = true;
-								// ok on a une route via ce voisin
-								// est-ce que le coût a changé?
-								// FIXME prob: on rajoute sans arrêt la distance
-								// au cout!
-								int nouveauCout =
-										routeVoisin.getCout()
-												+ voisinAyantEnvoyeInfos
-														.getDistance();
-								boolean coutModifie =
-										routeLocale.getCout() != nouveauCout;
-								boolean doitChanger = false;
-								if (initialisation) {
-									if (coutModifie
-											&& nouveauCout < routeLocale
-													.getCout()) {
-										doitChanger = true;
-									}
-								} else {
-									// le coût ne doit pas changer si
-									// l'agent de destination est un voisin!
-									// sinon on va faire des tours inutiles
-									// dans le réseau
-									if (coutModifie
-											&& !agentDestination
-													.equals(voisinAyantEnvoyeInfos
-															.getAgent())) {
-										doitChanger = true;
-									} else if (coutModifie
-											&& agentDestination
-													.equals(voisinAyantEnvoyeInfos
-															.getAgent())) {
-										List<Route> rTmps =
-												distanceVector
-														.get(voisinAyantEnvoyeInfos
-																.getAgent());
-										for (Route rTmp : rTmps) {
-											// FIXME implement
-										}
-									}
+				// on cherche dans les routes connues pour cette destination
+				// si on en a déjà une qui passe par ce voisin
+				for (Route routeLocale : routesLocales) {
+					// FIXME les seuls coûts qui peuvent changer ce sont
+					// d'abord les coûts
+					// des voisins directs (0 -> 5000)
+					// donc d'abord voir ça puis uh? .. :(
+					if (routeLocale.getVoisin().equals(voisinAyantEnvoyeInfos)) {
+						if (!agent.equals(routeVoisin.getVoisin().getAgent())) {
+							// ok on a une route via ce voisin
+							// est-ce que le coût a changé?
+							// FIXME prob: on rajoute sans arrêt la distance
+							// au cout!
+							int nouveauCout =
+									routeVoisin.getCout()
+											+ voisinAyantEnvoyeInfos
+													.getDistance();
+							
+							if (routeVoisin.getCout() == INFINI) {
+								nouveauCout = INFINI;
+							}
+							
+							boolean coutModifie =
+									routeLocale.getCout() != nouveauCout;
+							boolean doitChanger = false;
+							if (initialisation) {
+								if (coutModifie
+										&& nouveauCout < routeLocale.getCout()) {
+									doitChanger = true;
 								}
-								if (doitChanger) {
-									routeLocale.setCout(nouveauCout);
-									distanceVectorLocalModifie = true;
+							} else {
+								// le coût ne doit pas changer si
+								// l'agent de destination est un voisin!
+								// sinon on va faire des tours inutiles
+								// dans le réseau
+								if (coutModifie
+										&& !agentDestination
+												.equals(voisinAyantEnvoyeInfos
+														.getAgent())) {
+									doitChanger = true;
+								} else if (coutModifie
+										&& agentDestination
+												.equals(voisinAyantEnvoyeInfos
+														.getAgent())) {
+									List<Route> rTmps =
+											distanceVector
+													.get(voisinAyantEnvoyeInfos
+															.getAgent());
+									for (Route rTmp : rTmps) {
+										// FIXME implement
+									}
 								}
 							}
+							if (doitChanger) {
+								routeLocale.setCout(nouveauCout);
+								distanceVectorLocalModifie = true;
+							}
 						}
-					}
-					if (!routeTrouvee) {
-						// on a pas de route vers cette destination via ce
-						// voisin on doit l'ajouter!
-						Route nouvelleRoute =
-								creerRoute(agentDestination,
-										voisinAyantEnvoyeInfos.getAgent(),
-										// distance = distance du voisin
-										voisinAyantEnvoyeInfos.getDistance(),
-										// cout = cout estime par le voisin +
-										// cout qu'on estime pour aller
-										// jusqu'à ce voisin
-										routeVoisin.getCout()
-												+ getCoutEstimePourAllerVers(voisinAyantEnvoyeInfos));
-						routesLocales.add(nouvelleRoute);
-						distanceVectorLocalModifie = true;
 					}
 				}
 			}
 		}
 		// FIXME commenter ou supprimer:
-		if (!initialisation) {
-			LOGGER.info("après modifs ");
-			afficherDistanceVector();
-			LOGGER.info("  ");
-		}
+		LOGGER.info("après modifs ");
+		afficherDistanceVector();
+		LOGGER.info("  ");
 		return distanceVectorLocalModifie;
 	}
 
@@ -423,10 +355,10 @@ public class TableDeRoutage {
 	 * @return le coût actuellement estimé
 	 */
 	private int getCoutEstimePourAllerVers(final Voisin voisin) {
-		int retVal = Integer.MAX_VALUE;
+		int retVal = INFINI;
 		if (distanceVector.containsKey(voisin.getAgent())) {
 			List<Route> tmp = distanceVector.get(voisin.getAgent());
-			int coutRouteMin = Integer.MAX_VALUE;
+			int coutRouteMin = INFINI;
 			for (Route route : tmp) {
 				if (route.getCout() < coutRouteMin) {
 					coutRouteMin = route.getCout();
@@ -434,7 +366,7 @@ public class TableDeRoutage {
 			}
 			retVal = coutRouteMin;
 		}
-		if (retVal == Integer.MAX_VALUE) {
+		if (retVal == INFINI) {
 			throw new IllegalStateException(
 					"Aucune route trouvée pour ce voisin, ça ne devrait pas arriver!");
 		}
