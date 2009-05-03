@@ -24,39 +24,48 @@ line=0
 open=false
 order=-1
 
+[item:tex/annexes.tex]
+archive=true
+column=4
+encoding=
+highlight=LaTeX
+line=3
+open=false
+order=-1
+
 [item:tex/commandes.tex]
 archive=true
-column=47
+column=14
 encoding=UTF-8
 highlight=LaTeX
-line=29
+line=1
 open=false
 order=-1
 
 [item:tex/configuration.sty]
 archive=true
-column=0
+column=99
 encoding=UTF-8
 highlight=LaTeX
-line=70
-open=false
-order=0
+line=45
+open=true
+order=1
 
 [item:tex/page-de-garde.tex]
 archive=true
-column=36
+column=0
 encoding=UTF-8
 highlight=LaTeX
-line=11
+line=25
 open=false
 order=-1
 
 [item:tex/rapport.tex]
 archive=true
-column=16
+column=109
 encoding=UTF-8
 highlight=LaTeX
-line=4
+line=75
 open=true
 order=0
 
