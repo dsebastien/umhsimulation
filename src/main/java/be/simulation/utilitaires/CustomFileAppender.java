@@ -5,6 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.apache.log4j.FileAppender;
 
+/**
+ * Utilisé pour sauvegarder les logs à chaque fois dans un fichier différent.
+ * 
+ * @author Dubois Sebastien
+ * @author Regnier Frederic
+ * @author Mernier Jean-François
+ */
 public class CustomFileAppender extends FileAppender {
 
 	@Override
@@ -15,7 +22,6 @@ public class CustomFileAppender extends FileAppender {
 		dateStr = sdf.format(date, dateStr, new FieldPosition(0));
 		String logFileName = file + "." + dateStr + ".log";
 		super.setFile(logFileName);
-		System.out.println("file: " + logFileName);
 	}
 	
 }
