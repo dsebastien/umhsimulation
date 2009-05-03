@@ -11,7 +11,7 @@
 	<groupId>be.simulation</groupId>
 	<artifactId>simulation</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>2.0</version>
 
 	<name>Simulation</name>
 	<description>Projet de simulation</description>
@@ -132,8 +132,11 @@
 	
 	<build>
 		<!-- Nom de fichier -->
+		<!--
 		<finalName>${project.artifactId}-${project.version}-${buildNumber}</finalName>
-
+		-->
+		<finalName>${project.artifactId}</finalName>
+		
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
