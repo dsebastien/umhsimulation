@@ -90,14 +90,12 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	/**
 	 * Temps minimal entre deux envois des infos de routage.
 	 */
-	// TODO ajouter à l'UML
 	private final long			deltaEntreEnvoisInfosRoutage						=
 																							16;
 	/**
 	 * Nous indique quand on pourra envoyer à nouveau des infos de routage suite
 	 * à une occupation importante du buffer.
 	 */
-	// TODO ajouter à l'UML
 	private long				gardeEnvoiInfosRoutageBuffer						=
 																							0;
 	/**
