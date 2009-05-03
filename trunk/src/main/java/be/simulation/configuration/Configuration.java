@@ -286,6 +286,9 @@ public class Configuration {
 				+ this.getConfigurationHotes().getTimeoutReemissionMessages());
 		LOGGER.info("Simulation - Durée: "
 				+ this.getConfigurationSimulationReseau().getDuree());
+		LOGGER.info("SImulation - Durée de la période d'initialisation DV: "
+				+ this.getConfigurationSimulationReseau()
+						.getDureeInitialisation());
 		if (this.getConfigurationSimulationReseau().isDistanceVectorActive()) {
 			LOGGER.info("Simulation - Distance vector activé: OUI");
 		} else {
