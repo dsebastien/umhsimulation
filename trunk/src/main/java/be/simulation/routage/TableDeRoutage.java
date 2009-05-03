@@ -331,39 +331,6 @@ public class TableDeRoutage {
 		return distanceVectorLocalModifie;
 	}
 
-
-
-	/**
-	 * Récupérer le coût actuellement estimé pour atteindre un voisin donné.
-	 * 
-	 * @param voisin
-	 *        le voisin
-	 * @return le coût actuellement estimé
-	 */
-	private int getCoutEstimePourAllerVers(final Voisin voisin) {
-		int retVal = INFINI;
-		if (distanceVectorComplet.containsKey(voisin.getAgent())) {
-			List<Route> tmp = distanceVectorComplet.get(voisin.getAgent());
-			int coutRouteMin = INFINI;
-			for (Route route : tmp) {
-				if (route.getCout() < coutRouteMin) {
-					coutRouteMin = route.getCout();
-				}
-			}
-			retVal = coutRouteMin;
-		}
-		if (retVal == INFINI) {
-			throw new IllegalStateException(
-					"Aucune route trouvée pour ce voisin, ça ne devrait pas arriver!");
-		}
-		if (retVal == 0) {
-			throw new IllegalStateException("Un coût de 0 est impossible!");
-		}
-		return retVal;
-	}
-
-
-
 	/**
 	 * {@inheritDoc}
 	 */
