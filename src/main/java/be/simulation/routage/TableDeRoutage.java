@@ -300,6 +300,7 @@ public class TableDeRoutage {
 							
 							boolean coutModifie =
 									routeLocale.getCout() != nouveauCout;
+							
 							boolean doitChanger = false;
 							if (initialisation) {
 								if (coutModifie
@@ -316,16 +317,25 @@ public class TableDeRoutage {
 												.equals(voisinAyantEnvoyeInfos
 														.getAgent())) {
 									doitChanger = true;
-								} else if (coutModifie
+								}
+								// dans ce cas on doit mettre à jour les routes
+								// à destination d'un autre agent
+								// que ce voisin qui passent par celui-ci
+								else if (coutModifie
 										&& agentDestination
 												.equals(voisinAyantEnvoyeInfos
 														.getAgent())) {
-									List<Route> rTmps =
-											distanceVector
-													.get(voisinAyantEnvoyeInfos
-															.getAgent());
-									for (Route rTmp : rTmps) {
-										// FIXME implement
+									for (Agent agTmp : distanceVector.keySet()) {
+										if (agTmp.equals(voisinAyantEnvoyeInfos
+												.getAgent())
+												|| agTmp.equals(this.agent)) {
+											continue;
+										}
+										for (Route rTmp : distanceVector
+												.get(agTmp)) {
+											// rTmp.setCout(rTmp.getCout())
+											// on ajoute/retire la diff de coût?
+										}
 									}
 								}
 							}
