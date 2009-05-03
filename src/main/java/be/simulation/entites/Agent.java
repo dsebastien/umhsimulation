@@ -87,9 +87,20 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * vers où forwarder les messages).
 	 */
 	private TableDeRoutage		tableDeRoutage;
+	/**
+	 * Le dernier temps où on a envoyé les infos de routage.
+	 */
+	// TODO ajouter à l'UML
+	private final long			dernierTempsEnvoiInfosRoutage						=
+																							0;
 
-
-
+	/**
+	 * Temps minimal entre deux envois des infos de routage.
+	 */
+	// TODO ajouter à l'UML
+	private final long			deltaEntreEnvoisInfosRoutage						=
+																							16;
+	
 	/**
 	 * Crée un nouvel agent.
 	 */
@@ -124,9 +135,14 @@ public class Agent extends AbstractEntiteSimulationReseau {
 				// pas la peine de s'envoyer les informations
 				continue;
 			}
+			
+			// on ne va donner aux voisins que les meilleures routes
+			// qu'on connaît pour chaque destination
+			// (notre distance vector donc)
+			// TODO implémenter poisoned reverse?
 			InfosRoutage infosRoutage =
-					new InfosRoutage(this, voisin.getAgent(), tableDeRoutage
-							.getDistanceVector());
+	 new InfosRoutage(this, voisin.getAgent(), tableDeRoutage
+							.getDistanceVectorLocal());
 			AgentRecoitInfosRoutage evtAgentRecoitInfosRoutage =
 					new AgentRecoitInfosRoutage(infosRoutage,
 							voisin.getAgent(), getSimulation().getHorloge()
@@ -505,38 +521,37 @@ public class Agent extends AbstractEntiteSimulationReseau {
 					
 					
 					double occupationActuelle = (double)getBuffer().size() / (double) getConfiguration().getConfigurationAgents().getTailleMaxBuffer();
-					int modificationCout = 200;
-					Route routeLocale = null;
+					int modificationCout = 10;
 					
-					for (Route route : tableDeRoutage.getDistanceVector().get(
-							this)) {
-						if (route.getVoisin().getAgent().equals(this)) {
-							routeLocale = route;
-						}
-					}
-					
-					if (routeLocale == null) {
-						throw new IllegalStateException(
-								"La route locale n'a pas été trouvée!");
-					}
-					
-					int coutActuel = routeLocale.getCout();
-					
+
 					boolean envoiInfosNecessaire = false;
+					// TODO ajouter le check pour la différence de temps
+					// dernierTempsEnvoiInfosRoutage
+					// deltaEntreEnvoisInfosRoutage
+					
 					if(occupationActuelle >= 0.8){
-						if(coutActuel == 0){
-							// on augmente le coût local
-							// ça fera peut être passer les autres par une autre route
-							routeLocale.setCout(coutActuel + modificationCout);
-							envoiInfosNecessaire = true;
-						}
-						
-					} else if (occupationActuelle <= 0.2) {
-						if(coutActuel > 0){
-							routeLocale.setCout(coutActuel - modificationCout);
-							envoiInfosNecessaire = true;
+						for (Route route : tableDeRoutage
+								.getDistanceVectorComplet().get(this)) {
+							// on va tout augmenter sauf la route locale
+							// puisque ça n'a pas de sens
+							if (route.getVoisin().getAgent().equals(this)) {
+								continue;
+							}
+							int coutActuel = route.getCout();
+							if (coutActuel < TableDeRoutage.INFINI) {
+								envoiInfosNecessaire =
+										envoiInfosNecessaire && true;
+								route.setCout(coutActuel + modificationCout);
+							}
 						}
 					}
+					
+					// else if (occupationActuelle <= 0.2) {
+					// if(coutActuel > 0){
+					// routeLocale.setCout(coutActuel - modificationCout);
+					// envoiInfosNecessaire = true;
+					// }
+					// }
 					
 					// si un changement important a eu lieu, on doit prévenir les voisins
 					// la méthode appelée supprime l'évènement d'envoi initialement prévu
