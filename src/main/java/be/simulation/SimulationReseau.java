@@ -20,6 +20,7 @@ import be.simulation.evenements.HoteFinTraitementMessage;
 import be.simulation.evenements.HoteRecoitMessage;
 import be.simulation.evenements.HoteTimeoutReceptionAccuse;
 import be.simulation.routage.Route;
+import be.simulation.routage.TableDeRoutage;
 import be.simulation.routage.Voisin;
 import be.simulation.utilitaires.Utilitaires;
 
@@ -475,6 +476,54 @@ public class SimulationReseau extends AbstractSimulation {
 							voisin.getAgent(), routes);
 				}
 			}
+						// on a mis les routes vers tous les voisins
+			// maintenant on met le reste des routes avec un coût infini
+			for (Agent agent : agents) {
+				for (Agent agentDestination : agents) {
+					if (agent.equals(agentDestination)) {
+						continue;
+					}
+					List<Route> routes = new ArrayList<Route>();
+					for (Voisin voisin : agent.getTableDeRoutage()
+							.getVoisins()) {
+						if (!voisin.getAgent().equals(agentDestination)
+								&& !voisin.getAgent().equals(agent)) {
+							Route route =
+									agent.getTableDeRoutage().creerRoute(
+											agentDestination,
+											voisin.getAgent(),
+											voisin.getDistance(),
+											TableDeRoutage.INFINI);
+							routes.add(route);
+						}
+					}
+					
+					if(agent.getTableDeRoutage().getDistanceVector().containsKey(agentDestination)){
+						List<Route> routesConnues = agent.getTableDeRoutage().getDistanceVector().get(agentDestination);
+						
+						
+						for(Route nouvelle: routes){
+							boolean trouvee = false;
+							for(Route routeConnue: routesConnues){
+								if(routeConnue.getVoisin().getAgent().equals(nouvelle.getVoisin().getAgent())){
+									trouvee = true;
+								}
+							}
+								
+							if(!trouvee){
+								routesConnues.add(nouvelle);
+							}
+						}
+						
+					}else{
+						agent.getTableDeRoutage().getDistanceVector().put(
+							agentDestination, routes);
+					}
+				}
+			}
+			
+			
+			
 		} else {
 			// Si le distance vector n'est pas activé,
 			// on ajoute toutes les routes aux agents (table de routage fixe)
