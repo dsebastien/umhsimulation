@@ -253,7 +253,7 @@ public class SimulationReseau extends AbstractSimulation {
 						.getPeriodiciteAffichageStatistiques();
 		long dernierTempsAffichageStats = getHorloge();
 		long tempsEntreAffichagesStats =
-				Math.round((float) getConfiguration()
+				Math.round(getConfiguration()
 						.getConfigurationSimulationReseau().getDuree()
 						* periodiciteAffichageStats);
 		if (tempsEntreAffichagesStats == 0) {
@@ -312,7 +312,19 @@ public class SimulationReseau extends AbstractSimulation {
 			// Traitement de l'évènement imminent récupéré
 			// chaque évènement contient toutes les informations nécessaires
 			// pour le traiter
-			if (evenementImminent instanceof HoteEnvoieMessageOriginal) {				
+			if (evenementImminent instanceof HoteEnvoieMessageOriginal) {
+				
+				for (Agent agent : agents) {
+					agent.getTableDeRoutage().afficher(
+							agent,
+							agent.getTableDeRoutage()
+									.getDistanceVectorComplet(), true);
+					agent.getTableDeRoutage().afficher(agent,
+							agent.getTableDeRoutage().getDistanceVectorLocal(),
+							false);
+				}
+			
+				
 				// envoi d'un message original par un hôte
 				HoteEnvoieMessageOriginal evt =
 						(HoteEnvoieMessageOriginal) evenementImminent;
@@ -431,35 +443,28 @@ public class SimulationReseau extends AbstractSimulation {
 		agent1.getTableDeRoutage().ajouterVoisin(agent1, 0);
 		agent1.getTableDeRoutage().ajouterVoisin(agent2, 10);
 		agent1.getTableDeRoutage().ajouterVoisin(agent3, 20);
-		
 		agent2.getTableDeRoutage().ajouterVoisin(agent2, 0);
 		agent2.getTableDeRoutage().ajouterVoisin(agent1, 10);
 		agent2.getTableDeRoutage().ajouterVoisin(agent4, 10);
 		agent2.getTableDeRoutage().ajouterVoisin(agent7, 30);
-		
 		agent3.getTableDeRoutage().ajouterVoisin(agent3, 0);
 		agent3.getTableDeRoutage().ajouterVoisin(agent1, 20);
 		agent3.getTableDeRoutage().ajouterVoisin(agent4, 10);
-		
 		agent4.getTableDeRoutage().ajouterVoisin(agent4, 0);
 		agent4.getTableDeRoutage().ajouterVoisin(agent2, 10);
 		agent4.getTableDeRoutage().ajouterVoisin(agent3, 10);
 		agent4.getTableDeRoutage().ajouterVoisin(agent5, 20);
-		
 		agent5.getTableDeRoutage().ajouterVoisin(agent5, 0);
 		agent5.getTableDeRoutage().ajouterVoisin(agent4, 20);
 		agent5.getTableDeRoutage().ajouterVoisin(agent6, 40);
 		agent5.getTableDeRoutage().ajouterVoisin(agent7, 10);
-		
 		agent6.getTableDeRoutage().ajouterVoisin(agent6, 0);
 		agent6.getTableDeRoutage().ajouterVoisin(agent5, 40);
 		agent6.getTableDeRoutage().ajouterVoisin(agent7, 20);
-		
 		agent7.getTableDeRoutage().ajouterVoisin(agent7, 0);
 		agent7.getTableDeRoutage().ajouterVoisin(agent2, 30);
 		agent7.getTableDeRoutage().ajouterVoisin(agent5, 10);
 		agent7.getTableDeRoutage().ajouterVoisin(agent6, 20);
-		
 		if (getConfiguration().getConfigurationSimulationReseau()
 				.isDistanceVectorActive()) {
 			// initialisation du distance vector
@@ -472,58 +477,54 @@ public class SimulationReseau extends AbstractSimulation {
 					routes.add(agent.getTableDeRoutage().creerRoute(
 							voisin.getAgent(), voisin.getAgent(),
 							voisin.getDistance(), voisin.getDistance()));
-					agent.getTableDeRoutage().getDistanceVector().put(
+					agent.getTableDeRoutage().getDistanceVectorComplet().put(
 							voisin.getAgent(), routes);
 				}
-			}
-						// on a mis les routes vers tous les voisins
-			// maintenant on met le reste des routes avec un coût infini
-			for (Agent agent : agents) {
 				for (Agent agentDestination : agents) {
 					if (agent.equals(agentDestination)) {
 						continue;
 					}
 					List<Route> routes = new ArrayList<Route>();
-					for (Voisin voisin : agent.getTableDeRoutage()
-							.getVoisins()) {
-						if (!voisin.getAgent().equals(agentDestination)
-								&& !voisin.getAgent().equals(agent)) {
-							Route route =
-									agent.getTableDeRoutage().creerRoute(
-											agentDestination,
-											voisin.getAgent(),
-											voisin.getDistance(),
-											TableDeRoutage.INFINI);
-							routes.add(route);
+					for (Voisin voisin : agent.getTableDeRoutage().getVoisins()) {
+						if (voisin.getAgent().equals(agentDestination)
+								|| voisin.getAgent().equals(agent)) {
+							continue;
 						}
+						Route route =
+								agent.getTableDeRoutage().creerRoute(
+										agentDestination, voisin.getAgent(),
+										voisin.getDistance(),
+										TableDeRoutage.INFINI);
+						routes.add(route);
 					}
-					
-					if(agent.getTableDeRoutage().getDistanceVector().containsKey(agentDestination)){
-						List<Route> routesConnues = agent.getTableDeRoutage().getDistanceVector().get(agentDestination);
+					if (agent.getTableDeRoutage().getDistanceVectorComplet()
+							.containsKey(agentDestination)) {
 						
-						
-						for(Route nouvelle: routes){
-							boolean trouvee = false;
-							for(Route routeConnue: routesConnues){
-								if(routeConnue.getVoisin().getAgent().equals(nouvelle.getVoisin().getAgent())){
-									trouvee = true;
-								}
-							}
-								
-							if(!trouvee){
-								routesConnues.add(nouvelle);
-							}
+						List<Route> routesConnues =
+							agent.getTableDeRoutage()
+										.getDistanceVectorComplet().get(
+												agentDestination);
+						for (Route nouvelle : routes) {
+							routesConnues.add(nouvelle);
 						}
-						
-					}else{
-						agent.getTableDeRoutage().getDistanceVector().put(
-							agentDestination, routes);
+					} else {
+						agent.getTableDeRoutage().getDistanceVectorComplet()
+								.put(agentDestination, routes);
 					}
 				}
 			}
-			
-			
-			
+			// for (Agent agent : agents) {
+			// LOGGER.info("Routes de " + agent.toString());
+			// for (Agent destination : agent.getTableDeRoutage()
+			// .getDistanceVectorComplet().keySet()) {
+			// for (Route route : agent.getTableDeRoutage()
+			// .getDistanceVectorComplet().get(destination)) {
+			// LOGGER.info(route.toString());
+			// }
+			// }
+			// LOGGER.info("-------------------------------------");
+			// }
+			// LOGGER.info("");
 		} else {
 			// Si le distance vector n'est pas activé,
 			// on ajoute toutes les routes aux agents (table de routage fixe)
@@ -604,7 +605,6 @@ public class SimulationReseau extends AbstractSimulation {
 		agent5.reset();
 		agent6.reset();
 		agent7.reset();
-		
 		// on ajoute les agents à une liste
 		// pour simplifier certains traitements
 		agents.clear();
@@ -615,11 +615,8 @@ public class SimulationReseau extends AbstractSimulation {
 		agents.add(agent5);
 		agents.add(agent6);
 		agents.add(agent7);
-		
 		// on initialise les tables de routage des agents
 		reinitialiserTablesRoutageAgents();
-		
-		
 		if (getConfiguration().getConfigurationSimulationReseau()
 				.isDistanceVectorActive()) {
 			// Si le distance vector est activé, on planifie les premiers
@@ -661,6 +658,17 @@ public class SimulationReseau extends AbstractSimulation {
 		FinDeSimulation finDeSimulation =
 				new FinDeSimulation(dureeInitialisation + dureeSimulation);
 		getFutureEventList().planifierEvenement(finDeSimulation);
+	}
+
+
+
+	/**
+	 * Retourne la liste des agents.
+	 * 
+	 * @return la liste des agents
+	 */
+	public List<Agent> getAgents() {
+		return agents;
 	}
 
 

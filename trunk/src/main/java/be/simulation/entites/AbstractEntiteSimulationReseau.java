@@ -57,7 +57,7 @@ public abstract class AbstractEntiteSimulationReseau extends
 	 * 
 	 * @return la simulation dont l'entité fait partie
 	 */
-	protected SimulationReseau getSimulation() {
+	public SimulationReseau getSimulation() {
 		return simulation;
 	}
 
