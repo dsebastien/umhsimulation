@@ -149,7 +149,9 @@ public class SimulationReseau extends AbstractSimulation {
 		double pourcentageSimTmp = (double)tempsActuel / (double)dureeSimulation;
 		String pourcentageSimul = Utilitaires.pourcentage(pourcentageSimTmp);
 		
-		LOGGER.info(pourcentageSimul+";Rexpédiés:"+Utilitaires.pourcentage(pourcentageMessagesReexpedies)+";UtilBuf:"+Utilitaires.pourcentage(utilisationMoyenneBuffersAgents)+";MsgPerdusBufPleins :" +Utilitaires.pourcentage(pourcentageMessagesPerdusBuffersPleins));
+		LOGGER.info(pourcentageSimul+";"+Utilitaires.pourcentage(pourcentageMessagesReexpedies)+";"+Utilitaires.pourcentage(utilisationMoyenneBuffersAgents)+";" +Utilitaires.pourcentage(pourcentageMessagesPerdusBuffersPleins)+
+				";"+ (int) tempsMoyenEntreEmissionEtReceptionAccuse+";"+Hote.TOTAL_TIMEOUTS_TROP_COURTS+";"+(Hote.MESSAGE_LE_PLUS_REEMIS.getNumeroEmission() - 1)
+				+";"+ Hote.MESSAGE_TEMPS_MAX.getTempsTrajet());
 				
 				
 				
