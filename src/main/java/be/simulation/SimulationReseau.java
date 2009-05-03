@@ -68,6 +68,7 @@ public class SimulationReseau extends AbstractSimulation {
 
 
 
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -141,102 +142,114 @@ public class SimulationReseau extends AbstractSimulation {
 				getHorloge()
 						- getConfiguration().getConfigurationSimulationReseau()
 								.getDureeInitialisation();
-		LOGGER.info("Temps actuel de simulation: "
-				+ tempsActuelSimulation
-				+ "/"
-				+ getConfiguration().getConfigurationSimulationReseau()
-						.getDuree());
-		LOGGER.info("Agents - Messages en cours de traitement: "
-				+ Agent.TOTAL_MESSAGES_EN_COURS_TRAITEMENT);
-		LOGGER.info("Agents - Messages reçus: " + Agent.TOTAL_MESSAGES_RECUS);
-		LOGGER.info("Agents - Messages perdus: " + totalMessagesPerdus + " ("
-				+ Utilitaires.pourcentage(pourcentageMessagesPerdus) + ")");
-		LOGGER.info("Agents - Messages perdus brutalement: "
-				+ Agent.TOTAL_MESSAGES_PERDUS_BRUTALEMENT + " ("
-				+ Utilitaires.pourcentage(pourcentageMessagesPerdusBrutalement)
-				+ ")");
-		LOGGER.info("Agents - Messages perdus buffer plein: "
-				+ Agent.TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN
-				+ " ("
-				+ Utilitaires
-						.pourcentage(pourcentageMessagesPerdusBuffersPleins)
-				+ ")");
-		LOGGER.info("Agents - Buffers utilisés en moyenne à "
-				+ Utilitaires.pourcentage(utilisationMoyenneBuffersAgents));
-		for (Agent agent : agents) {
-			LOGGER.info("Agent "
-					+ agent.getNumero()
-					+ " - Buffer utilisé en moyenne à "
-					+ Utilitaires.pourcentage(utilisationMoyenneBufferAgent
-							.get(agent)));
-		}
-		for (Agent agent : agents) {
-			int perdusBufferPlein = agent.getMessagesPerdusBufferPlein();
-			int recus = agent.getMessagesRecus();
-			double pourcentageMessagesPerdusBufferPlein = 0;
-			if (recus > 0) {
-				pourcentageMessagesPerdusBufferPlein =
-						(double) perdusBufferPlein / (double) recus;
-			}
-			// pour calculer l'info globale
-			LOGGER.info("Agent "
-					+ agent.getNumero()
-					+ " - "
-					+ perdusBufferPlein
-					+ " messages perdus sur "
-					+ recus
-					+ " recus car son buffer était plein ("
-					+ Utilitaires
-							.pourcentage(pourcentageMessagesPerdusBufferPlein)
-					+ ")");
-		}
-		for (Agent agent : agents) {
-			int perdusBrutalement = agent.getMessagesPerdusBrutalement();
-			int recus = agent.getMessagesRecus();
-			double pourcentagePerdusBrutalement = 0;
-			if (recus > 0) {
-				pourcentagePerdusBrutalement =
-						(double) perdusBrutalement / (double) recus;
-			}
-			// pour calculer l'info globale
-			LOGGER.info("Agent " + agent.getNumero() + " - "
-					+ perdusBrutalement + " messages perdus brutalement sur "
-					+ recus + " recus ("
-					+ Utilitaires.pourcentage(pourcentagePerdusBrutalement)
-					+ ")");
-		}
-		LOGGER.info("Hotes - Messages originaux envoyés: "
-				+ Hote.TOTAL_MESSAGES_ENVOYES);
-		LOGGER.info("Hotes - Messages réexpédiés: "
-				+ Hote.TOTAL_MESSAGES_REEXPEDIES + " ("
-				+ Utilitaires.pourcentage(pourcentageMessagesReexpedies) + ")");
-		LOGGER.info("Hotes - Accuses de réception reçus: "
-				+ Hote.TOTAL_ACCUSES_RECUS);
-		LOGGER.info("Hotes - Timeouts trop courts: "
-				+ Hote.TOTAL_TIMEOUTS_TROP_COURTS);
-		LOGGER.info("Hotes - Messages en cours de traitement: "
-				+ Hote.TOTAL_MESSAGES_EN_COURS_TRAITEMENT);
-		LOGGER.info("Hotes - Message le plus réémis: "
-				+ (Hote.MESSAGE_LE_PLUS_REEMIS.getNumeroEmission() - 1)
-				+ " fois");
-		LOGGER
-				.info("Le temps moyen entre l'émission d'un message et la réception de l'accusé correspondant est de "
-						+ tempsMoyenEntreEmissionEtReceptionAccuse);
-		LOGGER.info("Les " + Hote.TOTAL_ACCUSES_RECUS
-				+ " messages ont passé en absolu "
-				+ tempsMoyenDansBuffersVoyageAbsolu
-				+ " unités de temps dans des buffers");
-		LOGGER.info("Les messages acquittés ont passé en moyenne "
-				+ Utilitaires.pourcentage(tempsMoyenDansBuffersVoyageComplet)
-				+ " de leur temps de voyage complet dans des buffers");
-		LOGGER
-				.info("Le message ayant mis le plus de temps à être acquitté a pris "
-						+ Hote.MESSAGE_TEMPS_MAX.getTempsTrajet()
-						+ " unités de temps");
-		LOGGER.info("-----------------------------------------------------");
+		
+		
+		long dureeSimulation = getConfiguration().getConfigurationSimulationReseau().getDuree();
+		long tempsActuel = getHorloge() - getConfiguration().getConfigurationSimulationReseau().getDureeInitialisation();
+		double pourcentageSimTmp = (double)tempsActuel / (double)dureeSimulation;
+		String pourcentageSimul = Utilitaires.pourcentage(pourcentageSimTmp);
+		
+		LOGGER.info(pourcentageSimul+";Rexpédiés:"+Utilitaires.pourcentage(pourcentageMessagesReexpedies)+";UtilBuf:"+Utilitaires.pourcentage(utilisationMoyenneBuffersAgents)+";MsgPerdusBufPleins :" +Utilitaires.pourcentage(pourcentageMessagesPerdusBuffersPleins));
+				
+				
+				
+//		LOGGER.info("Temps actuel de simulation: "
+//				+ tempsActuelSimulation
+//				+ "/"
+//				+ getConfiguration().getConfigurationSimulationReseau()
+//						.getDuree());
+//		LOGGER.info("Agents - Messages en cours de traitement: "
+//				+ Agent.TOTAL_MESSAGES_EN_COURS_TRAITEMENT);
+//		LOGGER.info("Agents - Messages reçus: " + Agent.TOTAL_MESSAGES_RECUS);
+//		LOGGER.info("Agents - Messages perdus: " + totalMessagesPerdus + " ("
+//				+ Utilitaires.pourcentage(pourcentageMessagesPerdus) + ")");
+//		LOGGER.info("Agents - Messages perdus brutalement: "
+//				+ Agent.TOTAL_MESSAGES_PERDUS_BRUTALEMENT + " ("
+//				+ Utilitaires.pourcentage(pourcentageMessagesPerdusBrutalement)
+//				+ ")");
+//		LOGGER.info("Agents - Messages perdus buffer plein: "
+//				+ Agent.TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN
+//				+ " ("
+//				+ Utilitaires
+//						.pourcentage(pourcentageMessagesPerdusBuffersPleins)
+//				+ ")");
+//		LOGGER.info("Agents - Buffers utilisés en moyenne à "
+//				+ Utilitaires.pourcentage(utilisationMoyenneBuffersAgents));
+//		for (Agent agent : agents) {
+//			LOGGER.info("Agent "
+//					+ agent.getNumero()
+//					+ " - Buffer utilisé en moyenne à "
+//					+ Utilitaires.pourcentage(utilisationMoyenneBufferAgent
+//							.get(agent)));
+//		}
+//		for (Agent agent : agents) {
+//			int perdusBufferPlein = agent.getMessagesPerdusBufferPlein();
+//			int recus = agent.getMessagesRecus();
+//			double pourcentageMessagesPerdusBufferPlein = 0;
+//			if (recus > 0) {
+//				pourcentageMessagesPerdusBufferPlein =
+//						(double) perdusBufferPlein / (double) recus;
+//			}
+//			// pour calculer l'info globale
+//			LOGGER.info("Agent "
+//					+ agent.getNumero()
+//					+ " - "
+//					+ perdusBufferPlein
+//					+ " messages perdus sur "
+//					+ recus
+//					+ " recus car son buffer était plein ("
+//					+ Utilitaires
+//							.pourcentage(pourcentageMessagesPerdusBufferPlein)
+//					+ ")");
+//		}
+//		for (Agent agent : agents) {
+//			int perdusBrutalement = agent.getMessagesPerdusBrutalement();
+//			int recus = agent.getMessagesRecus();
+//			double pourcentagePerdusBrutalement = 0;
+//			if (recus > 0) {
+//				pourcentagePerdusBrutalement =
+//						(double) perdusBrutalement / (double) recus;
+//			}
+//			// pour calculer l'info globale
+//			LOGGER.info("Agent " + agent.getNumero() + " - "
+//					+ perdusBrutalement + " messages perdus brutalement sur "
+//					+ recus + " recus ("
+//					+ Utilitaires.pourcentage(pourcentagePerdusBrutalement)
+//					+ ")");
+//		}
+//		LOGGER.info("Hotes - Messages originaux envoyés: "
+//				+ Hote.TOTAL_MESSAGES_ENVOYES);
+//		LOGGER.info("Hotes - Messages réexpédiés: "
+//				+ Hote.TOTAL_MESSAGES_REEXPEDIES + " ("
+//				+ Utilitaires.pourcentage(pourcentageMessagesReexpedies) + ")");
+//		LOGGER.info("Hotes - Accuses de réception reçus: "
+//				+ Hote.TOTAL_ACCUSES_RECUS);
+//		LOGGER.info("Hotes - Timeouts trop courts: "
+//				+ Hote.TOTAL_TIMEOUTS_TROP_COURTS);
+//		LOGGER.info("Hotes - Messages en cours de traitement: "
+//				+ Hote.TOTAL_MESSAGES_EN_COURS_TRAITEMENT);
+//		LOGGER.info("Hotes - Message le plus réémis: "
+//				+ (Hote.MESSAGE_LE_PLUS_REEMIS.getNumeroEmission() - 1)
+//				+ " fois");
+//		LOGGER
+//				.info("Le temps moyen entre l'émission d'un message et la réception de l'accusé correspondant est de "
+//						+ tempsMoyenEntreEmissionEtReceptionAccuse);
+//		LOGGER.info("Les " + Hote.TOTAL_ACCUSES_RECUS
+//				+ " messages ont passé en absolu "
+//				+ tempsMoyenDansBuffersVoyageAbsolu
+//				+ " unités de temps dans des buffers");
+//		LOGGER.info("Les messages acquittés ont passé en moyenne "
+//				+ Utilitaires.pourcentage(tempsMoyenDansBuffersVoyageComplet)
+//				+ " de leur temps de voyage complet dans des buffers");
+//		LOGGER
+//				.info("Le message ayant mis le plus de temps à être acquitté a pris "
+//						+ Hote.MESSAGE_TEMPS_MAX.getTempsTrajet()
+//						+ " unités de temps");
+//		LOGGER.info("-----------------------------------------------------");
 	}
 
 
+	
 
 	/**
 	 * {@inheritDoc}
