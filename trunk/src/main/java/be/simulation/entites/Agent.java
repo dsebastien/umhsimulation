@@ -539,6 +539,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 							gardeEnvoiInfosRoutageBuffer =
 									getSimulation().getHorloge()
 											+ deltaEntreEnvoisInfosRoutage;
+							// FIXME BUG quand dv active...
 							for (Route route : tableDeRoutage
 									.getDistanceVectorComplet().get(this)) {
 								// on va tout augmenter sauf la route locale
