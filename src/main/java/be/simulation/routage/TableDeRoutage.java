@@ -212,6 +212,7 @@ public class TableDeRoutage {
 	 * @return vrai si la table de routage locale a été modifiée
 	 */
 	public boolean mettreAJour(final InfosRoutage infosRoutage) {
+		//FIXME ajouter à l'uml
 		// on cherche quel voisin a envoyé les infos
 		Voisin voisinAyantEnvoyeInfos = null;
 		for (Voisin voisin : voisins) {
