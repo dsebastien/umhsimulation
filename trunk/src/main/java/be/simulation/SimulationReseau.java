@@ -237,7 +237,7 @@ public class SimulationReseau extends AbstractSimulation {
 //				.info("Le temps moyen entre l'émission d'un message et la réception de l'accusé correspondant est de "
 //						+ tempsMoyenEntreEmissionEtReceptionAccuse);
 //		LOGGER.info("Les " + Hote.TOTAL_ACCUSES_RECUS
-//				+ " messages ont passé en absolu "
+//				+ " messages acquittés ont passé en absolu "
 //				+ tempsMoyenDansBuffersVoyageAbsolu
 //				+ " unités de temps dans des buffers");
 //		LOGGER.info("Les messages acquittes ont passé en moyenne "
@@ -324,20 +324,7 @@ public class SimulationReseau extends AbstractSimulation {
 			// Traitement de l'évènement imminent récupéré
 			// chaque évènement contient toutes les informations nécessaires
 			// pour le traiter
-			if (evenementImminent instanceof HoteEnvoieMessageOriginal) {
-				
-				// TODO supprimer:
-				// for (Agent agent : agents) {
-				// agent.getTableDeRoutage().afficher(
-				// agent,
-				// agent.getTableDeRoutage()
-				// .getDistanceVectorComplet(), true);
-				// agent.getTableDeRoutage().afficher(agent,
-				// agent.getTableDeRoutage().getDistanceVectorLocal(),
-				// false);
-				// }
-			
-				
+			if (evenementImminent instanceof HoteEnvoieMessageOriginal) {				
 				// envoi d'un message original par un hôte
 				HoteEnvoieMessageOriginal evt =
 						(HoteEnvoieMessageOriginal) evenementImminent;
@@ -488,7 +475,7 @@ public class SimulationReseau extends AbstractSimulation {
 					routes.add(agent.getTableDeRoutage().creerRoute(
 							voisin.getAgent(), voisin.getAgent(),
 							voisin.getDistance(), voisin.getDistance()));
-					agent.getTableDeRoutage().getDistanceVectorComplet().put(
+					agent.getTableDeRoutage().getTableDeRoutageComplete().put(
 							voisin.getAgent(), routes);
 				}
 				for (Agent agentDestination : agents) {
@@ -508,18 +495,18 @@ public class SimulationReseau extends AbstractSimulation {
 										TableDeRoutage.INFINI);
 						routes.add(route);
 					}
-					if (agent.getTableDeRoutage().getDistanceVectorComplet()
+					if (agent.getTableDeRoutage().getTableDeRoutageComplete()
 							.containsKey(agentDestination)) {
 						
 						List<Route> routesConnues =
 							agent.getTableDeRoutage()
-										.getDistanceVectorComplet().get(
+										.getTableDeRoutageComplete().get(
 												agentDestination);
 						for (Route nouvelle : routes) {
 							routesConnues.add(nouvelle);
 						}
 					} else {
-						agent.getTableDeRoutage().getDistanceVectorComplet()
+						agent.getTableDeRoutage().getTableDeRoutageComplete()
 								.put(agentDestination, routes);
 					}
 				}
