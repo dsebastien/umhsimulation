@@ -12,32 +12,142 @@
 %\pagebreak
 
 
+
+
+% TODO trouver solution pour les figures
+% pê simplement en parler dans le rapport mais ne pas les inclure (dire qu'elles sont dans le dossier uml et hop)
+
+
+
+
+
+
+
 \section{Evenements}
 
 \begin{figure}[h!t]
   \centering
-    \includegraphics[scale=0.60]{evenements}
+    \includegraphics[scale=0.60]{Evenements}
   \caption{Evènements}
   \label{fig:evenements}
 \end{figure}
 
 \subsection{Hotes}
 \subsubsection{Envoi d'un message original}
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.60]{HoteEnvoieMessageOriginal}
+  \caption{Envoi d'un message original par un hôte}
+  \label{fig:hote-envoie-message-original}
+\end{figure}
+
+TODO
+
+
 \subsubsection{Réception d'un message}
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.60]{HoteRecoitMessage}
+  \caption{Réception d'un message par un hôte}
+  \label{fig:hote-recoit-message}
+\end{figure}
+
+TODO
+
 \subsubsection{Fin de traitement d'un message}
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.60]{HoteFinTraitementMessage}
+  \caption{Fin de traitement d'un message par un hôte}
+  \label{fig:hote-fin-traitement-message}
+\end{figure}
+
+TODO
+
 \subsubsection{Timeout}
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.60]{HoteTimeoutReceptionAccuse}
+  \caption{Timeout de réception d'un accusé}
+  \label{fig:hote-timeout}
+\end{figure}
+
+TODO
+
+
 
 \subsection{Agents}
 \subsubsection{Réception d'un message}\label{evt-agent-reception-message}
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.60]{AgentRecoitMessage}
+  \caption{Réception d'un message par un agent}
+  \label{fig:agent-recoit-message}
+\end{figure}
+
 Dans le diagramme UML, il y a deux points que nous n'avons pas expliqué. Tout d'abord: \og Est-ce qu'on peut envoyer les nouvelles informations de routage maintenant? \fg. En fait nous avons décidé d'éviter trop d'envois successifs inutiles d'informations de routage, afin de ne pas surcharger le système. Pour ce faire, quand on doit envoyer les informations de routage (à cause du niveau d'occupation du buffer), on vérifie si ça fait au moins $x$ temps de simulation qu'on a envoyé un message. Si oui, alors on peut envoyer le message. De cette manière, si pour un temps $t$ donné, l'agent reçoit $50$ messages, que pour le premier il dépasse le seuil d'alerte d'occupation du buffer et envoie ses informations de routage, puisqu'il sera toujours au delà du seuil d'alerte pour les $49$ autres messages, on évite ainsi de réenvoyer les informations inutilement.
 
 Le second point: \og Augmentation du coût de nos routes à destination des autres agents (on augmente d'une valeur fixe à chaque fois) \fg est ce que le distance vector prenne en compte le niveau d'occupation des agents. Quand un agent donné est surchargé, il augmente le coût de ses routes à destination d'autres agents et prévient ses voisins. De cette manière quand les voisins reçoivent les informations, ils mettent à jour leur propre DV et choisissent peut être d'autres routes pour faire suivre les messages (sauf si l'agent est la destination finale bien sûr!). Si les autres agents deviennent surchargés, leurs coûts augmenteront également. Ainsi au final, le Dv prend en compte l'occupation des buffers des agents, ce qui permet de mieux répartir la charge sur les différents agents. Dans les résultats des simulations, nous avons observé une bien meilleure répartition.
 
 
 \subsubsection{Fin de traitement d'un message}
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.60]{AgentFinTraitementMessage}
+  \caption{Fin de traitement d'un message par un agent}
+  \label{fig:agent-fin-traitement-message}
+\end{figure}
+
+TODO
+
+
 \subsubsection{Envoi des informations de routage}
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.60]{AgentEnvoieInfosRoutage}
+  \caption{Envoi d'informations de routage par un agent}
+  \label{fig:agent-envoi-infos-routage}
+\end{figure}
+
+TODO
+
+
+
 \subsubsection{Réception d'informations de routage}
 
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.60]{AgentRecoitInfosRoutage}
+  \caption{Réception d'informations de routage par un agent}
+  \label{fig:agent-recoit-infos-routage}
+\end{figure}
+
+TODO
+
+
+
+
+\subsection{Spécial}
+
+\subsubsection{Fin de simulation}
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.60]{FinDeSimulation}
+  \caption{Fin de la simulation}
+  \label{fig:fin-de-simulation}
+\end{figure}
+
+TODO
+
+Le dernier évènement est spécial et est celui qui provoque la fin de la simulation. Quand cet évènement est l'évènement imminent, il remet la FEL à zéro (il n'y a donc plus d'évènement imminent) et la boucle de simulation s'arrête.
 
 \section{Résultats}
 \subsection{Paramètres du système}
@@ -93,7 +203,7 @@ Une fois tous ces évènements traités pour un temps $t$, on traite les autres 
 \subsection{Distance vector}
 Nous avons choisi de modifier les coûts en fonction du taux d'occupation du buffer de l'agent. Ceci est expliqué à la section \refp{evt-agent-reception-message}\ concernant l'évènement de réception d'un message par un agent.
 
-TODO continuer
+Nous avons implémenté la technique du \textit{poisonned reverse} comme expliqué dans l'article concernant le distance vector.
 
 
 
