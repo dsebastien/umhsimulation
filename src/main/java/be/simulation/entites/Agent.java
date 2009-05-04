@@ -69,7 +69,6 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * Le niveau d'occupation du buffer à partir duquel l'agent doit prévenir ses voisins.
 	 * (0.5 = 50%)
 	 */
-	// TODO ajouter à l'UML
 	private static final double OCCUPATION_BUFFER_ALARMANTE = 0.5;
 	
 	/**
