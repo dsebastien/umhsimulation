@@ -1,0 +1,23 @@
+\appendix
+
+\section{Le programme et son utilisation}
+L'exécutable du projet est disponible dans le dossier target/dist. Pour l'exécuter, il suffit d'ouvrir un prompt et de lancer: \textbf{java -jar simulation.jar}.
+
+\subsection{Configuration et aide}
+Pour afficher la liste des paramètres pouvant être donnés au programme, il suffit d'ouvrir un prompt et de lancer: \textbf{java -jar simulation.jar -aide}
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.65]{options.png}
+  \caption{Options disponibles}
+  \label{fig:options}
+\end{figure}
+
+Ensuite pour spécifier les options, on peut par exemple faire: \textbf{java -jar simulation.jar --agentNombreHotes 1000 --duree 5000}.
+
+\subsection{Organisation du code source}
+\begin{itemize}
+ \item Les sources se trouvent dans le dossier \textbf{src/main/java}
+ \item Les fichiers de configuration par défaut se trouvent dans le dossier \textbf{src/main/resources/configuration}
+\end{itemize}
+
