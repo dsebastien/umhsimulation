@@ -256,7 +256,7 @@ public class Configuration {
 	public void afficher() {
 		LOGGER
 				.info("------------------------------------------------------------------");
-		LOGGER.info("Configuration utilisée:");
+		LOGGER.info("Configuration utilisee:");
 		LOGGER
 				.info("------------------------------------------------------------------");
 		LOGGER.info("Agents - Nombre d'hotes: "
@@ -268,41 +268,41 @@ public class Configuration {
 						.getTauxPerteBrutale()));
 		LOGGER.info("Agents - Temps de traitement: "
 				+ this.getConfigurationAgents().getTempsTraitementMessage());
-		LOGGER.info("Agents - Nombre de messages traitables simultanément: "
+		LOGGER.info("Agents - Nombre de messages traitables simultanement: "
 				+ this.getConfigurationAgents()
 						.getNombreMaxTraitementsSimultanes());
 		LOGGER
-				.info("Hotes - Pourcentage de messages à destination d'un hôte connecté à un autre agent: "
+				.info("Hotes - Pourcentage de messages a destination d'un hote connecte a un autre agent: "
 						+ Utilitaires.pourcentage(this.getConfigurationHotes()
 								.getTauxMessagesVersAutreAgent()));
 		LOGGER.info("Hotes - Temps max entre deux envois: "
 				+ this.getConfigurationHotes().getTempsMaxInterEnvois());
 		LOGGER.info("Hotes - Temps de traitement: "
 				+ this.getConfigurationHotes().getTempsTraitementMessage());
-		LOGGER.info("Hotes - Nombre de messages traitables simultanément: "
+		LOGGER.info("Hotes - Nombre de messages traitables simultanement: "
 				+ this.getConfigurationHotes()
 						.getNombreMaxTraitementsSimultanes());
-		LOGGER.info("Hotes - Durée du timeout pour la réception d'un accusé: "
+		LOGGER.info("Hotes - Duree du timeout pour la reception d'un accuse: "
 				+ this.getConfigurationHotes().getTimeoutReemissionMessages());
-		LOGGER.info("Simulation - Durée: "
+		LOGGER.info("Simulation - Duree: "
 				+ this.getConfigurationSimulationReseau().getDuree());
-		LOGGER.info("SImulation - Durée de la période d'initialisation DV: "
+		LOGGER.info("Simulation - Duree de la periode d'initialisation DV: "
 				+ this.getConfigurationSimulationReseau()
 						.getDureeInitialisation());
 		if (this.getConfigurationSimulationReseau().isDistanceVectorActive()) {
-			LOGGER.info("Simulation - Distance vector activé: OUI");
+			LOGGER.info("Simulation - Distance vector active: OUI");
 		} else {
-			LOGGER.info("Simulation - Distance vector activé: NON");
+			LOGGER.info("Simulation - Distance vector active: NON");
 		}
-		LOGGER.info("Simulation - Période d'initialisation: "
+		LOGGER.info("Simulation - Periode d'initialisation: "
 				+ this.getConfigurationSimulationReseau()
 						.getDureeInitialisation());
-		LOGGER.info("Simulation - Périodicité affichage statistiques: "
-				+ this.getConfigurationSimulationReseau()
-						.getPeriodiciteAffichageStatistiques());
-		LOGGER.info("Simulation - Delai entre entités: "
+		LOGGER.info("Simulation - Delai entre entites: "
 				+ this.getConfigurationSimulationReseau()
 						.getDelaiEntreEntites());
+		LOGGER.info("Simulation - Periodicite affichage statistiques: "
+				+ this.getConfigurationSimulationReseau()
+						.getPeriodiciteAffichageStatistiques());
 		LOGGER
 				.info("------------------------------------------------------------------");
 	}

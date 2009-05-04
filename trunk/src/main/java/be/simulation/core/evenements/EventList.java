@@ -131,7 +131,7 @@ public class EventList {
 			throw new IllegalArgumentException(
 					"L'évènement à planifier ne peut pas être null");
 		}
-		LOGGER.trace("Planification d'un évènement: " + evt.toString());
+		LOGGER.trace("Planification d'un evenement: " + evt.toString());
 		int index = Collections.binarySearch(eventList, evt);
 		if (index < 0) {
 			eventList.add(-index - 1, evt);
@@ -190,7 +190,7 @@ public class EventList {
 	public void supprimer(final Evenement evenement){
 		boolean resultat = eventList.remove(evenement);
 		if(resultat == false){
-			LOGGER.warn("L'évènement n'a pas été supprimé, il n'était apparemment pas dans l'event list");
+			LOGGER.warn("L'evenement n'a pas ete supprime, il n'etait apparemment pas dans l'event list");
 		}
 	}
 	

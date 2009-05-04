@@ -86,7 +86,8 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * Les informations de routage dont dispose cet agent (lui permet de savoir
 	 * vers où forwarder les messages).
 	 */
-	private TableDeRoutage		tableDeRoutage;
+	private TableDeRoutage		tableDeRoutage =
+		new TableDeRoutage(this);
 	/**
 	 * Temps minimal entre deux envois des infos de routage.
 	 */
@@ -118,10 +119,6 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		tableDeRoutage =
-				new TableDeRoutage(this, getConfiguration()
-						.getConfigurationSimulationReseau()
-						.isDistanceVectorActive());
 	}
 
 
@@ -375,7 +372,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * On crée les hôtes connectés à cet agent en fonction de la configuration.
 	 */
 	private void initialiserHotes() {
-		LOGGER.trace("Initialisation des hôtes de l'agent");
+		LOGGER.trace("Initialisation des hotes de l'agent");
 		this.hotes.clear();
 		for (int i = 1; i <= getConfiguration().getConfigurationAgents()
 				.getNombreHotes(); i++) {
@@ -537,8 +534,13 @@ public class Agent extends AbstractEntiteSimulationReseau {
 									getSimulation().getHorloge()
 											+ deltaEntreEnvoisInfosRoutage;
 							// FIXME BUG quand dv active...
-							for (Route route : tableDeRoutage
-									.getDistanceVectorComplet().get(this)) {
+							
+							List<Route> routes = tableDeRoutage.getDistanceVectorComplet().get(this);
+							if(routes == null){
+								throw new IllegalStateException("Ne doit pas être null!");
+							}
+							
+							for (Route route : routes) {
 								// on va tout augmenter sauf la route locale
 								// puisque ça n'a pas de sens
 								if (route.getVoisin().getAgent().equals(this)) {
@@ -596,7 +598,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 */
 	@Override
 	public void reset() {
-		LOGGER.trace("Réinitialisation de l'agent " + getNumero());
+		LOGGER.trace("Reinitialisation de l'agent " + getNumero());
 		super.reset();
 		sommeNiveauOccupationBuffer = 0L;
 		messagesPerdusBrutalement = 0;
