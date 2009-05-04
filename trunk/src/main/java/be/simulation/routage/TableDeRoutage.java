@@ -180,7 +180,6 @@ public class TableDeRoutage {
 		// on ne va donner aux voisins que les meilleures routes
 		// qu'on connaît pour chaque destination
 		// (notre distance vector donc)
-		// TODO implémenter poisoned reverse?
 		for (Agent destination : tableDeRoutageComplete.keySet()) {
 			tmpRoutes = new ArrayList<Route>();
 			tmpRoute = trouverMeilleureRoute(destination);			
@@ -226,11 +225,11 @@ public class TableDeRoutage {
 		}
 		Map<Agent, List<Route>> distanceVectorVoisin =
 				infosRoutage.getDistanceVector();
-		// FIXME commenter ou supprimer:
-		//afficher(this.agent, this.tableDeRoutageComplete, true);
-		afficher(this.agent, this.getDistanceVector(), false);
-		afficher(voisinAyantEnvoyeInfos.getAgent(), distanceVectorVoisin,false);
 		
+		// Pour voir facilement l'évolution des tables de routage
+		//afficher(this.agent, this.tableDeRoutageComplete, true);
+		//afficher(this.agent, this.getDistanceVector(), false);
+		//afficher(voisinAyantEnvoyeInfos.getAgent(), distanceVectorVoisin,false);
 		
 		// variable qui nous permet à la fin de savoir si
 		// le distance vector local a changé
@@ -269,10 +268,6 @@ public class TableDeRoutage {
 			}
 			
 			
-			
-			
-			
-			
 			// routes locales pour cette destination
 			List<Route> routesLocales =
 					tableDeRoutageComplete.get(agentDestination);
@@ -305,10 +300,11 @@ public class TableDeRoutage {
 				}
 			}
 		}
-		// FIXME commenter ou supprimer:
-		 LOGGER.info("Après mise à jour: ");
-		 //afficher(this.agent, distanceVectorComplet, true);
-		 afficher(this.agent, this.getDistanceVector(), false);
+		
+		// Pour voir facilement l'évolution des tables de routage
+		// LOGGER.info("Après mise à jour: ");
+		//afficher(this.agent, distanceVectorComplet, true);
+		//afficher(this.agent, this.getDistanceVector(), false);
 		 
 		return distanceVectorLocalModifie;
 	}
