@@ -2,6 +2,7 @@ package be.simulation.entites;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import be.simulation.evenements.AgentEnvoieInfosRoutage;
 import be.simulation.evenements.AgentFinTraitementMessage;
@@ -39,6 +40,35 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * a jour.
 	 */
 	private long				dernierTempsMiseAJourSommeNiveauxOccupationBuffer	=
+																							0;
+	/**
+	 * Temps minimal entre deux envois des infos de routage.
+	 */
+	private final long			deltaEntreEnvoisInfosRoutage						=
+																							16;
+	/**
+	 * Le changement qu'on a effectué actuellement sur les coûts à cause de
+	 * buffers trop remplis. Si = 0, signifie que le coût actuel est le coût
+	 * normal (celui trouvé à la fin de la période d'initialisation)
+	 */
+	private int					differenceCoutActuelle								=
+																							0;
+	/**
+	 * Modification de coût quand les buffers sont à plus de x% d'occupation.
+	 */
+	private static final int	MODIFICATION_COUT									=
+																							200;
+	/**
+	 * La modification de coût maximale qu'on peut faire à cause de buffers trop
+	 * remplis.
+	 */
+	private static final int	DIFFERENCE_COUT_MAX									=
+																							400;
+	/**
+	 * Nous indique quand on pourra envoyer à nouveau des infos de routage suite
+	 * à une occupation importante du buffer.
+	 */
+	private long				gardeEnvoiInfosRoutageBuffer						=
 																							0;
 	/**
 	 * PRNG utilise pour choisir un hote au hasard parmi les hotes connectes a
@@ -86,24 +116,10 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * Les informations de routage dont dispose cet agent (lui permet de savoir
 	 * vers où forwarder les messages).
 	 */
-	private TableDeRoutage		tableDeRoutage =
-		new TableDeRoutage(this);
-	/**
-	 * Temps minimal entre deux envois des infos de routage.
-	 */
-	private final long			deltaEntreEnvoisInfosRoutage						=
-																							16;
-	/**
-	 * Nous indique quand on pourra envoyer à nouveau des infos de routage suite
-	 * à une occupation importante du buffer.
-	 */
-	private long				gardeEnvoiInfosRoutageBuffer						=
-																							0;
-	/**
-	 * Modification de coût quand les buffers sont à plus de x% d'occupation.
-	 */
-	private static final int	MODIFICATION_COUT									=
-																							10;
+	private TableDeRoutage		tableDeRoutage										=
+																							new TableDeRoutage(
+																									this);
+
 
 
 	/**
@@ -136,16 +152,31 @@ public class Agent extends AbstractEntiteSimulationReseau {
 				// pas la peine de s'envoyer les informations
 				continue;
 			}
-			// on ne va donner aux voisins que les meilleures routes
-			// qu'on connaît pour chaque destination
-			// (notre distance vector donc)
-			// TODO implémenter poisoned reverse?
+			
+			// On fait le poisonned reverse
+			Map<Agent,List<Route>> distanceVectorLocal = tableDeRoutage
+			.getDistanceVector();
+			for(Agent destination: distanceVectorLocal.keySet()){
+				for(Route route: distanceVectorLocal.get(destination)){
+					// si la destination finale n'est pas le voisin
+					// auquel on envoie le DV
+					if(!route.getDestination().equals(voisin)){
+						// mais qu'on passe par le voisin pour
+						// y aller, alors on ment au voisin
+						if(route.getVoisin().getAgent().equals(voisin.getAgent())){
+							route.setCout(Integer.MAX_VALUE);
+						}
+					}
+				}
+			}
+			
+			// on envoie notre distance vector aux voisins
 			InfosRoutage infosRoutage =
-					new InfosRoutage(this, voisin.getAgent(), tableDeRoutage
-							.getDistanceVectorLocal());
+					new InfosRoutage(this, voisin.getAgent(), distanceVectorLocal);
 			AgentRecoitInfosRoutage evtAgentRecoitInfosRoutage =
 					new AgentRecoitInfosRoutage(infosRoutage,
-							voisin.getAgent(), getSimulation().getHorloge()
+							voisin.getAgent(), 
+							getSimulation().getHorloge()
 									+ voisin.getDistance());
 			getSimulation().getFutureEventList().planifierEvenement(
 					evtAgentRecoitInfosRoutage);
@@ -426,37 +457,12 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		// ce message est prioritaire et ne se préoccupe pas de
 		// l'occupation de l'agent
 		// on essaie de mettre à jour la table de routage avec les infos reçues
-		boolean tableModifiee =
-				tableDeRoutage.mettreAJour(infosRoutage);
+		boolean tableModifiee = tableDeRoutage.mettreAJour(infosRoutage);
 		// si la table de routage à été modifiée, alors on doit renvoyer
 		// les nouvelles infos de routage aux voisins
 		if (tableModifiee) {
 			replanifierEvenementEnvoiInfosRoutage();
 		}
-	}
-
-
-
-	/**
-	 * Les circonstances obligent l'agent à prévenir ses voisins de changements
-	 * dans son distance vector.
-	 */
-	private void replanifierEvenementEnvoiInfosRoutage() {
-		// on annule l'évènement d'envoi initialement prévu
-		AgentEnvoieInfosRoutage evtASupprimer =
-				getSimulation().getFutureEventList()
-						.trouverEvenementEnvoiInfosRoutagePourAgent(this);
-		if (evtASupprimer == null) {
-			throw new IllegalStateException(
-					"L'évènement d'envoi d'infos de routage à supprimer n'a pas été trouvé, ceci ne devrait pas arriver!");
-		} else {
-			getSimulation().getFutureEventList().supprimer(evtASupprimer);
-		}
-		// on en génère un nouveau (envoi immédiat)
-		AgentEnvoieInfosRoutage evtAgentEnvoieInfosRoutage =
-				new AgentEnvoieInfosRoutage(this, getSimulation().getHorloge());
-		getSimulation().getFutureEventList().planifierEvenement(
-				evtAgentEnvoieInfosRoutage);
 	}
 
 
@@ -515,8 +521,6 @@ public class Agent extends AbstractEntiteSimulationReseau {
 					// si le buffer n'est pas infini, on vérifie son état
 					// pour déterminer s'il faut prévenir que
 					// l'agent est surchargé si nécessaire
-					// FIXME v2.0 décider si on augmente de 20-50-100
-					// ou si on place à + infini
 					double occupationActuelle =
 							(double) getBuffer().size()
 									/ (double) getConfiguration()
@@ -528,34 +532,40 @@ public class Agent extends AbstractEntiteSimulationReseau {
 					// initialement prévu
 					// et en génère un autre immédiat
 					// on ne peut le faire que tous les X temps
-					if (occupationActuelle >= 0.8) {
+					// pour les explications, voir UML
+					boolean modificationNecessaire = false;
+					if (occupationActuelle >= 0.3) {
 						if (getSimulation().getHorloge() > gardeEnvoiInfosRoutageBuffer) {
-							gardeEnvoiInfosRoutageBuffer =
-									getSimulation().getHorloge()
-											+ deltaEntreEnvoisInfosRoutage;
-							List<Route> routes = tableDeRoutage.getDistanceVectorComplet().get(this);
+							if (differenceCoutActuelle + MODIFICATION_COUT <= DIFFERENCE_COUT_MAX) {
+								modificationNecessaire = true;
+								differenceCoutActuelle =
+										differenceCoutActuelle
+												+ MODIFICATION_COUT;
+							}
+						}
+					}
+					if (modificationNecessaire) {
+						gardeEnvoiInfosRoutageBuffer =
+								getSimulation().getHorloge()
+										+ deltaEntreEnvoisInfosRoutage;
+						for (Agent destination : getSimulation().getAgents()) {
+							List<Route> routes =
+									tableDeRoutage.getTableDeRoutageComplete()
+											.get(destination);
 							for (Route route : routes) {
 								// on va tout augmenter sauf la route locale
-								// puisque ça n'a pas de sens
 								if (route.getVoisin().getAgent().equals(this)) {
 									continue;
 								}
 								int coutActuel = route.getCout();
 								if (coutActuel < TableDeRoutage.INFINI) {
-									route
-											.setCout(coutActuel
-													+ MODIFICATION_COUT);
+										route.setCout(coutActuel
+												+ MODIFICATION_COUT);
 								}
 							}
-							replanifierEvenementEnvoiInfosRoutage();
 						}
+						replanifierEvenementEnvoiInfosRoutage();
 					}
-					// else if (occupationActuelle <= 0.2) {
-					// if(coutActuel > 0){
-					// routeLocale.setCout(coutActuel - modificationCout);
-					// envoiInfosNecessaire = true;
-					// }
-					// }
 				}
 				// on met à jour la statistique du taux d'utilisation du buffer
 				mettreAJourStatTauxUtilisationBuffer();
@@ -583,6 +593,30 @@ public class Agent extends AbstractEntiteSimulationReseau {
 				}
 			}
 		}
+	}
+
+
+
+	/**
+	 * Les circonstances obligent l'agent à prévenir ses voisins de changements
+	 * dans son distance vector.
+	 */
+	private void replanifierEvenementEnvoiInfosRoutage() {
+		// on annule l'évènement d'envoi initialement prévu
+		AgentEnvoieInfosRoutage evtASupprimer =
+				getSimulation().getFutureEventList()
+						.trouverEvenementEnvoiInfosRoutagePourAgent(this);
+		if (evtASupprimer == null) {
+			throw new IllegalStateException(
+					"L'évènement d'envoi d'infos de routage à supprimer n'a pas été trouvé, ceci ne devrait pas arriver!");
+		} else {
+			getSimulation().getFutureEventList().supprimer(evtASupprimer);
+		}
+		// on en génère un nouveau (envoi immédiat)
+		AgentEnvoieInfosRoutage evtAgentEnvoieInfosRoutage =
+				new AgentEnvoieInfosRoutage(this, getSimulation().getHorloge());
+		getSimulation().getFutureEventList().planifierEvenement(
+				evtAgentEnvoieInfosRoutage);
 	}
 
 
