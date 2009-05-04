@@ -368,12 +368,11 @@ public class SimulationReseau extends AbstractSimulation {
 			} else if (evenementImminent instanceof AgentEnvoieInfosRoutage) {
 				AgentEnvoieInfosRoutage evt =
 						(AgentEnvoieInfosRoutage) evenementImminent;
-				evt.getAgent().envoieInfosRoutage(evt.isInitialisation());
+				evt.getAgent().envoieInfosRoutage();
 			} else if (evenementImminent instanceof AgentRecoitInfosRoutage) {
 				AgentRecoitInfosRoutage evt =
 						(AgentRecoitInfosRoutage) evenementImminent;
-				evt.getAgent().recoitInfosRoutage(evt.getInfosRoutage(),
-						evt.isInitialisation());
+				evt.getAgent().recoitInfosRoutage(evt.getInfosRoutage());
 			} else if (evenementImminent instanceof FinDeSimulation) {
 				// on met à jour la statistique du taux d'utilisation du buffer
 				// de chaque agent
@@ -638,12 +637,12 @@ public class SimulationReseau extends AbstractSimulation {
 			// pour l'instant on le génère pour tous
 			for (Agent agent : agents) {
 				AgentEnvoieInfosRoutage evtEnvoiInfosRoutage =
-						new AgentEnvoieInfosRoutage(agent, 0, true);
+						new AgentEnvoieInfosRoutage(agent, 0);
 				getFutureEventList().planifierEvenement(evtEnvoiInfosRoutage);
 			}
 		}
-		// Génération des premiers évènements de la simulation
-		// avant d'ajouter quoi que ce soit sur la FEL on ajoute
+		// Génération des premiers évènements de la simulation.
+		// Avant d'ajouter quoi que ce soit sur la FEL on ajoute
 		// à l'horloge la durée d'initialisation de la simulation
 		// Le temps d'initialisation doit être suffisamment long pour s'assurer
 		// qu'à la fin de la période d'initialisation, le distance vector soit
@@ -651,6 +650,7 @@ public class SimulationReseau extends AbstractSimulation {
 		// stabilisé.
 		ajouterTempsHorloge(getConfiguration()
 				.getConfigurationSimulationReseau().getDureeInitialisation());
+		
 		// premiers évènements d'envoi par les hôtes
 		for (Agent agent : agents) {
 			for (Hote h : agent.getHotes()) {

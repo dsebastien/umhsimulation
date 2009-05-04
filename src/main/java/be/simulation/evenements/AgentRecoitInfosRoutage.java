@@ -22,13 +22,6 @@ public class AgentRecoitInfosRoutage extends Evenement {
 	private final InfosRoutage	infosRoutage;
 
 
-	private final boolean		initialisation;
-
-	public boolean isInitialisation() {
-		return initialisation;
-	}
-
-
 
 	/**
 	 * Construction d'un évènement AgentRecoitInfosRoutage.
@@ -41,8 +34,7 @@ public class AgentRecoitInfosRoutage extends Evenement {
 	 *        le temps prévu pour cet évènement
 	 */
 	public AgentRecoitInfosRoutage(final InfosRoutage infosRoutage,
-			final Agent agent, final long tempsPrevu,
-			final boolean initialisation) {
+			final Agent agent, final long tempsPrevu) {
 		super(tempsPrevu);
 		if (infosRoutage == null) {
 			throw new IllegalArgumentException(
@@ -53,7 +45,6 @@ public class AgentRecoitInfosRoutage extends Evenement {
 		}
 		this.infosRoutage = infosRoutage;
 		this.agent = agent;
-		this.initialisation = initialisation;
 	}
 
 
