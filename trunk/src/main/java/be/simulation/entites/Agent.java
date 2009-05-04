@@ -533,13 +533,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 							gardeEnvoiInfosRoutageBuffer =
 									getSimulation().getHorloge()
 											+ deltaEntreEnvoisInfosRoutage;
-							// FIXME BUG quand dv active...
-							
 							List<Route> routes = tableDeRoutage.getDistanceVectorComplet().get(this);
-							if(routes == null){
-								throw new IllegalStateException("Ne doit pas être null!");
-							}
-							
 							for (Route route : routes) {
 								// on va tout augmenter sauf la route locale
 								// puisque ça n'a pas de sens
