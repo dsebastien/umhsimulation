@@ -16,7 +16,7 @@ import be.simulation.routage.TableDeRoutage;
 import be.simulation.routage.Voisin;
 
 /**
- * Agent du système (= serveur).
+ * Agent du systeme (= serveur ou = routeur).
  * 
  * @author Dubois Sebastien
  * @author Regnier Frederic
@@ -36,12 +36,12 @@ public class Agent extends AbstractEntiteSimulationReseau {
 																							0;
 	/**
 	 * Dernier temps de simulation ou le taux d'utilisation du buffer a été mis
-	 * à jour.
+	 * a jour.
 	 */
 	private long				dernierTempsMiseAJourSommeNiveauxOccupationBuffer	=
 																							0;
 	/**
-	 * PRNG utilisé pour choisir un hôte au hasard parmi les hôtes connectés à
+	 * PRNG utilise pour choisir un hote au hasard parmi les hotes connectes a
 	 * cet agent.
 	 */
 	private final Random		generateurChoixHote									=
