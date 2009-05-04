@@ -130,7 +130,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * Méthode appelée quand cet agent envoie ses informations de routage à ses
 	 * voisins.
 	 */
-	public void envoieInfosRoutage(boolean initialisation) {
+	public void envoieInfosRoutage() {
 		// TODO ajouter à l'UML!
 		// on envoie notre distance vector
 		// a chaque voisin
@@ -149,7 +149,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 			AgentRecoitInfosRoutage evtAgentRecoitInfosRoutage =
 					new AgentRecoitInfosRoutage(infosRoutage,
 							voisin.getAgent(), getSimulation().getHorloge()
-									+ voisin.getDistance(), initialisation);
+									+ voisin.getDistance());
 			getSimulation().getFutureEventList().planifierEvenement(
 					evtAgentRecoitInfosRoutage);
 		}
@@ -159,8 +159,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 						+ getConfiguration().getConfigurationAgents()
 								.getTempsInterEnvoisInfosRoutage();
 		AgentEnvoieInfosRoutage evtEnvoiInfosRoutage =
-				new AgentEnvoieInfosRoutage(this, prochainTempsEnvoi,
-						initialisation);
+				new AgentEnvoieInfosRoutage(this, prochainTempsEnvoi);
 		getSimulation().getFutureEventList().planifierEvenement(
 				evtEnvoiInfosRoutage);
 	}
@@ -425,18 +424,17 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * @param infosRoutage
 	 *        les informations de routage reçues
 	 */
-	public void recoitInfosRoutage(final InfosRoutage infosRoutage,
-			boolean initialisation) {
+	public void recoitInfosRoutage(final InfosRoutage infosRoutage) {
 		// TODO v2.0 ajouter à l'UML (détailler la méthode replanifier...)
 		// ce message est prioritaire et ne se préoccupe pas de
 		// l'occupation de l'agent
 		// on essaie de mettre à jour la table de routage avec les infos reçues
 		boolean tableModifiee =
-				tableDeRoutage.mettreAJour(infosRoutage, initialisation);
+				tableDeRoutage.mettreAJour(infosRoutage);
 		// si la table de routage à été modifiée, alors on doit renvoyer
 		// les nouvelles infos de routage aux voisins
 		if (tableModifiee) {
-			replanifierEvenementEnvoiInfosRoutage(initialisation);
+			replanifierEvenementEnvoiInfosRoutage();
 		}
 	}
 
@@ -446,7 +444,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * Les circonstances obligent l'agent à prévenir ses voisins de changements
 	 * dans son distance vector.
 	 */
-	private void replanifierEvenementEnvoiInfosRoutage(boolean initialisation) {
+	private void replanifierEvenementEnvoiInfosRoutage() {
 		// on annule l'évènement d'envoi initialement prévu
 		AgentEnvoieInfosRoutage evtASupprimer =
 				getSimulation().getFutureEventList()
@@ -459,8 +457,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		}
 		// on en génère un nouveau (envoi immédiat)
 		AgentEnvoieInfosRoutage evtAgentEnvoieInfosRoutage =
-				new AgentEnvoieInfosRoutage(this, getSimulation().getHorloge(),
-						initialisation);
+				new AgentEnvoieInfosRoutage(this, getSimulation().getHorloge());
 		getSimulation().getFutureEventList().planifierEvenement(
 				evtAgentEnvoieInfosRoutage);
 	}
@@ -554,7 +551,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 													+ MODIFICATION_COUT);
 								}
 							}
-							replanifierEvenementEnvoiInfosRoutage(false);
+							replanifierEvenementEnvoiInfosRoutage();
 						}
 					}
 					// else if (occupationActuelle <= 0.2) {

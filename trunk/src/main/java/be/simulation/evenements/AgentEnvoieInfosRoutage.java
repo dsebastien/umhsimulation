@@ -4,7 +4,7 @@ import be.simulation.core.evenements.Evenement;
 import be.simulation.entites.Agent;
 
 /**
- * Evenement déclenché quand un agent envoie des informations de routage.
+ * Evenement declenche quand un agent envoie des informations de routage.
  * 
  * @author Dubois Sebastien
  * @author Regnier Frederic
@@ -16,37 +16,26 @@ public class AgentEnvoieInfosRoutage extends Evenement {
 	 */
 	private final Agent	agent;
 
-	private final boolean	initialisation;
-
-
-	public boolean isInitialisation() {
-		return initialisation;
-	}
-
-
-
 	/**
-	 * Construct d'un évènement AgentEnvoieInfosRoutage.
+	 * Construct d'un evenement AgentEnvoieInfosRoutage.
 	 * 
 	 * @param agent
 	 *        l'agent qui envoie ces informations de routage
 	 * @param tempsPrevu
-	 *        le temps prévu pour cet évènement
+	 *        le temps prevu pour cet evenement
 	 */
-	public AgentEnvoieInfosRoutage(final Agent agent, final long tempsPrevu,
-			final boolean initialisation) {
+	public AgentEnvoieInfosRoutage(final Agent agent, final long tempsPrevu) {
 		super(tempsPrevu);
 		if (agent == null) {
-			throw new IllegalArgumentException("L'agent ne peut pas être null!");
+			throw new IllegalArgumentException("L'agent ne peut pas etre null!");
 		}
 		this.agent = agent;
-		this.initialisation = initialisation;
 	}
 
 
 
 	/**
-	 * Récupérer l'agent qui envoie des informations de routage.
+	 * Recuperer l'agent qui envoie des informations de routage.
 	 * 
 	 * @return l'agent qui envoie des informations de routage.
 	 */
@@ -61,7 +50,6 @@ public class AgentEnvoieInfosRoutage extends Evenement {
 	 */
 	@Override
 	public String toString() {
-		return "Agent " + agent.getNumero()
-				+ " e des informations de routage au temps " + getTempsPrevu();
+		return agent.toString()+" envoie des informations de routage au temps " + getTempsPrevu();
 	}
 }
