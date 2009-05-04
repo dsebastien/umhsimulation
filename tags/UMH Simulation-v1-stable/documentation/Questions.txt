@@ -1,0 +1,19 @@
+Questions à poser à l'assistant:
+--------------------------------
+Pour l'envoi des nouveaux messages par les hôtes. A ce qu'on a compris, on peut générer au début de la simulation le scénario de chaque hôte.
+
+Est-ce qu'on doit dissocier les activités de traitement en entrée et en sortie pour les hôtes?
+Quand un évènement de type "HoteEnvoieNouveauMessage" arrive, est-ce que ce message peut être envoyé immédiatement ou est-ce qu'il doit lui aussi passer par le buffer?
+Si il doit passer par le buffer, est-ce que c'est alors le même buffer que le buffer d'entrée ou est-ce que c'est un second buffer?
+
+Pour l'instant, nous avons choisi de passer systématiquement par des buffers et ensuite de vérifier si l'entité des déjà en train d'effectuer un traitement (occupé ou non).
+
+
+Concernant le temps de simulation, pour l'instant nous avons choisi de le réprésenter par une variable de type double (donc temps continu),
+ce qui nous permet par exemple quand un agent traite un message de dire qu'il est occupé à partir du temps actuel de simulation jusqu'au temps t + temps de traitement.
+
+Est-ce que cette façon de faire est correcte? Parce que nous n'avons pas très bien compris votre réponse:
+		cela signifie qu'a chaque unité de temps un agent est capable de traiter (s'occuper de forwarder, ou de remarquer qu'il a recu) 
+		au maximum 2 messages  (dans le cas de 0.5) donc effectivement, s'il en recoit 50, il en traitera 2, et les 48 seront en attente, 
+		au temps de simulation suivant, il en traitera 2 et en restera 46, (sauf si d'autres messages arrivent à nouveau, et sont placé en 
+		fin de file (FIFO).

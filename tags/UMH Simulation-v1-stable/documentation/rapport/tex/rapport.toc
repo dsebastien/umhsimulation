@@ -1,0 +1,22 @@
+\select@language {frenchb}
+\select@language {french}
+\contentsline {section}{\numberline {1}Evenements}{5}{section.1}
+\contentsline {subsection}{\numberline {1.1}Hotes}{5}{subsection.1.1}
+\contentsline {subsubsection}{\numberline {1.1.1}Envoi d'un message original}{5}{subsubsection.1.1.1}
+\contentsline {subsubsection}{\numberline {1.1.2}R\IeC {\'e}ception d'un message}{5}{subsubsection.1.1.2}
+\contentsline {subsubsection}{\numberline {1.1.3}Fin de traitement d'un message}{5}{subsubsection.1.1.3}
+\contentsline {subsubsection}{\numberline {1.1.4}Timeout}{5}{subsubsection.1.1.4}
+\contentsline {subsection}{\numberline {1.2}Agents}{5}{subsection.1.2}
+\contentsline {subsubsection}{\numberline {1.2.1}R\IeC {\'e}ception d'un message}{5}{subsubsection.1.2.1}
+\contentsline {subsubsection}{\numberline {1.2.2}Fin de traitement d'un message}{5}{subsubsection.1.2.2}
+\contentsline {subsubsection}{\numberline {1.2.3}Envoi des informations de routage}{5}{subsubsection.1.2.3}
+\contentsline {subsubsection}{\numberline {1.2.4}R\IeC {\'e}ception d'informations de routage}{5}{subsubsection.1.2.4}
+\contentsline {section}{\numberline {2}R\IeC {\'e}sultats}{5}{section.2}
+\contentsline {subsection}{\numberline {2.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{5}{subsection.2.1}
+\contentsline {subsubsection}{\numberline {2.1.1}Hote}{5}{subsubsection.2.1.1}
+\contentsline {subsubsection}{\numberline {2.1.2}Agent}{5}{subsubsection.2.1.2}
+\contentsline {subsubsection}{\numberline {2.1.3}Simulation}{5}{subsubsection.2.1.3}
+\contentsline {section}{\numberline {3}D\IeC {\'e}cisions}{6}{section.3}
+\contentsline {subsection}{\numberline {3.1}Priorit\IeC {\'e}s des \IeC {\'e}v\IeC {\`e}nements pour un temps $t$ de simulation}{6}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Distance vector}{6}{subsection.3.2}
+\contentsline {section}{\numberline {A}Le programme et son utilisation}{7}{appendix.A}

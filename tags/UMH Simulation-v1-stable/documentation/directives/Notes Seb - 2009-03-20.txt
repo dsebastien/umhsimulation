@@ -1,0 +1,46 @@
+Les hotes ont aussi une file de traitement et aussi un paramètre de délais
+Chez les hotes, compter pour chaque message envoyé, combien de retries, ... --> historique
+
+
+Le timeout doit etre au moins aussi grand que le temps correspondant au chemin le plus long (ex: >= 80)
+
+Chaque agent doit avoir une table de routage:
+je suis 7000: pour aller en 1000 je passe par 2000, ..., pour aller en Y, je vais par Z, ...
+
+Possible qu'on envoie un message, qu'on renvoie le message (dépassement du timeout) puis qu'on reçoive seulement l'accusé du premier message. Donc si on recoit un accusé et qu'on a plus de timeout, on garde trace qu'on avait un timeout trop court
+Ex: si timeout = 100:
+
+100 envoi msg
+200 timeout (on devrait avoir recu une reponse)
+200 renvoi du msg
+200 timeout (on devrait avoir recu une reponse pour le renvoi)
+200 renvoi du message encore
+240 accuse de reception reçu --> celui du premier message mais qui annule le timeout suivant (300)
+300 timeout (on devrait avoir recu une reponse pour le re-renvoi)
+
+
+
+
+Ensuite adaptation:
+Si on est l'agent 7000 et qu'on veut communiquer avec 1000, on passe par 2000
+						 avec 2000,		 ... 
+						 avec 3000, on passe par 5000
+
+table de routage devient DYNAMIQUE
+
+
+Pour faire ça:
+(decentralized routing. Link state algorithm)
+utiliser: Distance Vector: DIJKSTRA (point 4.5.2)
+
+Je suis un noeud, j'ai une estimation du cout pour aller en 2000, en 3000, ...
+On a une estimation de couts qui evolue pour chaque agent
+
+...
+
+Au départ, les agents communiquent pour se mettre d'accord.
+On peut considérer que les 1000 premiers temps de simulation ne servent qu'à la configuration
+Ensuite le système démarre vraiment, puis imaginons que 4000 devient surchargé --> il prévient ses voisins
+Chaque agent passe sa table à ses voisins, qui mettent à jour leur propre table
+La notion de cout qu'on utilise dans l'algo pourra etre basee sur une combinaison entre les temps de latence et les taux d'occupation des buffers. Si un agent a un buffer plein de 90%, alors on calcule le coût comme le delai sur le chemin vers cet agent + 90
+Les agents peuvent connaitre les taux d'occupation des autres directement (ou pour un bonus grace à un message spécial, ...)

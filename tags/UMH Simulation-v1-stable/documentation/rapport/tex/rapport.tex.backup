@@ -1,0 +1,91 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{configuration}
+
+
+\begin{document}
+\input{page-de-garde}
+\tableofcontents % table des matières
+\pagebreak
+\listoffigures % liste des figures
+\pagebreak
+%\listoftables % liste des tables
+%\pagebreak
+
+
+\section{Evenements}
+
+\subsection{Hotes}
+\subsubsection{Envoi d'un message original}
+\subsubsection{Réception d'un message}
+\subsubsection{Fin de traitement d'un message}
+\subsubsection{Timeout}
+
+\subsection{Agents}
+\subsubsection{Réception d'un message}
+\subsubsection{Fin de traitement d'un message}
+\subsubsection{Envoi des informations de routage}
+\subsubsection{Réception d'informations de routage}
+
+
+\section{Résultats}
+\subsection{Paramètres du système}
+
+\subsubsection{Hote}
+\begin{itemize}
+ \item Durée du timeout (temps après lequel on réémet un message)
+ \item Temps maximal inter-envois (pour les messages originaux)
+ \item Temps de traitement d'un message
+ \item Pourcentage de messages à destination d'un autre agent
+\end{itemize}
+
+
+\subsubsection{Agent}
+
+\begin{itemize}
+ \item Nombre d'hôtes reliés
+ \item Taux de pertes brutales de messages
+ \item Temps de traitement d'un message
+ \item Taille de buffer (en entrée)
+\end{itemize}
+
+Pour le distance vector on a en plus:
+\begin{itemize}
+ \item Temps inter-envois des informations de routage
+\end{itemize}
+
+\subsubsection{Simulation}
+\begin{itemize}
+ \item Durée
+ \item Délai agent <-> hôte
+ \item Distance vector activé (oui/non)
+ \item Durée de la période d'initialisation
+ \item Périodicité d'affichage des statistiques (e.g., tous les 1\% de simulation)
+\end{itemize}
+
+
+
+\section{Décisions}
+
+\subsection{Priorités des évènements pour un temps $t$ de simulation}
+\begin{itemize}
+ \item Pour un temps $t$ donné, on traite en priorité les évènements d'envoi d'infos de routage
+ \item Pour un temps $t$ donné, on traite en priorité les évènements de réception d'infos de routage
+ \item Pour un temps $t$ donné, on traite en priorité les évènements de réception d'accusés de réception par rapport aux timeouts 
+ \item On utilise une seule FEL au niveau de la simulation dans laquelle on place tous les évènements
+\end{itemize}
+
+\subsection{Distance vector}
+Nous avons choisi de modifier les coûts en fonction du taux d'occupation du buffer de l'agent. TODO continuer
+
+
+
+%\pagebreak
+\clearpage
+
+%\backmatter % pour ne pas numéroter à la fin
+\input{annexes}
+\appendix
+
+
+
+\end{document}

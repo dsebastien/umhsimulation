@@ -1,0 +1,14 @@
+Utilisation de MAVEN:
+-------------------------------------------------
+
+Générer un projet eclipse:
+mvn eclipse:eclipse
+
+Compiler le code et générer le fichier jar exécutable via (java -jar fichier) (le jar est placé dans target\dist, avec toutes les librairies nécessaires)
+mvn clean package
+
+Tester le code:
+mvn clean test
+
+Générer les rapports (dans target\site)
+mvn clean site
