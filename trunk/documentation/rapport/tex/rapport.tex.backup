@@ -64,9 +64,9 @@ Pour le distance vector on a en plus:
 
 
 
+\section{Décisions}
 
-
-Décisions:
+\subsection{Priorités des évènements pour un temps $t$ de simulation}
 \begin{itemize}
  \item Pour un temps $t$ donné, on traite en priorité les évènements d'envoi d'infos de routage
  \item Pour un temps $t$ donné, on traite en priorité les évènements de réception d'infos de routage
@@ -74,6 +74,8 @@ Décisions:
  \item On utilise une seule FEL au niveau de la simulation dans laquelle on place tous les évènements
 \end{itemize}
 
+\subsection{Distance vector}
+Nous avons choisi de modifier les coûts en fonction du taux d'occupation du buffer de l'agent. TODO continuer
 
 
 
