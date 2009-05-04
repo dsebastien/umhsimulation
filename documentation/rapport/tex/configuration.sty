@@ -1,36 +1,14 @@
 \ProvidesPackage{configuration}
 
-% images: vérifie si on compile avec pdftex ou dvips
-\ifx\pdftexversion\undefined
- \usepackage[dvips]{graphicx}
-\else
-\usepackage[pdftex]{graphicx}
-\fi
+\usepackage{ae,aecompl, aeguill}		% pour les figures et les fonts
+\usepackage{pslatex}
+
+\usepackage{graphicx}
 
 \graphicspath{{../img/}}			% chemin vers les images
-%\DeclareGraphicsExtensions{.jpg,.png,.JPG, .ps, .eps}	% Formats d'images
-
-
-%\usepackage{glosstex}						% création d'un glossaire
-	%http://www.grappa.univ-lille3.fr/FAQ-LaTeX/17.1.html
-	
-%\usepackage{vrsion}						% gestion de la version
-	% avec \version
-
-
-%\usepackage{eurosym}						% symbole euro
-%\usepackage{cite}						% citations de la bibliographie
-%\usepackage{lastpage}						% reference derniere page
-%\usepackage{xspace}						% espaces
-%\usepackage{minitoc}						% table des matieres dans les chapitres
-%\usepackage[Lenny]{fncychap}					% beaux chapitres
-
-%\usepackage{draftcopy}						% draft
-%\usepackage[francais]{layout}					% layout fr
-%\usepackage[outerbars]{changebar}				% positionnement barre en marge externe
-%\usepackage{slashbox}						% slashbox dans les tableaux
 
 \usepackage{a4wide}						% page large
+%\usepackage{fullpage}
 \usepackage{ucs}						% encodage
 \usepackage[utf8x]{inputenc}					% encodage
 \usepackage[T1]{fontenc}					% font
@@ -39,7 +17,7 @@
 \usepackage{palatino}						% jolie font
 \usepackage[unicode]{hyperref}					% liens
 \hypersetup{unicode, colorlinks, linkcolor=black, urlcolor=black}% configuration des liens
-\usepackage{textcomp}						% ?
+\usepackage{textcomp}						%
 \usepackage{amsmath}						% math
 \usepackage{amsfonts}						% fonts math
 \usepackage{amssymb}						% symboles math
@@ -47,7 +25,8 @@
 %\usepackage[french,ruled]{algorithm2e}				% algorithmes
 % autres options: boxrules, linesnumbered, titlenumbered, dotocloa (ajoute une entrée dans la TOC pour les algos)
 
-\usepackage[usenames,dvipsnames,pdftex]{color}				% noms des couleurs
+%\usepackage[usenames,dvipsnames,pdftex]{color}			% noms des couleurs
+\usepackage[usenames,dvipsnames]{color}				% noms des couleurs
 
 %\usepackage{fancyhdr}						% configuration des entete et pied de pages
 %\pagestyle{fancy}
@@ -59,24 +38,7 @@
 \renewcommand{\sectionmark}[1]%
 {\markright{\thesection.\ #1}}
 
-%\usepackage{fullpage}
-%\usepackage[upright]{fourier}
-
-% graphics and graphs in particular
-%dot
-%\usepackage{dot2texi}
-
-%xy-pic
-%\usepackage[matrix,curve,arrow,tips,frame]{xy}
-%\usepackage{xy}
-%\xyoption{all}
-
-
-
-%\usepackage{colortbl}						% colorer les tableaux
 \usepackage{multirow}						% écrire du texte à cheval sur deux lignes
-%http://www.grappa.univ-lille3.fr/FAQ-LaTeX/7.12.html
-
 %\usepackage{backref}						% référencer les pages contenant des citations
 %\usepackage{endnotes}						% écrire des notes pour la fin du document
 	%\endnote{lol}
