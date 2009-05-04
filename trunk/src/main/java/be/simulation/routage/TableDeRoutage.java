@@ -253,7 +253,7 @@ public class TableDeRoutage {
 			}
 			
 			
-			//FIXME décider si ok et si oui ajouter à l'UML!
+			// TODO décider si ok et si oui ajouter à l'UML!
 			// Si la destination finale est un voisin, on
 			// ne modifie pas nos coûts car ça n'a pas d'intérêt
 			// on ferait juste tourner le paquet dans le réseau inutilement
