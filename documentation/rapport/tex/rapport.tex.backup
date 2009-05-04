@@ -22,6 +22,11 @@
 
 \subsection{Agents}
 \subsubsection{Réception d'un message}
+Dans le diagramme UML, il y a deux points que nous n'avons pas expliqué. Tout d'abord: \og Est-ce qu'on peut envoyer les nouvelles informations de routage maintenant? \fg. En fait nous avons décidé d'éviter trop d'envois successifs inutiles d'informations de routage, afin de ne pas surcharger le système. Pour ce faire, quand on doit envoyer les informations de routage (à cause du niveau d'occupation du buffer), on vérifie si ça fait au moins $x$ temps de simulation qu'on a envoyé un message. Si oui, alors on peut envoyer le message. De cette manière, si pour un temps $t$ donné, l'agent reçoit $50$ messages, que pour le premier il dépasse le seuil d'alerte d'occupation du buffer et envoie ses informations de routage, puisqu'il sera toujours au delà du seuil d'alerte pour les $49$ autres messages, on évite ainsi de réenvoyer les informations inutilement.
+
+Le second point: \og Augmentation du coût de nos routes à destination des autres agents (on augmente d'une valeur fixe à chaque fois) \fg est ce qu'on fait pour faire comprendre aux voisins que l'agent actuel est surchargé. On augmente le coût de ses routes à destination d'autres agents. Nous avons fixé une limite à cette augmentation de coût, de manière à éviter que les coûts des routes ne monte trop. Ainsi, le coût des routes pourra être augmenté deux fois au plus et ne pourra ensuite que redescendre. De cette manière, quand l'agent est surchargé, le coût de ses routes augmente suffisamment pour que les voisins choisissent d'autres routes (sauf si l'agent est la destination finale bien sûr!). Si les autres agents deviennent surchargés, leurs coûts augmenteront également et ainsi, le DV fonctionne également en prenant compte de la charge des agents.
+
+
 \subsubsection{Fin de traitement d'un message}
 \subsubsection{Envoi des informations de routage}
 \subsubsection{Réception d'informations de routage}
@@ -66,17 +71,23 @@ Pour le distance vector on a en plus:
 
 \section{Décisions}
 
-\subsection{Priorités des évènements pour un temps $t$ de simulation}
+\subsection{Gestion des évènements}
+Nous avons choisi d'utiliser une seule FEL pour la simulation. On y place tous les évènements. De plus, pour un temps $t$ de simulation donné, nous avons décidé de traiter certains évènements prioritairement.
+
 \begin{itemize}
- \item Pour un temps $t$ donné, on traite en priorité les évènements d'envoi d'infos de routage
- \item Pour un temps $t$ donné, on traite en priorité les évènements de réception d'infos de routage
- \item Pour un temps $t$ donné, on traite en priorité les évènements de réception d'accusés de réception par rapport aux timeouts 
- \item On utilise une seule FEL au niveau de la simulation dans laquelle on place tous les évènements
+ \item En premier lieu on traite les évènements de réception d'informations de routage
+ \item Ensuite on traite les évènements de réception d'informations de routage
+ \item Ensuite on traite les évènements de réception de messages (accusés et messages normaux)
+ \item Ensuite on traite les évènements de timeout (un message pour lequel on a pas encore reçu d'accusé)
 \end{itemize}
 
-\subsection{Distance vector}
-Nous avons choisi de modifier les coûts en fonction du taux d'occupation du buffer de l'agent. TODO continuer
+TODO ajouter explication pour la fin de simulation quand on aura pris une décision!
 
+
+\subsection{Distance vector}
+Nous avons choisi de modifier les coûts en fonction du taux d'occupation du buffer de l'agent. Pour ce faire
+
+TODO continuer
 
 
 %\pagebreak

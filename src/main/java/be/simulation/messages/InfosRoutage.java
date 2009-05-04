@@ -1,4 +1,4 @@
-package be.simulation.messages.routage;
+package be.simulation.messages;
 
 import java.util.List;
 import java.util.Map;

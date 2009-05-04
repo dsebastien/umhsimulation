@@ -2,7 +2,7 @@ package be.simulation.evenements;
 
 import be.simulation.core.evenements.Evenement;
 import be.simulation.entites.Agent;
-import be.simulation.messages.routage.InfosRoutage;
+import be.simulation.messages.InfosRoutage;
 
 /**
  * Evenement déclenché quand un agent reçoit des informations de routage.

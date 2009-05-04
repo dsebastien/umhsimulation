@@ -22,6 +22,11 @@
 
 \subsection{Agents}
 \subsubsection{Réception d'un message}
+Dans le diagramme UML, il y a deux points que nous n'avons pas expliqué. Tout d'abord: \og Est-ce qu'on peut envoyer les nouvelles informations de routage maintenant? \fg. En fait nous avons décidé d'éviter trop d'envois successifs inutiles d'informations de routage, afin de ne pas surcharger le système. Pour ce faire, quand on doit envoyer les informations de routage (à cause du niveau d'occupation du buffer), on vérifie si ça fait au moins $x$ temps de simulation qu'on a envoyé un message. Si oui, alors on peut envoyer le message. De cette manière, si pour un temps $t$ donné, l'agent reçoit $50$ messages, que pour le premier il dépasse le seuil d'alerte d'occupation du buffer et envoie ses informations de routage, puisqu'il sera toujours au delà du seuil d'alerte pour les $49$ autres messages, on évite ainsi de réenvoyer les informations inutilement.
+
+Le second point: \og Augmentation du coût de nos routes à destination des autres agents (on augmente d'une valeur fixe à chaque fois) \fg est ce que le distance vector prenne en compte le niveau d'occupation des agents. Quand un agent donné est surchargé, il augmente le coût de ses routes à destination d'autres agents et prévient ses voisins. De cette manière quand les voisins reçoivent les informations, ils mettent à jour leur propre DV et choisissent peut être d'autres routes pour faire suivre les messages (sauf si l'agent est la destination finale bien sûr!). Si les autres agents deviennent surchargés, leurs coûts augmenteront également. Ainsi au final, le Dv prend en compte l'occupation des buffers des agents, ce qui permet de mieux répartir la charge sur les différents agents. Dans les résultats des simulations, nous avons observé une bien meilleure répartition.
+
+
 \subsubsection{Fin de traitement d'un message}
 \subsubsection{Envoi des informations de routage}
 \subsubsection{Réception d'informations de routage}

@@ -7,7 +7,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import be.simulation.entites.Agent;
 import be.simulation.entites.Hote;
-import be.simulation.messages.routage.InfosRoutage;
+import be.simulation.messages.InfosRoutage;
 
 /**
  * Table de routage interne à un agent, lui permet de déterminer où envoyer un
