@@ -65,11 +65,6 @@ public class Main {
 		// Lancement de la simulation
 		simulation.demarrer();
 
-		LOGGER.info("Fin de la simulation");
-		
-		// TODO à 80% et 20%, mettre à jour
-		// variables: differenceCoutMax
-		// variable differenceCoutActuelle
-		
+		LOGGER.info("Fin de la simulation");		
 	}
 }
