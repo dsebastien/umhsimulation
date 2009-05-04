@@ -9,8 +9,8 @@ import be.simulation.evenements.AgentFinTraitementMessage;
 import be.simulation.evenements.AgentRecoitInfosRoutage;
 import be.simulation.evenements.AgentRecoitMessage;
 import be.simulation.evenements.HoteRecoitMessage;
+import be.simulation.messages.InfosRoutage;
 import be.simulation.messages.Message;
-import be.simulation.messages.routage.InfosRoutage;
 import be.simulation.messages.utilitaires.MessageEnAttente;
 import be.simulation.routage.Route;
 import be.simulation.routage.TableDeRoutage;
@@ -63,14 +63,13 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * remplis.
 	 */
 	private static final int	DIFFERENCE_COUT_MAX									=
-																							400;
-	
+																							Integer.MAX_VALUE; //400;
 	/**
-	 * Le niveau d'occupation du buffer à partir duquel l'agent doit prévenir ses voisins.
-	 * (0.5 = 50%)
+	 * Le niveau d'occupation du buffer à partir duquel l'agent doit prévenir
+	 * ses voisins. (0.5 = 50%)
 	 */
-	private static final double OCCUPATION_BUFFER_ALARMANTE = 0.5;
-	
+	private static final double	OCCUPATION_BUFFER_ALARMANTE							=
+																							0.5;
 	/**
 	 * Nous indique quand on pourra envoyer à nouveau des infos de routage suite
 	 * à une occupation importante du buffer.
@@ -151,39 +150,38 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 * voisins.
 	 */
 	public void envoieInfosRoutage() {
-		// TODO ajouter à l'UML!
 		// on envoie notre distance vector
 		// a chaque voisin
 		for (Voisin voisin : tableDeRoutage.getVoisins()) {
 			if (this.equals(voisin.getAgent())) {
-				// pas la peine de s'envoyer les informations
+				// pas la peine d'envoyer les informations
+				// à soi même
 				continue;
 			}
-			
 			// On fait le poisonned reverse
-			Map<Agent,List<Route>> distanceVectorLocal = tableDeRoutage
-			.getDistanceVector();
-			for(Agent destination: distanceVectorLocal.keySet()){
-				for(Route route: distanceVectorLocal.get(destination)){
+			Map<Agent, List<Route>> distanceVectorLocal =
+					tableDeRoutage.getDistanceVector();
+			for (Agent destination : distanceVectorLocal.keySet()) {
+				for (Route route : distanceVectorLocal.get(destination)) {
 					// si la destination finale n'est pas le voisin
 					// auquel on envoie le DV
-					if(!route.getDestination().equals(voisin)){
+					if (!route.getDestination().equals(voisin)) {
 						// mais qu'on passe par le voisin pour
 						// y aller, alors on ment au voisin
-						if(route.getVoisin().getAgent().equals(voisin.getAgent())){
+						if (route.getVoisin().getAgent().equals(
+								voisin.getAgent())) {
 							route.setCout(Integer.MAX_VALUE);
 						}
 					}
 				}
 			}
-			
 			// on envoie notre distance vector aux voisins
 			InfosRoutage infosRoutage =
-					new InfosRoutage(this, voisin.getAgent(), distanceVectorLocal);
+					new InfosRoutage(this, voisin.getAgent(),
+							distanceVectorLocal);
 			AgentRecoitInfosRoutage evtAgentRecoitInfosRoutage =
 					new AgentRecoitInfosRoutage(infosRoutage,
-							voisin.getAgent(), 
-							getSimulation().getHorloge()
+							voisin.getAgent(), getSimulation().getHorloge()
 									+ voisin.getDistance());
 			getSimulation().getFutureEventList().planifierEvenement(
 					evtAgentRecoitInfosRoutage);
@@ -249,7 +247,6 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		} else {
 			// le message est à destination d'un hôte connecté à un autre agent
 			// on cherche où forwarder le message
-			// TODO màj UML
 			Voisin voisin =
 					tableDeRoutage.trouverMeilleurVoisin(message
 							.getDestination());
@@ -500,104 +497,107 @@ public class Agent extends AbstractEntiteSimulationReseau {
 			// on incrémente le nombre de messages perdus brutalement par tous
 			// les agents
 			TOTAL_MESSAGES_PERDUS_BRUTALEMENT++;
-		} else {
-			// est-ce qu'on peut encore traiter un message?
-			if (messagesEnCoursTraitement < getConfiguration()
-					.getConfigurationAgents()
-					.getNombreMaxTraitementsSimultanes()) {
-				// on peut traiter le message directement donc on génère
-				// l'évènement de fin de traitement
-				AgentFinTraitementMessage evtAgentFinTraitementMessage =
-						genererEvenementAgentFinTraitementMessage(message);
-				// on l'ajoute sur la FEL
-				getSimulation().getFutureEventList().planifierEvenement(
-						evtAgentFinTraitementMessage);
-				// on incrémente le compteur de messages en cours de traitement
-				messagesEnCoursTraitement++;
-				// on incrémente aussi l'info globale (pour tous les agents)
-				TOTAL_MESSAGES_EN_COURS_TRAITEMENT++;
-			} else {
-				boolean bufferInfini =
-						getConfiguration().getConfigurationAgents()
-								.getTailleMaxBuffer() == Long.MAX_VALUE;
-				// FIXME màj l'uml
-				if (getConfiguration().getConfigurationSimulationReseau()
-						.isDistanceVectorActive()
-						&& !bufferInfini) {
-					// si le buffer n'est pas infini, on vérifie son état
-					// pour déterminer s'il faut prévenir que
-					// l'agent est surchargé si nécessaire
-					double occupationActuelle =
-							(double) getBuffer().size()
-									/ (double) getConfiguration()
-											.getConfigurationAgents()
-											.getTailleMaxBuffer();
-					// si un changement important a eu lieu, on doit prévenir
-					// les voisins
-					// la méthode appelée supprime l'évènement d'envoi
-					// initialement prévu
-					// et en génère un autre immédiat
-					// on ne peut le faire que tous les X temps
-					// pour les explications, voir UML
-					boolean modificationNecessaire = false;
-					if (occupationActuelle >= OCCUPATION_BUFFER_ALARMANTE) {
-						if (getSimulation().getHorloge() > gardeEnvoiInfosRoutageBuffer) {
-							if (differenceCoutActuelle + MODIFICATION_COUT <= DIFFERENCE_COUT_MAX) {
-								modificationNecessaire = true;
-								differenceCoutActuelle =
-										differenceCoutActuelle
-												+ MODIFICATION_COUT;
-							}
-						}
+			
+			// on s'arrête là
+			return;
+		}
+		// est-ce qu'on peut encore traiter un message?
+		if (messagesEnCoursTraitement < getConfiguration()
+				.getConfigurationAgents().getNombreMaxTraitementsSimultanes()) {
+			// on peut traiter le message directement donc on génère
+			// l'évènement de fin de traitement
+			AgentFinTraitementMessage evtAgentFinTraitementMessage =
+					genererEvenementAgentFinTraitementMessage(message);
+			// on l'ajoute sur la FEL
+			getSimulation().getFutureEventList().planifierEvenement(
+					evtAgentFinTraitementMessage);
+			// on incrémente le compteur de messages en cours de traitement
+			messagesEnCoursTraitement++;
+			// on incrémente aussi l'info globale (pour tous les agents)
+			TOTAL_MESSAGES_EN_COURS_TRAITEMENT++;
+			
+			// on s'arrête là
+			return;
+		}
+		
+		
+		boolean bufferInfini =
+				getConfiguration().getConfigurationAgents()
+						.getTailleMaxBuffer() == Long.MAX_VALUE;
+		if (getConfiguration().getConfigurationSimulationReseau()
+				.isDistanceVectorActive()
+				&& !bufferInfini) {
+			// si le buffer n'est pas infini, on vérifie son état
+			// pour déterminer s'il faut prévenir que
+			// l'agent est surchargé si nécessaire
+			double occupationActuelle =
+					(double) getBuffer().size()
+							/ (double) getConfiguration()
+									.getConfigurationAgents()
+									.getTailleMaxBuffer();
+			// si un changement important a eu lieu, on doit prévenir
+			// les voisins
+			// la méthode appelée supprime l'évènement d'envoi
+			// initialement prévu
+			// et en génère un autre immédiat
+			// on ne peut le faire que tous les X temps
+			// pour les explications, voir UML
+			boolean modificationNecessaire = false;
+			if (occupationActuelle >= OCCUPATION_BUFFER_ALARMANTE) {
+				if (getSimulation().getHorloge() > gardeEnvoiInfosRoutageBuffer) {
+					if (differenceCoutActuelle + MODIFICATION_COUT <= DIFFERENCE_COUT_MAX) {
+						modificationNecessaire = true;
+						differenceCoutActuelle =
+								differenceCoutActuelle + MODIFICATION_COUT;
 					}
-					if (modificationNecessaire) {
-						gardeEnvoiInfosRoutageBuffer =
-								getSimulation().getHorloge()
-										+ deltaEntreEnvoisInfosRoutage;
-						for (Agent destination : getSimulation().getAgents()) {
-							List<Route> routes =
-									tableDeRoutage.getTableDeRoutageComplete()
-											.get(destination);
-							for (Route route : routes) {
-								// on va tout augmenter sauf la route locale
-								if (route.getVoisin().getAgent().equals(this)) {
-									continue;
-								}
-								int coutActuel = route.getCout();
-								if (coutActuel < TableDeRoutage.INFINI) {
-										route.setCout(coutActuel
-												+ MODIFICATION_COUT);
-								}
-							}
-						}
-						replanifierEvenementEnvoiInfosRoutage();
-					}
-				}
-				// on met à jour la statistique du taux d'utilisation du buffer
-				mettreAJourStatTauxUtilisationBuffer();
-				// on ne peut plus traiter de message pour l'instant donc on
-				// doit le mettre en attente on essaie
-				// donc de le placer dans le buffer si possible
-				boolean bufferRempli =
-						getBuffer().size() == getConfiguration()
-								.getConfigurationAgents().getTailleMaxBuffer();
-				// si le buffer n'est pas rempli ou est infini, pas de problème
-				if (!bufferRempli || bufferInfini) {
-					// le buffer n'est pas plein alors on peut y placer le
-					// message.
-					// on enregistre le temps de simulation auquel on l'y a
-					// placé
-					getBuffer().add(
-							new MessageEnAttente(message, getSimulation()
-									.getHorloge()));
-				} else {
-					// le buffer est plein donc le message est perdu
-					messagesPerdusBufferPlein++;
-					// on incrémente le nombre global de messages perdus à cause
-					// d'un buffer plein (pour tous les agents)
-					TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN++;
 				}
 			}
+			if (modificationNecessaire) {
+				gardeEnvoiInfosRoutageBuffer =
+						getSimulation().getHorloge()
+								+ deltaEntreEnvoisInfosRoutage;
+				for (Agent destination : getSimulation().getAgents()) {
+					List<Route> routes =
+							tableDeRoutage.getTableDeRoutageComplete().get(
+									destination);
+					for (Route route : routes) {
+						// on va tout augmenter sauf la route locale
+						if (route.getVoisin().getAgent().equals(this)) {
+							continue;
+						}
+						int coutActuel = route.getCout();
+						if (coutActuel < TableDeRoutage.INFINI) {
+							route.setCout(coutActuel + MODIFICATION_COUT);
+						}
+					}
+				}
+				replanifierEvenementEnvoiInfosRoutage();
+			}
+		}
+		// on met à jour la statistique du taux d'utilisation du buffer
+		mettreAJourStatTauxUtilisationBuffer();
+		// on ne peut plus traiter de message pour l'instant donc on
+		// doit le mettre en attente on essaie
+		// donc de le placer dans le buffer si possible
+		boolean bufferRempli =
+				getBuffer().size() == getConfiguration()
+						.getConfigurationAgents().getTailleMaxBuffer();
+		// si le buffer n'est pas rempli ou est infini, pas de problème
+		if (!bufferRempli || bufferInfini) {
+			// le buffer n'est pas plein alors on peut y placer le
+			// message.
+			// on enregistre le temps de simulation auquel on l'y a
+			// placé
+			getBuffer()
+					.add(
+							new MessageEnAttente(message, getSimulation()
+									.getHorloge()));
+		} else {
+			// le buffer est plein donc le message est perdu
+			messagesPerdusBufferPlein++;
+			// on incrémente le nombre global de messages perdus à cause
+			// d'un buffer plein (pour tous les agents)
+			TOTAL_MESSAGES_PERDUS_BUFFER_PLEIN++;
 		}
 	}
 

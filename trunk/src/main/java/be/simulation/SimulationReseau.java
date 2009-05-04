@@ -154,7 +154,7 @@ public class SimulationReseau extends AbstractSimulation {
 				+";"+ Hote.MESSAGE_TEMPS_MAX.getTempsTrajet());
 				
 				
-				
+//				
 //		LOGGER.info("Temps actuel de simulation: "
 //				+ tempsActuelSimulation
 //				+ "/"
@@ -286,22 +286,13 @@ public class SimulationReseau extends AbstractSimulation {
 				// on calcule affiche les statistiques actuelles
 				calculerEtAfficherResultats();
 			}
-			// TODO décider si on doit prendre la fin de simulation en
-			// premier pour un temps t ou tout le reste d'abord!!
-			// on vérifie si la simulation
-			// ne doit pas se terminer en premier lieu
-			Evenement evenementImminent =
-					getFutureEventList().getEvenementImminent(
-							FinDeSimulation.class);
-			// TODO v2.0 déterminer lequel des deux devrait avoir priorité (si
-			// utile)
-			// on traiter d'abord l'envoi et la réception d'informations de
+
+			// on traite d'abord l'envoi et la réception d'informations de
 			// routage
-			if (evenementImminent == null) {
-				evenementImminent =
+			Evenement evenementImminent =
 						getFutureEventList().getEvenementImminent(
 								AgentRecoitInfosRoutage.class);
-			}
+			
 			if (evenementImminent == null) {
 				evenementImminent =
 						getFutureEventList().getEvenementImminent(
