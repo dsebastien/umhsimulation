@@ -65,6 +65,8 @@ public class Main {
 		// Lancement de la simulation
 		simulation.demarrer();
 
-		LOGGER.info("Fin de la simulation");		
+		LOGGER.info("Fin de la simulation");
+		
+		//FIXME ajouter à l'uml les endroits où on met à jour les infos globales
 	}
 }
