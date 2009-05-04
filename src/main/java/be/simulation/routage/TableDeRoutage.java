@@ -25,10 +25,6 @@ public class TableDeRoutage {
 	 */
 	private final Agent						agent;
 	/**
-	 * Est-ce que le distance vector est activé?
-	 */
-	private final boolean					distanceVectorActive;
-	/**
 	 * Le distance vector maintenu par cette table de routage
 	 */
 	private final Map<Agent, List<Route>>	distanceVectorComplet	=
@@ -58,12 +54,11 @@ public class TableDeRoutage {
 	 * @param distanceVectorActive
 	 *        est-ce que le distance vector est activé?
 	 */
-	public TableDeRoutage(final Agent agent, final boolean distanceVectorActive) {
+	public TableDeRoutage(final Agent agent) {
 		if (agent == null) {
 			throw new IllegalArgumentException("L'agent ne peut pas être null!");
 		}
 		this.agent = agent;
-		this.distanceVectorActive = distanceVectorActive;
 	}
 
 
@@ -286,7 +281,7 @@ public class TableDeRoutage {
 			}
 		}
 		// FIXME commenter ou supprimer:
-		// LOGGER.info("après modifs ");
+		// LOGGER.info("Après mise à jour: ");
 		// afficher(this.agent, distanceVectorComplet, true);
 		return distanceVectorLocalModifie;
 	}
@@ -348,9 +343,12 @@ public class TableDeRoutage {
 	 */
 	public Voisin trouverMeilleurVoisin(final Hote destinataire) {
 		Voisin meilleurVoisin = null;
+		
+		boolean dvActive = agent.getConfiguration().getConfigurationSimulationReseau().isDistanceVectorActive();
+		
 		// Si le DV n'est pas activé, on trouve simplement la route
 		// puisqu'on l'a déjà (elle est fixée)
-		if (!distanceVectorActive) {
+		if (!dvActive) {
 			// On cherche parmi les routes connues celle définie pour aller vers
 			// le
 			// destinataire voulu

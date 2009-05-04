@@ -162,7 +162,7 @@ public class SimulationReseau extends AbstractSimulation {
 //						.getDuree());
 //		LOGGER.info("Agents - Messages en cours de traitement: "
 //				+ Agent.TOTAL_MESSAGES_EN_COURS_TRAITEMENT);
-//		LOGGER.info("Agents - Messages reçus: " + Agent.TOTAL_MESSAGES_RECUS);
+//		LOGGER.info("Agents - Messages recus: " + Agent.TOTAL_MESSAGES_RECUS);
 //		LOGGER.info("Agents - Messages perdus: " + totalMessagesPerdus + " ("
 //				+ Utilitaires.pourcentage(pourcentageMessagesPerdus) + ")");
 //		LOGGER.info("Agents - Messages perdus brutalement: "
@@ -175,7 +175,7 @@ public class SimulationReseau extends AbstractSimulation {
 //				+ Utilitaires
 //						.pourcentage(pourcentageMessagesPerdusBuffersPleins)
 //				+ ")");
-//		LOGGER.info("Agents - Buffers utilisés en moyenne à "
+//		LOGGER.info("Agents - Buffers utilises en moyenne à "
 //				+ Utilitaires.pourcentage(utilisationMoyenneBuffersAgents));
 //		for (Agent agent : agents) {
 //			LOGGER.info("Agent "
@@ -219,18 +219,18 @@ public class SimulationReseau extends AbstractSimulation {
 //					+ Utilitaires.pourcentage(pourcentagePerdusBrutalement)
 //					+ ")");
 //		}
-//		LOGGER.info("Hotes - Messages originaux envoyés: "
+//		LOGGER.info("Hotes - Messages originaux envoyes: "
 //				+ Hote.TOTAL_MESSAGES_ENVOYES);
-//		LOGGER.info("Hotes - Messages réexpédiés: "
+//		LOGGER.info("Hotes - Messages reexpédies: "
 //				+ Hote.TOTAL_MESSAGES_REEXPEDIES + " ("
 //				+ Utilitaires.pourcentage(pourcentageMessagesReexpedies) + ")");
-//		LOGGER.info("Hotes - Accuses de réception reçus: "
+//		LOGGER.info("Hotes - Accuses de reception recus: "
 //				+ Hote.TOTAL_ACCUSES_RECUS);
 //		LOGGER.info("Hotes - Timeouts trop courts: "
 //				+ Hote.TOTAL_TIMEOUTS_TROP_COURTS);
 //		LOGGER.info("Hotes - Messages en cours de traitement: "
 //				+ Hote.TOTAL_MESSAGES_EN_COURS_TRAITEMENT);
-//		LOGGER.info("Hotes - Message le plus réémis: "
+//		LOGGER.info("Hotes - Message le plus reemis: "
 //				+ (Hote.MESSAGE_LE_PLUS_REEMIS.getNumeroEmission() - 1)
 //				+ " fois");
 //		LOGGER
@@ -240,7 +240,7 @@ public class SimulationReseau extends AbstractSimulation {
 //				+ " messages ont passé en absolu "
 //				+ tempsMoyenDansBuffersVoyageAbsolu
 //				+ " unités de temps dans des buffers");
-//		LOGGER.info("Les messages acquittés ont passé en moyenne "
+//		LOGGER.info("Les messages acquittes ont passé en moyenne "
 //				+ Utilitaires.pourcentage(tempsMoyenDansBuffersVoyageComplet)
 //				+ " de leur temps de voyage complet dans des buffers");
 //		LOGGER
@@ -258,7 +258,7 @@ public class SimulationReseau extends AbstractSimulation {
 	 */
 	@Override
 	public void demarrer() {
-		LOGGER.info("Démarrage de la simulation ("
+		LOGGER.info("Demarrage de la simulation ("
 				+ getConfiguration().getConfigurationSimulationReseau()
 						.getNom() + ")");
 		LOGGER
@@ -384,7 +384,6 @@ public class SimulationReseau extends AbstractSimulation {
 				calculerEtAfficherResultats();
 				// on vide la FEL, ce qui provoque la sortie de cette boucle
 				getFutureEventList().reset();
-				LOGGER.info("Fin de la simulation");
 			}
 		}
 	}

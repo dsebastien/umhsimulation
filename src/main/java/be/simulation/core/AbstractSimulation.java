@@ -46,9 +46,6 @@ public abstract class AbstractSimulation extends AbstractEntiteSimulation {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		LOGGER.info("Initialisation de la simulation...");
-		reset();
-		LOGGER.info("Simulation initialisée");
 	}
 
 

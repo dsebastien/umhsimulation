@@ -56,7 +56,7 @@ public abstract class AbstractEntiteSimulation implements InitializingBean,
 	 * 
 	 * @return la configuration de la simulation
 	 */
-	protected Configuration getConfiguration() {
+	public Configuration getConfiguration() {
 		return configuration;
 	}
 

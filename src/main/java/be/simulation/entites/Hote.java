@@ -145,16 +145,16 @@ public class Hote extends AbstractEntiteSimulationReseau {
 		}
 		Hote hoteDestination = null;
 		if (messagePourHoteAutreAgent) {
-			LOGGER.trace("Message de l'hôte " + getNumero()
-					+ " pour un autre agent (génération au temps "
+			LOGGER.trace("Message de l'hote " + getNumero()
+					+ " pour un autre agent (generation au temps "
 					+ getSimulation().getHorloge() + ")");
 			// choix aléatoire, on ajoute l'agent de cet hôte comme exception
 			hoteDestination =
 					getSimulation().getAgentAleatoire(this.getAgent())
 							.getHoteAleatoire();
 		} else {
-			LOGGER.trace("Message de l'hôte " + getNumero()
-					+ " pour le même agent (génération au temps "
+			LOGGER.trace("Message de l'hote " + getNumero()
+					+ " pour le meme agent (generation au temps "
 					+ getSimulation().getHorloge() + ")");
 			// choix aléatoire, on ajoute cet hôte comme exception
 			hoteDestination = this.getAgent().getHoteAleatoire(this);
@@ -564,7 +564,7 @@ public class Hote extends AbstractEntiteSimulationReseau {
 	 */
 	@Override
 	public void reset() {
-		LOGGER.trace("Réinitialisation de l'hôte " + getNumero());
+		LOGGER.trace("Reinitialisation de l'hote " + getNumero());
 		super.reset();
 		this.messagesEnvoyes = 0;
 		this.messagesReexpedies = 0;

@@ -52,15 +52,21 @@ public class Main {
 		SimulationReseau simulation =
 				(SimulationReseau) springApplicationContext
 						.getBean("simulationReseau");
+		
+		LOGGER.info("Initialisation de la simulation...");
+		// important (initialisation des agents, 
+		// hôtes, tables de routage ...
+		simulation.reset();
+		LOGGER.info("Simulation initialisee");
+		
 		// Affichage de la configuration
 		configuration.afficher();
 		
 		// Lancement de la simulation
 		simulation.demarrer();
 
-		//TODO virer les caractères spéciaux des outputs (LOGGER. ...)
-		//pour éviter les problèmes d'affichage sous windows
-		//console DOS -> ne connaît pas l'UTF-8 :(
+		LOGGER.info("Fin de la simulation");
+		
 		// TODO à 80% et 20%, mettre à jour
 		// variables: differenceCoutMax
 		// variable differenceCoutActuelle
