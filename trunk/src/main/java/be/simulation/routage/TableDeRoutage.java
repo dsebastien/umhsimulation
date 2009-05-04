@@ -212,7 +212,6 @@ public class TableDeRoutage {
 	 * @return vrai si la table de routage locale a été modifiée
 	 */
 	public boolean mettreAJour(final InfosRoutage infosRoutage) {
-		//FIXME ajouter à l'uml
 		// on cherche quel voisin a envoyé les infos
 		Voisin voisinAyantEnvoyeInfos = null;
 		for (Voisin voisin : voisins) {
@@ -254,7 +253,7 @@ public class TableDeRoutage {
 			}
 			
 			
-			//FIXME décider si ok
+			//FIXME décider si ok et si oui ajouter à l'UML!
 			// Si la destination finale est un voisin, on
 			// ne modifie pas nos coûts car ça n'a pas d'intérêt
 			// on ferait juste tourner le paquet dans le réseau inutilement
@@ -288,9 +287,6 @@ public class TableDeRoutage {
 				}
 				boolean coutModifie = routeLocale.getCout() != nouveauCout;
 				if (coutModifie) {
-					if (nouveauCout == INFINI) {
-						LOGGER.info("");
-					}
 					routeLocale.setCout(nouveauCout);
 					// est-ce que la route devient plus intéressante que notre
 					// meilleure route actuelle? (est-ce que notre DV a changé?)
