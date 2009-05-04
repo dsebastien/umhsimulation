@@ -64,6 +64,14 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 */
 	private static final int	DIFFERENCE_COUT_MAX									=
 																							400;
+	
+	/**
+	 * Le niveau d'occupation du buffer à partir duquel l'agent doit prévenir ses voisins.
+	 * (0.5 = 50%)
+	 */
+	// TODO ajouter à l'UML
+	private static final double OCCUPATION_BUFFER_ALARMANTE = 0.5;
+	
 	/**
 	 * Nous indique quand on pourra envoyer à nouveau des infos de routage suite
 	 * à une occupation importante du buffer.
@@ -453,7 +461,6 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	 *        les informations de routage reçues
 	 */
 	public void recoitInfosRoutage(final InfosRoutage infosRoutage) {
-		// TODO v2.0 ajouter à l'UML (détailler la méthode replanifier...)
 		// ce message est prioritaire et ne se préoccupe pas de
 		// l'occupation de l'agent
 		// on essaie de mettre à jour la table de routage avec les infos reçues
@@ -534,7 +541,7 @@ public class Agent extends AbstractEntiteSimulationReseau {
 					// on ne peut le faire que tous les X temps
 					// pour les explications, voir UML
 					boolean modificationNecessaire = false;
-					if (occupationActuelle >= 0.3) {
+					if (occupationActuelle >= OCCUPATION_BUFFER_ALARMANTE) {
 						if (getSimulation().getHorloge() > gardeEnvoiInfosRoutageBuffer) {
 							if (differenceCoutActuelle + MODIFICATION_COUT <= DIFFERENCE_COUT_MAX) {
 								modificationNecessaire = true;
