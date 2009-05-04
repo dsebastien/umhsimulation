@@ -3,7 +3,7 @@ img_extIsRegExp=false
 img_extensions=.eps .jpg .jpeg .png .pdf .ps .fig .gif .dvi
 kileprversion=2
 kileversion=2.0
-lastDocument=tex/configuration.sty
+lastDocument=tex/rapport.tex
 masterDocument=
 name=rapport
 pkg_extIsRegExp=false
@@ -26,46 +26,46 @@ order=-1
 
 [item:tex/annexes.tex]
 archive=true
-column=4
+column=40
 encoding=
 highlight=LaTeX
-line=3
+line=11
 open=false
-order=-1
+order=2
 
 [item:tex/commandes.tex]
 archive=true
-column=14
+column=28
 encoding=UTF-8
 highlight=LaTeX
-line=1
+line=15
 open=false
 order=-1
 
 [item:tex/configuration.sty]
 archive=true
-column=99
+column=0
 encoding=UTF-8
 highlight=LaTeX
-line=45
-open=true
+line=10
+open=false
 order=1
 
 [item:tex/page-de-garde.tex]
 archive=true
-column=0
+column=41
 encoding=UTF-8
 highlight=LaTeX
-line=25
+line=40
 open=false
 order=-1
 
 [item:tex/rapport.tex]
 archive=true
-column=105
+column=0
 encoding=UTF-8
 highlight=LaTeX
-line=75
+line=18
 open=true
 order=0
 

@@ -14,6 +14,13 @@
 
 \section{Evenements}
 
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.60]{evenements}
+  \caption{Evènements}
+  \label{fig:evenements}
+\end{figure}
+
 \subsection{Hotes}
 \subsubsection{Envoi d'un message original}
 \subsubsection{Réception d'un message}
@@ -21,7 +28,7 @@
 \subsubsection{Timeout}
 
 \subsection{Agents}
-\subsubsection{Réception d'un message}
+\subsubsection{Réception d'un message}\label{evt-agent-reception-message}
 Dans le diagramme UML, il y a deux points que nous n'avons pas expliqué. Tout d'abord: \og Est-ce qu'on peut envoyer les nouvelles informations de routage maintenant? \fg. En fait nous avons décidé d'éviter trop d'envois successifs inutiles d'informations de routage, afin de ne pas surcharger le système. Pour ce faire, quand on doit envoyer les informations de routage (à cause du niveau d'occupation du buffer), on vérifie si ça fait au moins $x$ temps de simulation qu'on a envoyé un message. Si oui, alors on peut envoyer le message. De cette manière, si pour un temps $t$ donné, l'agent reçoit $50$ messages, que pour le premier il dépasse le seuil d'alerte d'occupation du buffer et envoie ses informations de routage, puisqu'il sera toujours au delà du seuil d'alerte pour les $49$ autres messages, on évite ainsi de réenvoyer les informations inutilement.
 
 Le second point: \og Augmentation du coût de nos routes à destination des autres agents (on augmente d'une valeur fixe à chaque fois) \fg est ce que le distance vector prenne en compte le niveau d'occupation des agents. Quand un agent donné est surchargé, il augmente le coût de ses routes à destination d'autres agents et prévient ses voisins. De cette manière quand les voisins reçoivent les informations, ils mettent à jour leur propre DV et choisissent peut être d'autres routes pour faire suivre les messages (sauf si l'agent est la destination finale bien sûr!). Si les autres agents deviennent surchargés, leurs coûts augmenteront également. Ainsi au final, le Dv prend en compte l'occupation des buffers des agents, ce qui permet de mieux répartir la charge sur les différents agents. Dans les résultats des simulations, nous avons observé une bien meilleure répartition.
@@ -72,22 +79,23 @@ Pour le distance vector on a en plus:
 \section{Décisions}
 
 \subsection{Gestion des évènements}
-Nous avons choisi d'utiliser une seule FEL pour la simulation. On y place tous les évènements. De plus, pour un temps $t$ de simulation donné, nous avons décidé de traiter certains évènements prioritairement.
+Nous avons choisi d'utiliser une seule FEL pour la simulation. On y place tous les évènements. De plus, pour un temps $t$ de simulation donné, nous avons décidé de traiter certains évènements prioritairement:
 
-\begin{itemize}
+\begin{enumerate}
  \item En premier lieu on traite les évènements de réception d'informations de routage
- \item Ensuite on traite les évènements de réception d'informations de routage
- \item Ensuite on traite les évènements de réception de messages (accusés et messages normaux)
- \item Ensuite on traite les évènements de timeout (un message pour lequel on a pas encore reçu d'accusé)
-\end{itemize}
+ \item Puis les évènements de réception d'informations de routage
+ \item Puis les évènements de réception de messages (accusés et messages normaux)
+ \item Puis les évènements de timeout (un message pour lequel on a pas encore reçu d'accusé)
+\end{enumerate}
 
-TODO ajouter explication pour la fin de simulation quand on aura pris une décision!
-
+Une fois tous ces évènements traités pour un temps $t$, on traite les autres selon l'ordre \textit{FIFO}.
 
 \subsection{Distance vector}
-Nous avons choisi de modifier les coûts en fonction du taux d'occupation du buffer de l'agent. Pour ce faire
+Nous avons choisi de modifier les coûts en fonction du taux d'occupation du buffer de l'agent. Ceci est expliqué à la section \refp{evt-agent-reception-message}\ concernant l'évènement de réception d'un message par un agent.
 
 TODO continuer
+
+
 
 
 %\pagebreak
