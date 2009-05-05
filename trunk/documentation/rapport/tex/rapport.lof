@@ -1,13 +1,12 @@
 \select@language {frenchb}
 \select@language {french}
-\contentsline {figure}{\numberline {1}{\ignorespaces Ev\IeC {\`e}nements}}{5}{figure.1}
-\contentsline {figure}{\numberline {2}{\ignorespaces Envoi d'un message original par un h\IeC {\^o}te}}{6}{figure.2}
-\contentsline {figure}{\numberline {3}{\ignorespaces R\IeC {\'e}ception d'un message par un h\IeC {\^o}te}}{7}{figure.3}
-\contentsline {figure}{\numberline {4}{\ignorespaces Fin de traitement d'un message par un h\IeC {\^o}te}}{10}{figure.4}
-\contentsline {figure}{\numberline {5}{\ignorespaces Timeout de r\IeC {\'e}ception d'un accus\IeC {\'e}}}{11}{figure.5}
-\contentsline {figure}{\numberline {6}{\ignorespaces R\IeC {\'e}ception d'un message par un agent}}{12}{figure.6}
-\contentsline {figure}{\numberline {7}{\ignorespaces Fin de traitement d'un message par un agent}}{13}{figure.7}
-\contentsline {figure}{\numberline {8}{\ignorespaces Envoi d'informations de routage par un agent}}{14}{figure.8}
-\contentsline {figure}{\numberline {9}{\ignorespaces R\IeC {\'e}ception d'informations de routage par un agent}}{15}{figure.9}
-\contentsline {figure}{\numberline {10}{\ignorespaces Fin de la simulation}}{16}{figure.10}
-\contentsline {figure}{\numberline {11}{\ignorespaces Options disponibles}}{17}{figure.11}
+\contentsline {figure}{\numberline {1}{\ignorespaces Ev\IeC {\`e}nements}}{6}{figure.1}
+\contentsline {figure}{\numberline {2}{\ignorespaces Envoi d'un message original par un h\IeC {\^o}te}}{7}{figure.2}
+\contentsline {figure}{\numberline {3}{\ignorespaces R\IeC {\'e}ception d'un message par un h\IeC {\^o}te}}{11}{figure.3}
+\contentsline {figure}{\numberline {4}{\ignorespaces Timeout de r\IeC {\'e}ception d'un accus\IeC {\'e}}}{12}{figure.4}
+\contentsline {figure}{\numberline {5}{\ignorespaces Envoi d'informations de routage par un agent}}{14}{figure.5}
+\contentsline {figure}{\numberline {6}{\ignorespaces R\IeC {\'e}ception d'informations de routage par un agent}}{15}{figure.6}
+\contentsline {figure}{\numberline {7}{\ignorespaces Fin de la simulation}}{16}{figure.7}
+\contentsline {figure}{\numberline {8}{\ignorespaces D\IeC {\'e}roulement de la simulation}}{17}{figure.8}
+\contentsline {figure}{\numberline {9}{\ignorespaces Calcul et affichage des r\IeC {\'e}sultats}}{18}{figure.9}
+\contentsline {figure}{\numberline {10}{\ignorespaces Options disponibles}}{19}{figure.10}
