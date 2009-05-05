@@ -9,4 +9,3 @@ ps2pdf rapport.ps
 wait
 echo "Rapport généré"
 okular rapport.pdf
-exit

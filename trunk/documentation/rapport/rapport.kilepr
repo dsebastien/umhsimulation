@@ -26,12 +26,12 @@ order=-1
 
 [item:tex/annexes.tex]
 archive=true
-column=74
+column=52
 encoding=
 highlight=LaTeX
-line=3
+line=30
 open=true
-order=0
+order=2
 
 [item:tex/commandes.tex]
 archive=true
@@ -44,30 +44,30 @@ order=-1
 
 [item:tex/configuration.sty]
 archive=true
-column=70
+column=25
 encoding=UTF-8
 highlight=LaTeX
-line=13
+line=96
 open=false
 order=1
 
 [item:tex/page-de-garde.tex]
 archive=true
-column=27
+column=0
 encoding=UTF-8
 highlight=LaTeX
-line=39
+line=49
 open=false
 order=-1
 
 [item:tex/rapport.tex]
 archive=true
-column=113
+column=11
 encoding=UTF-8
 highlight=LaTeX
-line=17
+line=9
 open=true
-order=1
+order=0
 
 [item:tex/temp.tex]
 archive=true
@@ -75,5 +75,5 @@ column=0
 encoding=
 highlight=LaTeX
 line=0
-open=false
-order=-1
+open=true
+order=1
