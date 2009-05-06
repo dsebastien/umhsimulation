@@ -19,7 +19,7 @@
 \section{Décisions}
 
 \subsection{Gestion des évènements}
-Nous avons choisi d'utiliser une seule FEL pour la simulation. On y place tous les évènements. De plus, pour un temps $t$ de simulation donné, nous avons décidé de traiter certains évènements prioritairement:
+Nous avons choisi d'utiliser une seule FEL pour la simulation; on y place tous les évènements. De plus, pour un temps $t$ de simulation donné, nous avons décidé de traiter certains évènements prioritairement:
 
 \begin{enumerate}
  \item En premier lieu on traite les évènements de réception d'informations de routage
@@ -67,12 +67,12 @@ L'envoi d'un message original par un hôte est illustré par la figure \refp{fig
   \label{fig:hote-envoie-message-original}
 \end{figure}
 
-Comme le diagramme le montre, nous avons choisi de ne générer qu'un évènement d'envoi à la fois. Nous générons et plaçons le premier évènement sur la FEL. Quand celui-ci devient l'évènement imminent, l'hôte crée et envoie son message et génère l'évènement suivant puis le place sur la FEL.
+Comme le diagramme le montre, nous avons choisi de ne générer qu'un évènement d'envoi à la fois. Nous planifions et plaçons le premier évènement de chaque hôte sur la FEL pendant l'initialisation de la simulation. Quand l'évènement d'envoi devient l'évènement imminent, l'hôte crée puis envoie son message et génère l'évènement d'envoi suivant qu'il place ensuite sur la FEL.
 
 
 \clearpage
 \subsubsection*{Génération des temps d'envoi}
-Une variable aléatoire nous permet de générer pour chaque hôte le temps du prochain envoi (entre le temps actuel de simulation + 1 et le temps actuel de simulation + le temps inter-envois). Pour ce faire, chaque hôte dispose de sa propre instance:
+Une variable aléatoire nous permet de générer pour chaque hôte le temps du prochain envoi (entre le temps actuel de simulation + 1 et le temps actuel de simulation + le temps inter-envois configuré). Pour ce faire, chaque hôte dispose de sa propre instance:
 
 \begin{lstlisting}[caption=Génération des temps d'envoi]
 private final Random generateurTempsEnvoi = new Random();
@@ -127,7 +127,7 @@ if (random <= randomDigitsAutreAgent) {
 
 \clearpage
 
-D'un autre côté, des méthodes se servant de variables aléatoires permettent de choisir un agent ou un hôte aléatoirement. De cette façon, un hôte peut déterminer de manière aléatoire qui devra reçevoir son message:
+D'autres fonctions se servant de variables aléatoires permettent de choisir un agent ou un hôte aléatoirement. De cette façon, un hôte peut déterminer de manière aléatoire qui devra reçevoir son message:
 
 \begin{lstlisting}[caption=Hote - Choix de la destination]
 if (messagePourHoteAutreAgent) {
@@ -143,7 +143,7 @@ else {
 
 \clearpage
 
-Dans le premier cas, si le message doit être à destination d'un hôte connecté à un autre agent, l'hôte demande un agent aléatoire avec comme exception son propre agent (puisque ça doit être n'importe quel agent autre que le sien). Dans le second, l'hôte demande simplement à son agent de choisir un de ses hôtes aléatoirement (à l'exception de l'hôte actuel). Par exemple, voici la méthode permettant d'obtenir un agent aléatoire:
+Dans le premier cas, si le message doit être à destination d'un hôte connecté à un autre agent, l'hôte demande un agent aléatoire avec comme exception son propre agent (puisque ça doit être n'importe quel agent autre que le sien). Dans le second, l'hôte demande simplement à son agent de choisir l'un de ses hôtes aléatoirement (à l'exception de l'hôte actuel). Par exemple, voici la méthode permettant d'obtenir un agent aléatoire:
 
 \begin{lstlisting}[caption=Utilisation des variables aléatoires pour sélectionner un agent]
 /**
@@ -257,7 +257,7 @@ Les actions prises lors d'un timeout sont illustrées par la figure \refp{fig:ho
 \subsubsection{Réception d'un message}\label{evt-agent-reception-message}
 Le diagramme UML correspondant étant trop grand, nous ne l'avons pas inclus dans le rapport. Il est disponible dans le dossier \textbf{UML} qui accompagne le rapport (le fichier: \textbf{Evenement - AgentRecoitMessage.png}).
 
-Dans le diagramme UML, il y a deux points que nous n'avons pas expliqués (en jaune):
+Sur le diagramme UML, il y a deux points que nous n'avons pas expliqués (en jaune):
 
 \begin{itemize}
  \item Le premier point: \og Est-ce qu'on peut envoyer les nouvelles informations de routage maintenant? \fg. Nous avons décidé d'éviter trop d'envois successifs inutiles d'informations de routage, afin de ne pas surcharger le système. Pour ce faire, quand un agent doit envoyer les informations de routage (à cause du niveau d'occupation du buffer), il vérifie si ça fait au moins $x$ temps de simulation qu'il a envoyé un message de ce type. Si oui, alors il peut envoyer le message. De cette manière, si pour un temps $t$ donné, l'agent reçoit $50$ messages, que pour le premier il dépasse le seuil d'alerte d'occupation du buffer et envoie ses informations de routage, puisqu'il sera toujours au delà du seuil d'alerte pour les $49$ autres messages, il ne renverra plus de message avant un certain délai.
@@ -302,7 +302,7 @@ La réception d'informations de routage (réception du DV d'un voisin par un age
   \label{fig:agent-recoit-infos-routage}
 \end{figure}
 
-Le détail des opérations effectuée lors de la mise à jour (vérifications, etc) n'est pas dans le rapport non plus car le diagramme est trop grand. Le fichier est disponible dans le dossier \textbf{UML} qui accompagne le rapport (le fichier: \textbf{Mise à jour des informations de routage.png}).
+Le détail des opérations effectuée lors de la mise à jour (vérifications, etc) n'est pas inclus dans le rapport non plus car le diagramme est trop grand. Le fichier est disponible dans le dossier \textbf{UML} qui accompagne le rapport (le fichier: \textbf{Mise à jour des informations de routage.png}).
 
 
 
@@ -386,7 +386,7 @@ Pour le distance vector nous avons en plus:
  \item Délai agent <-> hôte
  \item Distance vector activé (oui/non)
  \item Durée de la période d'initialisation
- \item Périodicité d'affichage des statistiques (e.g., tous les 1\% de simulation)
+ \item Périodicité d'affichage des statistiques (e.g., tous les 1\% de temps de simulation)
 \end{itemize}
 
 
@@ -414,7 +414,7 @@ La figure \ref{fig:deroulement-simulation} illustre le déroulement de la simula
 
 
 \section{Calcul et affichage des résultats}
-La figure \refp{fig:calcul-affichage-resultats} illustre les différentes statistiques que nous calculons et affichons pendant la simulation.
+La figure \refp{fig:calcul-affichage-resultats} illustre les différentes statistiques que nous calculons et affichons au cours de la simulation.
 
 \begin{figure}[h!t]
   \centering
