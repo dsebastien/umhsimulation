@@ -23,19 +23,31 @@
 \contentsline {subsection}{\numberline {4.3}Simulation}{16}{subsection.4.3}
 \contentsline {section}{\numberline {5}D\IeC {\'e}roulement de la simulation}{16}{section.5}
 \contentsline {section}{\numberline {6}Calcul et affichage des r\IeC {\'e}sultats}{16}{section.6}
-\contentsline {section}{\numberline {7}R\IeC {\'e}sultats}{17}{section.7}
-\contentsline {subsection}{\numberline {7.1}Situation probl\IeC {\'e}matique 1}{17}{subsection.7.1}
-\contentsline {subsubsection}{\numberline {7.1.1}Param\IeC {\`e}tres probl\IeC {\'e}matiques}{17}{subsubsection.7.1.1}
-\contentsline {subsubsection}{\numberline {7.1.2}Explications}{17}{subsubsection.7.1.2}
-\contentsline {subsubsection}{\numberline {7.1.3}R\IeC {\'e}solution du probl\IeC {\`e}me}{17}{subsubsection.7.1.3}
-\contentsline {subsection}{\numberline {7.2}Situation probl\IeC {\'e}matique 2}{17}{subsection.7.2}
-\contentsline {subsubsection}{\numberline {7.2.1}Param\IeC {\`e}tres probl\IeC {\'e}matiques}{17}{subsubsection.7.2.1}
-\contentsline {subsubsection}{\numberline {7.2.2}Explications}{17}{subsubsection.7.2.2}
-\contentsline {subsubsection}{\numberline {7.2.3}R\IeC {\'e}solution du probl\IeC {\`e}me}{17}{subsubsection.7.2.3}
-\contentsline {subsection}{\numberline {7.3}Am\IeC {\'e}lioration apport\IeC {\'e}e par le DV}{17}{subsection.7.3}
-\contentsline {section}{\numberline {A}Le programme et son utilisation}{20}{appendix.A}
-\contentsline {subsection}{\numberline {A.1}Configuration et aide}{20}{subsection.A.1}
-\contentsline {subsection}{\numberline {A.2}Organisation du code source}{20}{subsection.A.2}
-\contentsline {subsection}{\numberline {A.3}Ex\IeC {\'e}cution de la simulation}{21}{subsection.A.3}
-\contentsline {subsection}{\numberline {A.4}Compilation}{21}{subsection.A.4}
-\contentsline {subsection}{\numberline {A.5}UML}{21}{subsection.A.5}
+\contentsline {section}{\numberline {7}Situation probl\IeC {\'e}matique 1}{17}{section.7}
+\contentsline {subsection}{\numberline {7.1}Param\IeC {\`e}tres probl\IeC {\'e}matiques}{17}{subsection.7.1}
+\contentsline {subsection}{\numberline {7.2}Explications}{17}{subsection.7.2}
+\contentsline {subsection}{\numberline {7.3}R\IeC {\'e}solution du probl\IeC {\`e}me}{17}{subsection.7.3}
+\contentsline {section}{\numberline {8}Situation probl\IeC {\'e}matique 2}{17}{section.8}
+\contentsline {subsection}{\numberline {8.1}Param\IeC {\`e}tres probl\IeC {\'e}matiques}{17}{subsection.8.1}
+\contentsline {subsection}{\numberline {8.2}Explications}{17}{subsection.8.2}
+\contentsline {subsection}{\numberline {8.3}R\IeC {\'e}solution du probl\IeC {\`e}me}{17}{subsection.8.3}
+\contentsline {section}{\numberline {9}Taille des buffers minimale pour \IeC {\'e}viter trop de pertes}{17}{section.9}
+\contentsline {subsection}{\numberline {9.1}Sans pertes brutales}{17}{subsection.9.1}
+\contentsline {subsubsection}{\numberline {9.1.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{17}{subsubsection.9.1.1}
+\contentsline {subsubsection}{\numberline {9.1.2}R\IeC {\'e}sultats et explications}{17}{subsubsection.9.1.2}
+\contentsline {subsection}{\numberline {9.2}Avec pertes brutales}{17}{subsection.9.2}
+\contentsline {subsubsection}{\numberline {9.2.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{17}{subsubsection.9.2.1}
+\contentsline {subsubsection}{\numberline {9.2.2}R\IeC {\'e}sultats et explications}{18}{subsubsection.9.2.2}
+\contentsline {section}{\numberline {10}Implication des buffers sur le nombre de r\IeC {\'e}\IeC {\'e}missions}{18}{section.10}
+\contentsline {subsection}{\numberline {10.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{18}{subsection.10.1}
+\contentsline {subsection}{\numberline {10.2}R\IeC {\'e}sultats et explications}{18}{subsection.10.2}
+\contentsline {section}{\numberline {11}Implication de la taille des buffers sur le temps de voyage total}{18}{section.11}
+\contentsline {subsection}{\numberline {11.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{18}{subsection.11.1}
+\contentsline {subsection}{\numberline {11.2}R\IeC {\'e}sultats et explications}{18}{subsection.11.2}
+\contentsline {subsection}{\numberline {11.3}Am\IeC {\'e}lioration apport\IeC {\'e}e par le DV}{18}{subsection.11.3}
+\contentsline {section}{\numberline {A}Le programme et son utilisation}{21}{appendix.A}
+\contentsline {subsection}{\numberline {A.1}Configuration et aide}{21}{subsection.A.1}
+\contentsline {subsection}{\numberline {A.2}Organisation du code source}{21}{subsection.A.2}
+\contentsline {subsection}{\numberline {A.3}Ex\IeC {\'e}cution de la simulation}{22}{subsection.A.3}
+\contentsline {subsection}{\numberline {A.4}Compilation}{22}{subsection.A.4}
+\contentsline {subsection}{\numberline {A.5}UML}{22}{subsection.A.5}
