@@ -3,7 +3,7 @@ img_extIsRegExp=false
 img_extensions=.eps .jpg .jpeg .png .pdf .ps .fig .gif .dvi
 kileprversion=2
 kileversion=2.1
-lastDocument=tex/temp.tex
+lastDocument=tex/rapport.tex
 masterDocument=
 name=rapport
 pkg_extIsRegExp=false
@@ -26,11 +26,11 @@ order=-1
 
 [item:tex/annexes.tex]
 archive=true
-column=168
+column=52
 encoding=UTF-8
 highlight=LaTeX
-line=37
-open=false
+line=30
+open=true
 order=2
 
 [item:tex/commandes.tex]
@@ -62,10 +62,10 @@ order=-1
 
 [item:tex/rapport.tex]
 archive=true
-column=4
+column=52
 encoding=UTF-8
 highlight=LaTeX
-line=502
+line=517
 open=true
 order=0
 
