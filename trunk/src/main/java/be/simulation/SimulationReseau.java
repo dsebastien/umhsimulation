@@ -149,13 +149,15 @@ public class SimulationReseau extends AbstractSimulation {
 		double utilisationMoyenneBuffersAgents =
 				(double)sommeSommeTauxUtilisationBuffersAgents / (double)agents.size() / (double)tempsActuel / (double) tailleMaxBuffer;
 		
-		
-		//LOGGER.info(pourcentageSimul+";"+Utilitaires.pourcentage(pourcentageMessagesReexpedies)+";"+Utilitaires.pourcentage(utilisationMoyenneBuffersAgents)+";" +Utilitaires.pourcentage(pourcentageMessagesPerdusBuffersPleins)+
-		//";"+ (int) tempsMoyenEntreEmissionEtReceptionAccuse+";"+Hote.TOTAL_TIMEOUTS_TROP_COURTS+";"+(Hote.MESSAGE_LE_PLUS_REEMIS.getNumeroEmission() - 1)
-		//+";"+ Hote.MESSAGE_TEMPS_MAX.getTempsTrajet());
-		
+		if(sommeSommeTauxUtilisationBuffersAgents == 0){
+			utilisationMoyenneBuffersAgents = 0;
+		}
 		
 		
+//		LOGGER.info(pourcentageSimul+";"+Utilitaires.pourcentage(pourcentageMessagesReexpedies)+";"+Utilitaires.pourcentage(utilisationMoyenneBuffersAgents)+";" +Utilitaires.pourcentage(pourcentageMessagesPerdusBuffersPleins)+
+//                ";"+ (int) tempsMoyenEntreEmissionEtReceptionAccuse+";"+Hote.TOTAL_TIMEOUTS_TROP_COURTS+";"+(Hote.MESSAGE_LE_PLUS_REEMIS.getNumeroEmission() - 1)
+//                +";"+ Hote.MESSAGE_TEMPS_MAX.getTempsTrajet());
+//		
 		
 		LOGGER.info("Temps actuel de simulation: "
 				+ tempsActuel
