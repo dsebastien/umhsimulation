@@ -6,27 +6,36 @@
 \contentsline {section}{\numberline {2}Evenements}{5}{section.2}
 \contentsline {subsection}{\numberline {2.1}Hotes}{5}{subsection.2.1}
 \contentsline {subsubsection}{\numberline {2.1.1}Envoi d'un message original}{5}{subsubsection.2.1.1}
-\contentsline {subsubsection}{\numberline {2.1.2}R\IeC {\'e}ception d'un message}{9}{subsubsection.2.1.2}
-\contentsline {subsubsection}{\numberline {2.1.3}Fin de traitement d'un message}{9}{subsubsection.2.1.3}
-\contentsline {subsubsection}{\numberline {2.1.4}Timeout}{9}{subsubsection.2.1.4}
-\contentsline {subsection}{\numberline {2.2}Agents}{9}{subsection.2.2}
-\contentsline {subsubsection}{\numberline {2.2.1}R\IeC {\'e}ception d'un message}{9}{subsubsection.2.2.1}
-\contentsline {subsubsection}{\numberline {2.2.2}Fin de traitement d'un message}{10}{subsubsection.2.2.2}
-\contentsline {subsubsection}{\numberline {2.2.3}Envoi des informations de routage}{10}{subsubsection.2.2.3}
-\contentsline {subsubsection}{\numberline {2.2.4}R\IeC {\'e}ception d'informations de routage}{10}{subsubsection.2.2.4}
-\contentsline {subsection}{\numberline {2.3}Autres}{10}{subsection.2.3}
-\contentsline {subsubsection}{\numberline {2.3.1}Fin de simulation}{10}{subsubsection.2.3.1}
-\contentsline {section}{\numberline {3}Messages}{10}{section.3}
-\contentsline {section}{\numberline {4}Param\IeC {\`e}tres du syst\IeC {\`e}me}{11}{section.4}
-\contentsline {subsection}{\numberline {4.1}Hote}{11}{subsection.4.1}
-\contentsline {subsection}{\numberline {4.2}Agent}{11}{subsection.4.2}
-\contentsline {subsection}{\numberline {4.3}Simulation}{11}{subsection.4.3}
-\contentsline {section}{\numberline {5}D\IeC {\'e}roulement de la simulation}{11}{section.5}
-\contentsline {section}{\numberline {6}Calcul et affichage des r\IeC {\'e}sultats}{11}{section.6}
-\contentsline {section}{\numberline {7}R\IeC {\'e}sultats}{11}{section.7}
-\contentsline {section}{\numberline {A}Le programme et son utilisation}{12}{appendix.A}
-\contentsline {subsection}{\numberline {A.1}Configuration et aide}{12}{subsection.A.1}
-\contentsline {subsection}{\numberline {A.2}Organisation du code source}{12}{subsection.A.2}
-\contentsline {subsection}{\numberline {A.3}Ex\IeC {\'e}cution de la simulation}{12}{subsection.A.3}
-\contentsline {subsection}{\numberline {A.4}Compilation}{12}{subsection.A.4}
-\contentsline {subsection}{\numberline {A.5}UML}{12}{subsection.A.5}
+\contentsline {subsubsection}{\numberline {2.1.2}R\IeC {\'e}ception d'un message}{11}{subsubsection.2.1.2}
+\contentsline {subsubsection}{\numberline {2.1.3}Fin de traitement d'un message}{11}{subsubsection.2.1.3}
+\contentsline {subsubsection}{\numberline {2.1.4}Timeout}{11}{subsubsection.2.1.4}
+\contentsline {subsection}{\numberline {2.2}Agents}{13}{subsection.2.2}
+\contentsline {subsubsection}{\numberline {2.2.1}R\IeC {\'e}ception d'un message}{13}{subsubsection.2.2.1}
+\contentsline {subsubsection}{\numberline {2.2.2}Fin de traitement d'un message}{13}{subsubsection.2.2.2}
+\contentsline {subsubsection}{\numberline {2.2.3}Envoi des informations de routage}{13}{subsubsection.2.2.3}
+\contentsline {subsubsection}{\numberline {2.2.4}R\IeC {\'e}ception d'informations de routage}{13}{subsubsection.2.2.4}
+\contentsline {subsection}{\numberline {2.3}Autres}{14}{subsection.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}Fin de simulation}{14}{subsubsection.2.3.1}
+\contentsline {section}{\numberline {3}Messages}{14}{section.3}
+\contentsline {section}{\numberline {4}Param\IeC {\`e}tres du syst\IeC {\`e}me}{15}{section.4}
+\contentsline {subsection}{\numberline {4.1}Hote}{15}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Agent}{15}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}Simulation}{16}{subsection.4.3}
+\contentsline {section}{\numberline {5}D\IeC {\'e}roulement de la simulation}{16}{section.5}
+\contentsline {section}{\numberline {6}Calcul et affichage des r\IeC {\'e}sultats}{16}{section.6}
+\contentsline {section}{\numberline {7}R\IeC {\'e}sultats}{17}{section.7}
+\contentsline {subsection}{\numberline {7.1}Situation probl\IeC {\'e}matique 1}{17}{subsection.7.1}
+\contentsline {subsubsection}{\numberline {7.1.1}Param\IeC {\`e}tres probl\IeC {\'e}matiques}{17}{subsubsection.7.1.1}
+\contentsline {subsubsection}{\numberline {7.1.2}Explications}{17}{subsubsection.7.1.2}
+\contentsline {subsubsection}{\numberline {7.1.3}R\IeC {\'e}solution du probl\IeC {\`e}me}{17}{subsubsection.7.1.3}
+\contentsline {subsection}{\numberline {7.2}Situation probl\IeC {\'e}matique 2}{17}{subsection.7.2}
+\contentsline {subsubsection}{\numberline {7.2.1}Param\IeC {\`e}tres probl\IeC {\'e}matiques}{17}{subsubsection.7.2.1}
+\contentsline {subsubsection}{\numberline {7.2.2}Explications}{17}{subsubsection.7.2.2}
+\contentsline {subsubsection}{\numberline {7.2.3}R\IeC {\'e}solution du probl\IeC {\`e}me}{17}{subsubsection.7.2.3}
+\contentsline {subsection}{\numberline {7.3}Am\IeC {\'e}lioration apport\IeC {\'e}e par le DV}{17}{subsection.7.3}
+\contentsline {section}{\numberline {A}Le programme et son utilisation}{20}{appendix.A}
+\contentsline {subsection}{\numberline {A.1}Configuration et aide}{20}{subsection.A.1}
+\contentsline {subsection}{\numberline {A.2}Organisation du code source}{20}{subsection.A.2}
+\contentsline {subsection}{\numberline {A.3}Ex\IeC {\'e}cution de la simulation}{21}{subsection.A.3}
+\contentsline {subsection}{\numberline {A.4}Compilation}{21}{subsection.A.4}
+\contentsline {subsection}{\numberline {A.5}UML}{21}{subsection.A.5}
