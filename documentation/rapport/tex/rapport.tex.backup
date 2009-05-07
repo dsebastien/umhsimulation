@@ -16,6 +16,30 @@
 
 
 
+\section{Décisions}
+
+\subsection{Gestion des évènements}
+Nous avons choisi d'utiliser une seule FEL pour la simulation. On y place tous les évènements. De plus, pour un temps $t$ de simulation donné, nous avons décidé de traiter certains évènements prioritairement:
+
+\begin{enumerate}
+ \item En premier lieu on traite les évènements de réception d'informations de routage
+ \item Puis les évènements de réception d'informations de routage
+ \item Puis les évènements de réception de messages (accusés et messages normaux)
+ \item Puis les évènements de timeout (un message pour lequel on a pas encore reçu d'accusé)
+\end{enumerate}
+
+Une fois tous ces évènements traités pour un temps $t$, on traite les autres selon l'ordre \textit{FIFO}.
+
+\subsection{Distance vector}
+Nous avons choisi de modifier les coûts en fonction du taux d'occupation du buffer de l'agent. Ceci est expliqué à la section \refp{evt-agent-reception-message} concernant l'évènement de réception d'un message par un agent.
+
+Nous avons aussi implémenté la technique du \textit{poisonned reverse} comme expliqué dans l'article concernant le distance vector.
+
+
+
+
+
+
 
 \section{Evenements}
 
@@ -237,12 +261,334 @@ Dans le diagramme UML, il y a deux points que nous n'avons pas expliqués (en ja
 \begin{itemize}
  \item Le premier point: \og Est-ce qu'on peut envoyer les nouvelles informations de routage maintenant? \fg. Nous avons décidé d'éviter trop d'envois successifs inutiles d'informations de routage, afin de ne pas surcharger le système. Pour ce faire, quand un agent doit envoyer les informations de routage (à cause du niveau d'occupation du buffer), il vérifie si ça fait au moins $x$ temps de simulation qu'il a envoyé un message de ce type. Si oui, alors il peut envoyer le message. De cette manière, si pour un temps $t$ donné, l'agent reçoit $50$ messages, que pour le premier il dépasse le seuil d'alerte d'occupation du buffer et envoie ses informations de routage, puisqu'il sera toujours au delà du seuil d'alerte pour les $49$ autres messages, il ne renverra plus de message avant un certain délai.
  
- \item Le second point: \og Augmentation du coût de nos routes à destination des autres agents (on augmente d'une valeur fixe à chaque fois) \fg. Nous faisons ceci avec que le distance vector prenne en compte le niveau d'occupation des agents. Quand un agent donné est surchargé, il augmente le coût de ses routes à destination des autres agents et prévient ses voisins. De cette manière quand les voisins reçoivent les informations, ils mettent à jour leur propre table de routage et choisissent peut être d'autres routes (i.e., changent leur DV) pour faire suivre les messages. Si les autres agents deviennent surchargés, leurs coûts augmenteront également. Ainsi au final, le DV prend en compte l'occupation des buffers des agents, ce qui permet de mieux répartir la charge sur les différents agents. Dans les résultats des simulations, nous avons en effet constaté que les buffers sont utilisés de manière plus homogène.
+ \item Le second point: \og Augmentation du coût de nos routes à destination des autres agents (on augmente d'une valeur fixe à chaque fois) \fg. Nous faisons ceci afin que le distance vector prenne en compte le niveau d'occupation des buffers des agents. Quand un agent donné est surchargé, il augmente le coût de ses routes à destination des autres agents et prévient ses voisins (i.e., leur envoie son DV). De cette manière quand les voisins reçoivent les informations, ils mettent à jour leur propre table de routage et choisissent peut être d'autres routes pour faire suivre les messages (i.e., changent leur DV). Si les autres agents deviennent surchargés, leurs coûts augmenteront également. Ainsi au final, le DV prend en compte l'occupation des buffers des agents, ce qui permet de mieux répartir la charge sur les différents agents. Dans les résultats des simulations, nous avons en effet constaté que les buffers sont utilisés de manière plus homogène quand le distance vector est activé.
 \end{itemize}
 
 
 
 
+
+\subsubsection{Fin de traitement d'un message}
+Le diagramme UML correspondant étant trop grand, nous ne l'avons pas inclus dans le rapport. Il est disponible dans le dossier \textbf{UML} qui accompagne le rapport (le fichier: \textbf{Evenement - AgentFinTraitementMessage.png}).
+
+
+
+
+
+
+
+\subsubsection{Envoi des informations de routage}
+L'envoi d'informations de routage (envoi du DV d'un agent à ses voisins) est illustré par la figure \refp{fig:agent-envoi-infos-routage}.
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.60]{AgentEnvoieInfosRoutage}
+  \caption{Envoi d'informations de routage par un agent}
+  \label{fig:agent-envoi-infos-routage}
+\end{figure}
+
+
+
+
+
+\subsubsection{Réception d'informations de routage}
+La réception d'informations de routage (réception du DV d'un voisin par un agent) est illustrée par la figure \refp{fig:agent-recoit-infos-routage}.
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.60]{AgentRecoitInfosRoutage}
+  \caption{Réception d'informations de routage par un agent}
+  \label{fig:agent-recoit-infos-routage}
+\end{figure}
+
+Le détail des opérations effectuée lors de la mise à jour (vérifications, etc) n'est pas dans le rapport non plus car le diagramme est trop grand. Le fichier est disponible dans le dossier \textbf{UML} qui accompagne le rapport (le fichier: \textbf{Mise à jour des informations de routage.png}).
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Autres}
+
+\subsubsection{Fin de simulation}
+Le dernier évènement est spécial; c'est celui qui provoque la fin de la simulation. Quand cet évènement devient l'évènement imminent, il remet la FEL à zéro (il n'y a donc plus d'évènement imminent après lui) et la boucle de simulation s'arrête. Le détail est illustré par la figure \refp{fig:fin-de-simulation}.
+
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.60]{FinDeSimulation}
+  \caption{Fin de la simulation}
+  \label{fig:fin-de-simulation}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+\section{Observations}
+Nous avons identifié les temps d'attente dans les buffers comme étant des \textit{délais}. En effet, le fait qu'un message passe du temps dans des buffers et le temps qu'il peut y passer sont deux inconnues. Quand on messages est envoyé, nous ne pouvont pas savoir avec certitude à quel moment il sera réceptionné par son destinataire (d'autant plus si l'on considère les pertes brutales). Suivant la charge du réseau, les messages seront retardés pour un temps indéterminé.
+
+
+TODO
+
+
+
+
+\section{Messages}
+Les entités de la simulation s'envoient différents types de messages. Un diagramme UML les illustrant existe mais n'a pas été inclus au rapport car il est trop grand. Il est disponible dans le dossier \textbf{UML} qui accompagne le rapport (le fichier: \textbf{CD Messages.png}).
+
+
+
+
+
+
+
+
+\section{Paramètres du système}
+
+\subsection{Hote}
+\begin{itemize}
+ \item Durée du timeout (temps après lequel on réémet un message)
+ \item Temps maximal inter-envois (pour les messages originaux)
+ \item Temps de traitement d'un message
+ \item Pourcentage de messages à destination d'un autre agent
+\end{itemize}
+
+
+\subsection{Agent}
+
+\begin{itemize}
+ \item Nombre d'hôtes reliés
+ \item Taux de pertes brutales de messages
+ \item Temps de traitement d'un message
+ \item Taille de buffer (en entrée)
+\end{itemize}
+
+Pour le distance vector nous avons en plus:
+\begin{itemize}
+ \item Temps inter-envois des informations de routage
+\end{itemize}
+
+\subsection{Simulation}
+\begin{itemize}
+ \item Durée
+ \item Délai agent <-> hôte
+ \item Distance vector activé (oui/non)
+ \item Durée de la période d'initialisation
+ \item Périodicité d'affichage des statistiques (e.g., tous les 1\% de simulation)
+\end{itemize}
+
+
+
+
+
+
+
+
+
+\section{Déroulement de la simulation}
+La figure \ref{fig:deroulement-simulation} illustre le déroulement de la simulation (les grandes étapes).
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.60]{DeroulementSimulation}
+  \caption{Déroulement de la simulation}
+  \label{fig:deroulement-simulation}
+\end{figure}
+
+
+
+
+
+
+
+\section{Calcul et affichage des résultats}
+La figure \refp{fig:calcul-affichage-resultats} illustre les différentes statistiques que nous calculons et affichons pendant la simulation.
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.55]{CalculAffichageResultats}
+  \caption{Calcul et affichage des résultats}
+  \label{fig:calcul-affichage-resultats}
+\end{figure}
+
+
+
+
+
+
+
+
+\section{Situation problématique 1}
+\subsection{Paramètres problématiques}
+\begin{itemize}
+ \item Simulation - Duree: $10000$
+ \item Simulation - Delai entre entités: $5$
+ \item Agents - Nombre d'hotes: $15$
+ \item Agents - Taille de buffer: $100$
+ \item Agents - Taux de pertes brutales: $5.00$\%
+ \item Agents - Temps de traitement: $0.5$
+ \item Hotes - Pourcentage de messages a destination d'un hote connecte a un autre agent: $75$\%
+ \item Hotes - Temps max entre deux envois: $150$
+ \item Hotes - Temps de traitement: $0.5$
+ \item Hotes - Timeout: \textbf{$100$}
+\end{itemize}
+
+
+
+\subsection{Résolution et explications}
+La figure \refp{fig:situationproblematique1} illustre le problème. Au départ, nous avons fixé les timeouts à $100$. On voit clairement sur la figure qu'avec ce temps de timeout, le pourcentage de messages perdus car les buffers étaient pleins monte très rapidement. Ces pertes deviennent de plus en plus importantes à cause d'un phénomène d'emballement (le nombre de réémissions augmente et charge de plus en plus les buffers).
+
+La solution du problème est également illustré par la figure. On voit qu'en augmentant simplement le temps des timeouts à $115$, on règle complètement le problème des buffers. C'est normal car de cette manière, on évite les réémissions inutiles et on voit que globalement, c'est tout le système qui s'en porte mieux.
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.55]{situationProblematique1}
+  \caption{Situation problématique 1}
+  \label{fig:situationproblematique1}
+\end{figure}
+
+
+
+
+
+
+\section{Situation problématique 2}
+\subsection{Paramètres problématiques}
+TODO
+
+\subsection{Explications}
+TODO
+
+\subsection{Résolution du problème}
+TODO
+
+
+
+
+
+\section{Taille des buffers minimale pour éviter trop de pertes}
+\subsection{Sans pertes brutales}
+\subsubsection{Paramètres du système}
+TODO
+\subsubsection{Résultats et explications}
+TODO
+
+
+\subsection{Avec pertes brutales}
+TODO
+\subsubsection{Paramètres du système}
+TODO
+\subsubsection{Résultats et explications}
+TODO
+
+
+
+\section{Implication des buffers sur le nombre de réémissions}
+\subsection{Paramètres du système}
+TODO
+
+\subsection{Résultats et explications}
+TODO (graphique!)
+
+
+
+
+
+
+\section{Implication de la taille des buffers sur le temps de voyage total}
+\subsection{Paramètres du système}
+TODO
+
+\subsection{Résultats et explications}
+TODO
+
+
+
+
+
+
+
+
+
+\section{Amélioration apportée par le DV}
+\subsection{Paramètres du système}
+\begin{itemize}
+ \item Simulation - Duree: $1000$
+ \item Simulation - Delai entre entités: $5$
+ \item Agents - Nombre d'hotes: $8$
+ \item Agents - Taille de buffer: $15$
+ \item Agents - Taux de pertes brutales: $5.00$\%
+ \item Agents - Temps de traitement: $0.1$
+ \item Hotes - Pourcentage de messages a destination d'un hote connecte a un autre agent: $80$\%
+ \item Hotes - Temps max entre deux envois: $5$
+ \item Hotes - Temps de traitement: $0.1$
+ \item Hotes - Timeout: $400$
+\end{itemize}
+
+\subsection{Résultats sans DV}
+Les figures \refp{fig:sansdv01} et \refp{fig:sansdv02} illustrent les résultats de la simulation quand le distance vector n'est pas activé.
+TODO ajouter commentaires!
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.55]{sansdv1}
+  \caption{Résultats sans DV (01)}
+  \label{fig:sansdv01}
+\end{figure}
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.55]{sansdv2}
+  \caption{Résultats sans DV (02)}
+  \label{fig:sansdv02}
+\end{figure}
+
+
+\subsection{Résultats avec DV}
+Les figures \refp{fig:avecdv01} et \refp{fig:avecdv02} illustrent les résultats de la simulation quand le distance vector est activé.
+TODO ajouter commentaires!
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.55]{avecdv1}
+  \caption{Résultats avec DV (01)}
+  \label{fig:avecdv01}
+\end{figure}
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.55]{avecdv2}
+  \caption{Résultats avec DV (02)}
+  \label{fig:avecdv02}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+%\pagebreak
+\clearpage
+
+%\backmatter % pour ne pas numéroter à la fin
+\input{annexes}
+\appendix
 
 
 \end{document}
