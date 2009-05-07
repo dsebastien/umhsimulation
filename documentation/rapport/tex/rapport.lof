@@ -13,8 +13,12 @@
 \contentsline {figure}{\numberline {11}{\ignorespaces Situation probl\IeC {\'e}matique 2 - Taille des buffers}}{24}{figure.11}
 \contentsline {figure}{\numberline {12}{\ignorespaces Influence des buffers sur la r\IeC {\'e}\IeC {\'e}mission de messages (sans pertes brutales)}}{25}{figure.12}
 \contentsline {figure}{\numberline {13}{\ignorespaces Influence des buffers sur la r\IeC {\'e}\IeC {\'e}mission de messages (avec pertes brutales)}}{25}{figure.13}
-\contentsline {figure}{\numberline {14}{\ignorespaces R\IeC {\'e}sultats sans DV (01)}}{26}{figure.14}
-\contentsline {figure}{\numberline {15}{\ignorespaces R\IeC {\'e}sultats sans DV (02)}}{27}{figure.15}
-\contentsline {figure}{\numberline {16}{\ignorespaces R\IeC {\'e}sultats avec DV (01)}}{28}{figure.16}
-\contentsline {figure}{\numberline {17}{\ignorespaces R\IeC {\'e}sultats avec DV (02)}}{29}{figure.17}
-\contentsline {figure}{\numberline {18}{\ignorespaces Options disponibles}}{30}{figure.18}
+\contentsline {figure}{\numberline {14}{\ignorespaces Influence de buffers assez grands sur la r\IeC {\'e}\IeC {\'e}mission de messages}}{26}{figure.14}
+\contentsline {figure}{\numberline {15}{\ignorespaces Influence de buffers trop petits sur la r\IeC {\'e}\IeC {\'e}mission de messages}}{26}{figure.15}
+\contentsline {figure}{\numberline {16}{\ignorespaces Influence de buffers assez grands sur le temps de voyage moyen}}{27}{figure.16}
+\contentsline {figure}{\numberline {17}{\ignorespaces Influence de buffers trop petits sur le temps de voyage moyen}}{27}{figure.17}
+\contentsline {figure}{\numberline {18}{\ignorespaces R\IeC {\'e}sultats sans DV (01)}}{28}{figure.18}
+\contentsline {figure}{\numberline {19}{\ignorespaces R\IeC {\'e}sultats sans DV (02)}}{29}{figure.19}
+\contentsline {figure}{\numberline {20}{\ignorespaces R\IeC {\'e}sultats avec DV (01)}}{30}{figure.20}
+\contentsline {figure}{\numberline {21}{\ignorespaces R\IeC {\'e}sultats avec DV (02)}}{31}{figure.21}
+\contentsline {figure}{\numberline {22}{\ignorespaces Options disponibles}}{32}{figure.22}
