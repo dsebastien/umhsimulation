@@ -1,55 +1,55 @@
 \select@language {frenchb}
 \select@language {french}
-\contentsline {section}{\numberline {1}D\IeC {\'e}cisions}{5}{section.1}
-\contentsline {subsection}{\numberline {1.1}Gestion des \IeC {\'e}v\IeC {\`e}nements}{5}{subsection.1.1}
-\contentsline {subsection}{\numberline {1.2}Distance vector}{5}{subsection.1.2}
-\contentsline {section}{\numberline {2}Evenements}{5}{section.2}
-\contentsline {subsection}{\numberline {2.1}Hotes}{5}{subsection.2.1}
-\contentsline {subsubsection}{\numberline {2.1.1}Envoi d'un message original}{5}{subsubsection.2.1.1}
-\contentsline {subsubsection}{\numberline {2.1.2}R\IeC {\'e}ception d'un message}{11}{subsubsection.2.1.2}
-\contentsline {subsubsection}{\numberline {2.1.3}Fin de traitement d'un message}{11}{subsubsection.2.1.3}
-\contentsline {subsubsection}{\numberline {2.1.4}Timeout}{11}{subsubsection.2.1.4}
-\contentsline {subsection}{\numberline {2.2}Agents}{13}{subsection.2.2}
-\contentsline {subsubsection}{\numberline {2.2.1}R\IeC {\'e}ception d'un message}{13}{subsubsection.2.2.1}
-\contentsline {subsubsection}{\numberline {2.2.2}Fin de traitement d'un message}{13}{subsubsection.2.2.2}
-\contentsline {subsubsection}{\numberline {2.2.3}Envoi des informations de routage}{13}{subsubsection.2.2.3}
-\contentsline {subsubsection}{\numberline {2.2.4}R\IeC {\'e}ception d'informations de routage}{13}{subsubsection.2.2.4}
-\contentsline {subsection}{\numberline {2.3}Autres}{14}{subsection.2.3}
-\contentsline {subsubsection}{\numberline {2.3.1}Fin de simulation}{14}{subsubsection.2.3.1}
-\contentsline {section}{\numberline {3}D\IeC {\'e}lais}{14}{section.3}
-\contentsline {section}{\numberline {4}Messages}{15}{section.4}
-\contentsline {section}{\numberline {5}Param\IeC {\`e}tres du syst\IeC {\`e}me}{15}{section.5}
-\contentsline {subsection}{\numberline {5.1}Hote}{15}{subsection.5.1}
-\contentsline {subsection}{\numberline {5.2}Agent}{15}{subsection.5.2}
-\contentsline {subsection}{\numberline {5.3}Simulation}{16}{subsection.5.3}
-\contentsline {section}{\numberline {6}D\IeC {\'e}roulement de la simulation}{16}{section.6}
-\contentsline {section}{\numberline {7}Calcul et affichage des r\IeC {\'e}sultats}{16}{section.7}
-\contentsline {section}{\numberline {8}Situation probl\IeC {\'e}matique 1}{17}{section.8}
-\contentsline {subsection}{\numberline {8.1}Param\IeC {\`e}tres probl\IeC {\'e}matiques}{17}{subsection.8.1}
-\contentsline {subsection}{\numberline {8.2}R\IeC {\'e}solution et explications}{17}{subsection.8.2}
-\contentsline {section}{\numberline {9}Situation probl\IeC {\'e}matique 2}{17}{section.9}
-\contentsline {subsection}{\numberline {9.1}Param\IeC {\`e}tres probl\IeC {\'e}matiques}{17}{subsection.9.1}
-\contentsline {subsection}{\numberline {9.2}R\IeC {\'e}solution et explications}{17}{subsection.9.2}
-\contentsline {section}{\numberline {10}Taille minimale des buffers pour \IeC {\'e}viter trop de r\IeC {\'e}\IeC {\'e}missions}{18}{section.10}
-\contentsline {subsection}{\numberline {10.1}Sans pertes brutales}{18}{subsection.10.1}
-\contentsline {subsubsection}{\numberline {10.1.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{18}{subsubsection.10.1.1}
-\contentsline {subsubsection}{\numberline {10.1.2}R\IeC {\'e}sultats et explications}{18}{subsubsection.10.1.2}
-\contentsline {subsection}{\numberline {10.2}Avec pertes brutales}{18}{subsection.10.2}
-\contentsline {subsubsection}{\numberline {10.2.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{18}{subsubsection.10.2.1}
-\contentsline {subsubsection}{\numberline {10.2.2}R\IeC {\'e}sultats et explications}{18}{subsubsection.10.2.2}
-\contentsline {section}{\numberline {11}Implication des buffers sur le nombre de r\IeC {\'e}\IeC {\'e}missions}{18}{section.11}
-\contentsline {subsection}{\numberline {11.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{18}{subsection.11.1}
-\contentsline {subsection}{\numberline {11.2}R\IeC {\'e}sultats et explications}{18}{subsection.11.2}
-\contentsline {section}{\numberline {12}Implication de la taille des buffers sur le temps de voyage total}{19}{section.12}
-\contentsline {subsection}{\numberline {12.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{19}{subsection.12.1}
-\contentsline {subsection}{\numberline {12.2}R\IeC {\'e}sultats et explications}{19}{subsection.12.2}
-\contentsline {section}{\numberline {13}Am\IeC {\'e}lioration apport\IeC {\'e}e par le DV}{19}{section.13}
-\contentsline {subsection}{\numberline {13.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{19}{subsection.13.1}
-\contentsline {subsection}{\numberline {13.2}R\IeC {\'e}sultats sans DV}{19}{subsection.13.2}
-\contentsline {subsection}{\numberline {13.3}R\IeC {\'e}sultats avec DV}{19}{subsection.13.3}
-\contentsline {section}{\numberline {A}Le programme et son utilisation}{27}{appendix.A}
-\contentsline {subsection}{\numberline {A.1}Configuration et aide}{27}{subsection.A.1}
-\contentsline {subsection}{\numberline {A.2}Organisation du code source}{27}{subsection.A.2}
-\contentsline {subsection}{\numberline {A.3}Ex\IeC {\'e}cution de la simulation}{28}{subsection.A.3}
-\contentsline {subsection}{\numberline {A.4}Compilation}{28}{subsection.A.4}
-\contentsline {subsection}{\numberline {A.5}UML}{28}{subsection.A.5}
+\contentsline {section}{\numberline {1}D\IeC {\'e}cisions}{6}{section.1}
+\contentsline {subsection}{\numberline {1.1}Gestion des \IeC {\'e}v\IeC {\`e}nements}{6}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}Distance vector}{6}{subsection.1.2}
+\contentsline {section}{\numberline {2}Evenements}{6}{section.2}
+\contentsline {subsection}{\numberline {2.1}Hotes}{6}{subsection.2.1}
+\contentsline {subsubsection}{\numberline {2.1.1}Envoi d'un message original}{6}{subsubsection.2.1.1}
+\contentsline {subsubsection}{\numberline {2.1.2}R\IeC {\'e}ception d'un message}{12}{subsubsection.2.1.2}
+\contentsline {subsubsection}{\numberline {2.1.3}Fin de traitement d'un message}{12}{subsubsection.2.1.3}
+\contentsline {subsubsection}{\numberline {2.1.4}Timeout}{12}{subsubsection.2.1.4}
+\contentsline {subsection}{\numberline {2.2}Agents}{14}{subsection.2.2}
+\contentsline {subsubsection}{\numberline {2.2.1}R\IeC {\'e}ception d'un message}{14}{subsubsection.2.2.1}
+\contentsline {subsubsection}{\numberline {2.2.2}Fin de traitement d'un message}{14}{subsubsection.2.2.2}
+\contentsline {subsubsection}{\numberline {2.2.3}Envoi des informations de routage}{14}{subsubsection.2.2.3}
+\contentsline {subsubsection}{\numberline {2.2.4}R\IeC {\'e}ception d'informations de routage}{14}{subsubsection.2.2.4}
+\contentsline {subsection}{\numberline {2.3}Autres}{15}{subsection.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}Fin de simulation}{15}{subsubsection.2.3.1}
+\contentsline {section}{\numberline {3}D\IeC {\'e}lais}{15}{section.3}
+\contentsline {section}{\numberline {4}Messages}{16}{section.4}
+\contentsline {section}{\numberline {5}Param\IeC {\`e}tres du syst\IeC {\`e}me}{16}{section.5}
+\contentsline {subsection}{\numberline {5.1}Hote}{16}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}Agent}{16}{subsection.5.2}
+\contentsline {subsection}{\numberline {5.3}Simulation}{17}{subsection.5.3}
+\contentsline {section}{\numberline {6}D\IeC {\'e}roulement de la simulation}{17}{section.6}
+\contentsline {section}{\numberline {7}Calcul et affichage des r\IeC {\'e}sultats}{17}{section.7}
+\contentsline {section}{\numberline {8}Situation probl\IeC {\'e}matique 1}{18}{section.8}
+\contentsline {subsection}{\numberline {8.1}Param\IeC {\`e}tres probl\IeC {\'e}matiques}{18}{subsection.8.1}
+\contentsline {subsection}{\numberline {8.2}R\IeC {\'e}solution et explications}{18}{subsection.8.2}
+\contentsline {section}{\numberline {9}Situation probl\IeC {\'e}matique 2}{18}{section.9}
+\contentsline {subsection}{\numberline {9.1}Param\IeC {\`e}tres probl\IeC {\'e}matiques}{18}{subsection.9.1}
+\contentsline {subsection}{\numberline {9.2}R\IeC {\'e}solution et explications}{18}{subsection.9.2}
+\contentsline {section}{\numberline {10}Taille minimale des buffers pour \IeC {\'e}viter trop de r\IeC {\'e}\IeC {\'e}missions}{19}{section.10}
+\contentsline {subsection}{\numberline {10.1}Sans pertes brutales}{19}{subsection.10.1}
+\contentsline {subsubsection}{\numberline {10.1.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{19}{subsubsection.10.1.1}
+\contentsline {subsubsection}{\numberline {10.1.2}R\IeC {\'e}sultats et explications}{19}{subsubsection.10.1.2}
+\contentsline {subsection}{\numberline {10.2}Avec pertes brutales}{19}{subsection.10.2}
+\contentsline {subsubsection}{\numberline {10.2.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{19}{subsubsection.10.2.1}
+\contentsline {subsubsection}{\numberline {10.2.2}R\IeC {\'e}sultats et explications}{20}{subsubsection.10.2.2}
+\contentsline {section}{\numberline {11}Implication des buffers sur le nombre de r\IeC {\'e}\IeC {\'e}missions}{20}{section.11}
+\contentsline {subsection}{\numberline {11.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{20}{subsection.11.1}
+\contentsline {subsection}{\numberline {11.2}R\IeC {\'e}sultats et explications}{20}{subsection.11.2}
+\contentsline {section}{\numberline {12}Implication de la taille des buffers sur le temps de voyage total}{20}{section.12}
+\contentsline {subsection}{\numberline {12.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{20}{subsection.12.1}
+\contentsline {subsection}{\numberline {12.2}R\IeC {\'e}sultats et explications}{20}{subsection.12.2}
+\contentsline {section}{\numberline {13}Am\IeC {\'e}lioration apport\IeC {\'e}e par le DV}{20}{section.13}
+\contentsline {subsection}{\numberline {13.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{20}{subsection.13.1}
+\contentsline {subsection}{\numberline {13.2}R\IeC {\'e}sultats sans DV}{20}{subsection.13.2}
+\contentsline {subsection}{\numberline {13.3}R\IeC {\'e}sultats avec DV}{21}{subsection.13.3}
+\contentsline {section}{\numberline {A}Le programme et son utilisation}{30}{appendix.A}
+\contentsline {subsection}{\numberline {A.1}Configuration et aide}{30}{subsection.A.1}
+\contentsline {subsection}{\numberline {A.2}Organisation du code source}{30}{subsection.A.2}
+\contentsline {subsection}{\numberline {A.3}Ex\IeC {\'e}cution de la simulation}{31}{subsection.A.3}
+\contentsline {subsection}{\numberline {A.4}Compilation}{31}{subsection.A.4}
+\contentsline {subsection}{\numberline {A.5}UML}{31}{subsection.A.5}

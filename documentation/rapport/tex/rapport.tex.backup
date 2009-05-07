@@ -433,7 +433,7 @@ La figure \refp{fig:calcul-affichage-resultats} illustre les différentes statis
 \section{Situation problématique 1}
 \subsection{Paramètres problématiques}
 \begin{itemize}
- \item Simulation - Duree: $10000$
+ \item Simulation - Duree: $100000$
  \item Simulation - Delai entre entités: $5$
  \item Agents - Nombre d'hotes: $15$
  \item Agents - Taille de buffer: $100$
@@ -467,7 +467,7 @@ La solution du problème est également illustré par la figure. On voit qu'en a
 \section{Situation problématique 2}
 \subsection{Paramètres problématiques}
 \begin{itemize}
- \item Simulation - Duree: $10000$
+ \item Simulation - Duree: $100000$
  \item Simulation - Delai entre entités: $5$
  \item Agents - Nombre d'hotes: $15$
  \item Agents - Taille de buffer: \textbf{$5$}
@@ -501,9 +501,44 @@ La figure \refp{fig:situationproblematique2} illustre le problème. Au départ, 
 \section{Taille minimale des buffers pour éviter trop de réémissions}
 \subsection{Sans pertes brutales}
 \subsubsection{Paramètres du système}
-TODO
+\begin{itemize}
+ \item Simulation - Duree: $100000$
+ \item Simulation - Delai entre entités: $5$
+ \item Agents - Nombre d'hotes: $17$
+ \item Agents - Taille de buffer: \textbf{$3$}
+ \item Agents - Taux de pertes brutales: $0$\%
+ \item Agents - Temps de traitement: $0.4$
+ \item Hotes - Pourcentage de messages a destination d'un hote connecte a un autre agent: $75$\%
+ \item Hotes - Temps max entre deux envois: $179$
+ \item Hotes - Temps de traitement: $0.5$
+ \item Hotes - Timeout: $179$
+\end{itemize}
+
+
+
+
+
+
 \subsubsection{Résultats et explications}
-TODO
+La figure \refp{fig:messagesreemissanspertesbrutales} illustre le résultat de la simulation. On voit que le taux de réémission des messages se stabilise peu à peu sous la barre des $20$\%. Comme il n'y a pas de pertes brutales, la situation se stabilise assez rapidement.
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.55]{MessagesReemisSansPertesBrutales}
+  \caption{Influence des buffers sur la réémission de messages (sans pertes brutales)}
+  \label{fig:messagesreemissanspertesbrutales}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
 
 
 \subsection{Avec pertes brutales}
