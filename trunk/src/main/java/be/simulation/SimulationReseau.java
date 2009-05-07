@@ -147,9 +147,9 @@ public class SimulationReseau extends AbstractSimulation {
 		// on doit diviser par le nombre d'agents puisque là on a le total pour
 		// tous les agents
 		double utilisationMoyenneBuffersAgents =
-				(double)sommeSommeTauxUtilisationBuffersAgents / (double)agents.size() / (double)tempsActuel / (double) tailleMaxBuffer;
+				(double)sommeSommeTauxUtilisationBuffersAgents / (double)tempsActuel / ((double) tailleMaxBuffer * (double) agents.size());
 		
-		if(sommeSommeTauxUtilisationBuffersAgents == 0){
+		if(sommeSommeTauxUtilisationBuffersAgents == 0 || Double.isNaN(utilisationMoyenneBuffersAgents)){
 			utilisationMoyenneBuffersAgents = 0;
 		}
 		
@@ -652,6 +652,11 @@ public class SimulationReseau extends AbstractSimulation {
 		FinDeSimulation finDeSimulation =
 				new FinDeSimulation(dureeInitialisation + dureeSimulation);
 		getFutureEventList().planifierEvenement(finDeSimulation);
+		
+		// le temps de départ est maintenant
+		for(Agent agent: agents){
+			agent.setDernierTempsMiseAJourSommeNiveauxOccupationBuffer(getHorloge());
+		}
 	}
 
 
