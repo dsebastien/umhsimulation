@@ -30,7 +30,7 @@
 \contentsline {section}{\numberline {9}Situation probl\IeC {\'e}matique 2}{17}{section.9}
 \contentsline {subsection}{\numberline {9.1}Param\IeC {\`e}tres probl\IeC {\'e}matiques}{17}{subsection.9.1}
 \contentsline {subsection}{\numberline {9.2}R\IeC {\'e}solution et explications}{17}{subsection.9.2}
-\contentsline {section}{\numberline {10}Taille des buffers minimale pour \IeC {\'e}viter trop de pertes}{18}{section.10}
+\contentsline {section}{\numberline {10}Taille minimale des buffers pour \IeC {\'e}viter trop de r\IeC {\'e}\IeC {\'e}missions}{18}{section.10}
 \contentsline {subsection}{\numberline {10.1}Sans pertes brutales}{18}{subsection.10.1}
 \contentsline {subsubsection}{\numberline {10.1.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{18}{subsubsection.10.1.1}
 \contentsline {subsubsection}{\numberline {10.1.2}R\IeC {\'e}sultats et explications}{18}{subsubsection.10.1.2}
@@ -40,8 +40,8 @@
 \contentsline {section}{\numberline {11}Implication des buffers sur le nombre de r\IeC {\'e}\IeC {\'e}missions}{18}{section.11}
 \contentsline {subsection}{\numberline {11.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{18}{subsection.11.1}
 \contentsline {subsection}{\numberline {11.2}R\IeC {\'e}sultats et explications}{18}{subsection.11.2}
-\contentsline {section}{\numberline {12}Implication de la taille des buffers sur le temps de voyage total}{18}{section.12}
-\contentsline {subsection}{\numberline {12.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{18}{subsection.12.1}
+\contentsline {section}{\numberline {12}Implication de la taille des buffers sur le temps de voyage total}{19}{section.12}
+\contentsline {subsection}{\numberline {12.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{19}{subsection.12.1}
 \contentsline {subsection}{\numberline {12.2}R\IeC {\'e}sultats et explications}{19}{subsection.12.2}
 \contentsline {section}{\numberline {13}Am\IeC {\'e}lioration apport\IeC {\'e}e par le DV}{19}{section.13}
 \contentsline {subsection}{\numberline {13.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{19}{subsection.13.1}
