@@ -31,7 +31,7 @@ Nous avons choisi d'utiliser une seule FEL pour la simulation. On y place tous l
 Une fois tous ces évènements traités pour un temps $t$, on traite les autres selon l'ordre \textit{FIFO}.
 
 \subsection{Distance vector}
-Nous avons choisi de modifier les coûts en fonction du taux d'occupation du buffer de l'agent. Ceci est expliqué à la section \refp{evt-agent-reception-message} concernant l'évènement de réception d'un message par un agent.
+Nous avons choisi de modifier les coûts en fonction du taux d'occupation des buffers des agents. Ceci est expliqué à la section \refp{evt-agent-reception-message} concernant l'évènement de réception d'un message par un agent.
 
 Nous avons aussi implémenté la technique du \textit{poisonned reverse} comme expliqué dans l'article concernant le distance vector.
 
@@ -225,7 +225,7 @@ La réception d'un message par un hôte est illustrée par la figure \refp{fig:h
 
 
 \subsubsection{Fin de traitement d'un message}
-Le diagramme UML correspondant étant trop grand, nous ne l'avons pas inclus dans le rapport. Il est disponible dans le dossier \textbf{UML} qui accompagne le rapport (le fichier: \textbf{Evenement - HoteFinTraitementMessage.png}).
+Le diagramme UML correspondant étant trop grand, nous ne l'avons pas inclus dans le rapport. Il est disponible dans le dossier \textbf{UML} qui accompagne le rapport (le fichier: \textbf{Evenement - HoteFinTraitementMessage.png}). La fin de traitement d'un message par un hôte est un évènement primaire.
 
 
 
@@ -269,7 +269,7 @@ Dans le diagramme UML, il y a deux points que nous n'avons pas expliqués (en ja
 
 
 \subsubsection{Fin de traitement d'un message}
-Le diagramme UML correspondant étant trop grand, nous ne l'avons pas inclus dans le rapport. Il est disponible dans le dossier \textbf{UML} qui accompagne le rapport (le fichier: \textbf{Evenement - AgentFinTraitementMessage.png}).
+Le diagramme UML correspondant étant trop grand, nous ne l'avons pas inclus dans le rapport. Il est disponible dans le dossier \textbf{UML} qui accompagne le rapport (le fichier: \textbf{Evenement - AgentFinTraitementMessage.png}). La fin de traitement d'un message par un agent est un évènement primaire.
 
 
 
@@ -338,11 +338,9 @@ Le dernier évènement est spécial; c'est celui qui provoque la fin de la simul
 
 
 
-\section{Observations}
-Nous avons identifié les temps d'attente dans les buffers comme étant des \textit{délais}. En effet, le fait qu'un message passe du temps dans des buffers et le temps qu'il peut y passer sont deux inconnues. Quand on messages est envoyé, nous ne pouvont pas savoir avec certitude à quel moment il sera réceptionné par son destinataire (d'autant plus si l'on considère les pertes brutales). Suivant la charge du réseau, les messages seront retardés pour un temps indéterminé.
+\section{Délais}
+Nous avons identifié les temps d'attente dans les buffers comme étant des \textit{délais} pour la simulation étudiée. En effet, le fait qu'un message donné passe du temps dans des buffers et le temps qu'il peut y passer sont deux inconnues. Quand un message est envoyé, nous ne savons pas quand il arrivera à destination. Suivant la charge du réseau, les messages peuvent être retardés pour un temps indéterminé, voir perdus.
 
-
-TODO
 
 
 
@@ -468,19 +466,39 @@ La solution du problème est également illustré par la figure. On voit qu'en a
 
 \section{Situation problématique 2}
 \subsection{Paramètres problématiques}
-TODO
+\begin{itemize}
+ \item Simulation - Duree: $10000$
+ \item Simulation - Delai entre entités: $5$
+ \item Agents - Nombre d'hotes: $15$
+ \item Agents - Taille de buffer: \textbf{$5$}
+ \item Agents - Taux de pertes brutales: $5.00$\%
+ \item Agents - Temps de traitement: $0.5$
+ \item Hotes - Pourcentage de messages a destination d'un hote connecte a un autre agent: $75$\%
+ \item Hotes - Temps max entre deux envois: $150$
+ \item Hotes - Temps de traitement: $0.5$
+ \item Hotes - Timeout: $115$
+\end{itemize}
 
-\subsection{Explications}
-TODO
+\subsection{Résolution et explications}
+La figure \refp{fig:situationproblematique2} illustre le problème. Au départ, nous avons fixé une taille de buffers trop petite pour les agents. Sur le graphique, on voit clairement que le nombre de messages perdus à cause de buffers pleins augmente et approche les $70$\% en fin de simulation. De la même manière que pour la première situation problématique, ceci s'explique du fait que les messages étant perdus, les hôtes les réexpédient, ce qui surcharge le système. La solution a ce problème a été d'augmenter la taille des buffers des agents. Une fois ceci fait, comme le graphique le montre, il n'y a plus de pertes à cause de buffers pleins.
 
-\subsection{Résolution du problème}
-TODO
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.55]{situationProblematique2}
+  \caption{Situation problématique 2 - Taille des buffers}
+  \label{fig:situationproblematique2}
+\end{figure}
 
 
 
 
 
-\section{Taille des buffers minimale pour éviter trop de pertes}
+
+
+
+
+
+\section{Taille minimale des buffers pour éviter trop de réémissions}
 \subsection{Sans pertes brutales}
 \subsubsection{Paramètres du système}
 TODO
@@ -489,11 +507,30 @@ TODO
 
 
 \subsection{Avec pertes brutales}
-TODO
 \subsubsection{Paramètres du système}
-TODO
+\begin{itemize}
+ \item Simulation - Duree: $10000$
+ \item Simulation - Delai entre entités: $5$
+ \item Agents - Nombre d'hotes: $15$
+ \item Agents - Taille de buffer: \textbf{$3$}
+ \item Agents - Taux de pertes brutales: $5.00$\%
+ \item Agents - Temps de traitement: $0.5$
+ \item Hotes - Pourcentage de messages a destination d'un hote connecte a un autre agent: $25$\%
+ \item Hotes - Temps max entre deux envois: $250$
+ \item Hotes - Temps de traitement: $0.5$
+ \item Hotes - Timeout: $150$
+\end{itemize}
+
+
 \subsubsection{Résultats et explications}
-TODO
+La figure \refp{fig:messagesreemispertesbrutales} illustre le résultat de la simulation. On voit que le taux de réémission des messages se stabilise peu à peu sous la barre des $20$\%.
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.55]{MessagesReemisPertesBrutales}
+  \caption{Influence des buffers sur la réémission de messages (avec pertes brutales)}
+  \label{fig:messagesreemispertesbrutales}
+\end{figure}
 
 
 
