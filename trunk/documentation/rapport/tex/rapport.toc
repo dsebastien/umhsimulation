@@ -43,13 +43,13 @@
 \contentsline {section}{\numberline {12}Implication de la taille des buffers sur le temps de voyage total}{20}{section.12}
 \contentsline {subsection}{\numberline {12.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{20}{subsection.12.1}
 \contentsline {subsection}{\numberline {12.2}R\IeC {\'e}sultats et explications}{20}{subsection.12.2}
-\contentsline {section}{\numberline {13}Am\IeC {\'e}lioration apport\IeC {\'e}e par le DV}{20}{section.13}
-\contentsline {subsection}{\numberline {13.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{20}{subsection.13.1}
-\contentsline {subsection}{\numberline {13.2}R\IeC {\'e}sultats sans DV}{20}{subsection.13.2}
+\contentsline {section}{\numberline {13}Am\IeC {\'e}lioration apport\IeC {\'e}e par le DV}{21}{section.13}
+\contentsline {subsection}{\numberline {13.1}Param\IeC {\`e}tres du syst\IeC {\`e}me}{21}{subsection.13.1}
+\contentsline {subsection}{\numberline {13.2}R\IeC {\'e}sultats sans DV}{21}{subsection.13.2}
 \contentsline {subsection}{\numberline {13.3}R\IeC {\'e}sultats avec DV}{21}{subsection.13.3}
-\contentsline {section}{\numberline {A}Le programme et son utilisation}{30}{appendix.A}
-\contentsline {subsection}{\numberline {A.1}Configuration et aide}{30}{subsection.A.1}
-\contentsline {subsection}{\numberline {A.2}Organisation du code source}{30}{subsection.A.2}
-\contentsline {subsection}{\numberline {A.3}Ex\IeC {\'e}cution de la simulation}{31}{subsection.A.3}
-\contentsline {subsection}{\numberline {A.4}Compilation}{31}{subsection.A.4}
-\contentsline {subsection}{\numberline {A.5}UML}{31}{subsection.A.5}
+\contentsline {section}{\numberline {A}Le programme et son utilisation}{32}{appendix.A}
+\contentsline {subsection}{\numberline {A.1}Configuration et aide}{32}{subsection.A.1}
+\contentsline {subsection}{\numberline {A.2}Organisation du code source}{32}{subsection.A.2}
+\contentsline {subsection}{\numberline {A.3}Ex\IeC {\'e}cution de la simulation}{33}{subsection.A.3}
+\contentsline {subsection}{\numberline {A.4}Compilation}{33}{subsection.A.4}
+\contentsline {subsection}{\numberline {A.5}UML}{33}{subsection.A.5}

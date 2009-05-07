@@ -14,8 +14,6 @@
 %\pagebreak
 
 
-
-
 \section{Décisions}
 
 \subsection{Gestion des évènements}
@@ -33,8 +31,7 @@ Une fois tous ces évènements traités pour un temps $t$, on traite les autres 
 \subsection{Distance vector}
 Nous avons choisi de modifier les coûts en fonction du taux d'occupation des buffers des agents. Ceci est expliqué à la section \refp{evt-agent-reception-message} concernant l'évènement de réception d'un message par un agent.
 
-Nous avons aussi implémenté la technique du \textit{poisonned reverse} comme expliqué dans l'article concernant le distance vector.
-
+Nous avons aussi implémenté la technique du \textit{poisoned reverse} comme expliqué dans l'article concernant le distance vector.
 
 
 
@@ -570,12 +567,37 @@ La figure \refp{fig:messagesreemispertesbrutales} illustre le résultat de la si
 
 
 \section{Implication des buffers sur le nombre de réémissions}
-\subsection{Paramètres du système}
-TODO
+\subsection{Paramètres du système}\label{implicbuffsconfig}
+\begin{itemize}
+ \item Simulation - Duree: $100000$
+ \item Simulation - Delai entre entités: $5$
+ \item Agents - Nombre d'hotes: $17$
+ \item Agents - Taille de buffer: $10$
+ \item Agents - Taux de pertes brutales: $0$\%
+ \item Agents - Temps de traitement: $0.5$
+ \item Hotes - Pourcentage de messages a destination d'un hote connecte a un autre agent: $75$\%
+ \item Hotes - Temps max entre deux envois: $179$
+ \item Hotes - Temps de traitement: $0.5$
+ \item Hotes - Timeout: $179$
+\end{itemize}
 
 \subsection{Résultats et explications}
-TODO (graphique!)
+La figure \refp{fig:ImplicationTailleBuffersSurReemissions01} illustre le résultat de la simulation. On voit qu'avec cette taille de buffers, il n'y a quasiment aucune réémissions même après un long temps de simulation. La figure \refp{fig:ImplicationTailleBuffersSurReemissions02} montre quant à elle que quand les buffers sont trop petits ($3$ au lieu de $10$ (donc qu'il y a des pertes de messages à cause de buffers pleins), le nombre de réémissions augmente.
 
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.55]{ImplicationTailleBuffersSurReemissions01}
+  \caption{Influence de buffers assez grands sur la réémission de messages}
+  \label{fig:ImplicationTailleBuffersSurReemissions01}
+\end{figure}
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.55]{ImplicationTailleBuffersSurReemissions02}
+  \caption{Influence de buffers trop petits sur la réémission de messages}
+  \label{fig:ImplicationTailleBuffersSurReemissions02}
+\end{figure}
 
 
 
@@ -583,10 +605,25 @@ TODO (graphique!)
 
 \section{Implication de la taille des buffers sur le temps de voyage total}
 \subsection{Paramètres du système}
-TODO
+Idem qu'à la section précédente (\refp{implicbuffsconfig}).
+
 
 \subsection{Résultats et explications}
-TODO
+\textbf{Remarque importante}: pour calculer le temps moyen entre l'émission d'un paquet et la réception de l'accusé correspondant, nous avons décidé de ne compter que le temps entre la dernière émission et l'accusé de réception. Sans doute aurions nous vu une très forte différence si nous avions calculé le temps entre l'émission du paquet d'origine (le message original de l'hôte) et la réception de l'accusé, puisqu'alors, le nombre de réémissions aurait eu un impact sur le temps moyen de voyage et donc les buffers auraient fait une différence. Ceci explique pourquoi les figures \refp{fig:ImplicationTailleBuffersSurTempsVoyage01} et \refp{fig:ImplicationTailleBuffersSurTempsVoyage02} ne montrent pas de différence notable.
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.55]{ImplicationTailleBuffersSurTempsVoyage01}
+  \caption{Influence de buffers assez grands sur le temps de voyage moyen}
+  \label{fig:ImplicationTailleBuffersSurTempsVoyage01}
+\end{figure}
+
+\begin{figure}[h!t]
+  \centering
+    \includegraphics[scale=0.55]{ImplicationTailleBuffersSurTempsVoyage02}
+  \caption{Influence de buffers trop petits sur le temps de voyage moyen}
+  \label{fig:ImplicationTailleBuffersSurTempsVoyage02}
+\end{figure}
 
 
 
@@ -596,7 +633,7 @@ TODO
 
 
 
-\section{Amélioration apportée par le DV}
+\section{Amélioration apportée par le DV}\label{dv}
 \subsection{Paramètres du système}
 \begin{itemize}
  \item Simulation - Duree: $1000$
@@ -629,7 +666,7 @@ Les figures \refp{fig:sansdv01} et \refp{fig:sansdv02} illustrent les résultats
 
 
 \subsection{Résultats avec DV}
-Les figures \refp{fig:avecdv01} et \refp{fig:avecdv02} illustrent les résultats de la simulation quand le distance vector est activé.
+Les figures \refp{fig:avecdv01} et \refp{fig:avecdv02} illustrent les résultats de la simulation quand le distance vector est activé. Malheureusement nous nous sommes rendus compte trop tard que notre implémentation semble problématique. En effet, le seul avantage que nous constatons de l'utilisation du DV dans notre simulation est que le taux moyen d'utilisation des buffers évolue de manière beaucoup plus homogène (le Dv répartit mieux la charge sur les différents agents). Par contre, nous constatons que certains messages passent beaucoup plus de temps avec d'arriver à destination et que le nombre de réexpéditions semble plus important, alors que nous espérions justement voir ces valeurs diminuer. Il est probable que notre implémentation comporte un bug.
 
 \begin{figure}[h!t]
   \centering
