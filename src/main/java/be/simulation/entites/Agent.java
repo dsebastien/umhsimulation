@@ -24,6 +24,23 @@ import be.simulation.routage.Voisin;
  * @author Mernier Jean-François
  */
 public class Agent extends AbstractEntiteSimulationReseau {
+	/**
+	 * La modification de coût maximale qu'on peut faire à cause de buffers trop
+	 * remplis.
+	 */
+	private static final int	DIFFERENCE_COUT_MAX									=
+																							Integer.MAX_VALUE; //400;
+	/**
+	 * Modification de coût quand les buffers sont à plus de x% d'occupation.
+	 */
+	private static final int	MODIFICATION_COUT									=
+																							200;
+	/**
+	 * Le niveau d'occupation du buffer à partir duquel l'agent doit prévenir
+	 * ses voisins. (0.5 = 50%)
+	 */
+	private static final double	OCCUPATION_BUFFER_ALARMANTE							=
+																							0.5;
 	// variables tenant l'information globale (pour tous les agents)
 	public static int			TOTAL_MESSAGES_EN_COURS_TRAITEMENT					=
 																							0;
@@ -33,13 +50,10 @@ public class Agent extends AbstractEntiteSimulationReseau {
 																							0;
 	public static int			TOTAL_MESSAGES_RECUS								=
 																							0;
+
+
+
 	public static int			TOTAL_SOMME_NIVEAUX_OCCUPATION_BUFFERS				=
-																							0;
-	/**
-	 * Dernier temps de simulation ou le taux d'utilisation du buffer a été mis
-	 * a jour.
-	 */
-	private long				dernierTempsMiseAJourSommeNiveauxOccupationBuffer	=
 																							0;
 	/**
 	 * Temps minimal entre deux envois des infos de routage.
@@ -47,29 +61,18 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	private final long			deltaEntreEnvoisInfosRoutage						=
 																							16;
 	/**
+	 * Dernier temps de simulation ou le taux d'utilisation du buffer a été mis
+	 * a jour.
+	 */
+	private long				dernierTempsMiseAJourSommeNiveauxOccupationBuffer	=
+																							0;
+	/**
 	 * Le changement qu'on a effectué actuellement sur les coûts à cause de
 	 * buffers trop remplis. Si = 0, signifie que le coût actuel est le coût
 	 * normal (celui trouvé à la fin de la période d'initialisation)
 	 */
 	private int					differenceCoutActuelle								=
 																							0;
-	/**
-	 * Modification de coût quand les buffers sont à plus de x% d'occupation.
-	 */
-	private static final int	MODIFICATION_COUT									=
-																							200;
-	/**
-	 * La modification de coût maximale qu'on peut faire à cause de buffers trop
-	 * remplis.
-	 */
-	private static final int	DIFFERENCE_COUT_MAX									=
-																							Integer.MAX_VALUE; //400;
-	/**
-	 * Le niveau d'occupation du buffer à partir duquel l'agent doit prévenir
-	 * ses voisins. (0.5 = 50%)
-	 */
-	private static final double	OCCUPATION_BUFFER_ALARMANTE							=
-																							0.5;
 	/**
 	 * Nous indique quand on pourra envoyer à nouveau des infos de routage suite
 	 * à une occupation importante du buffer.
@@ -125,9 +128,6 @@ public class Agent extends AbstractEntiteSimulationReseau {
 	private TableDeRoutage		tableDeRoutage										=
 																							new TableDeRoutage(
 																									this);
-
-
-
 	/**
 	 * Crée un nouvel agent.
 	 */
@@ -648,6 +648,14 @@ public class Agent extends AbstractEntiteSimulationReseau {
 		// on réinitialise les hôtes (le nombre d'hôtes par agent dans la
 		// configuration peut avoir changé)
 		initialiserHotes();
+	}
+
+
+
+	public void setDernierTempsMiseAJourSommeNiveauxOccupationBuffer(
+			long dernierTempsMiseAJourSommeNiveauxOccupationBuffer) {
+		this.dernierTempsMiseAJourSommeNiveauxOccupationBuffer =
+				dernierTempsMiseAJourSommeNiveauxOccupationBuffer;
 	}
 
 
